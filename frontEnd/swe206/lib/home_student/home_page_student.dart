@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:swe206/UI_componenets/tournament_card.dart';
 
 class HomePageStudent extends StatefulWidget {
@@ -12,6 +10,7 @@ class HomePageStudent extends StatefulWidget {
 }
 
 class _HomePageStudentState extends State<HomePageStudent> {
+  int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
     List<TournamentWidget> myTournaments() => const [
@@ -71,7 +70,6 @@ class _HomePageStudentState extends State<HomePageStudent> {
           )
         ];
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(items: []),
       appBar: AppBar(title: const Text("Student Home Page")),
       body: Padding(
         padding: const EdgeInsets.all(8.0),

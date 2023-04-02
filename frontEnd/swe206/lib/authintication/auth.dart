@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:swe206/home_student/home_page_student.dart';
+import 'package:swe206/home_student/main_page_student.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
@@ -51,7 +52,7 @@ class _AuthPageState extends State<AuthPage> {
                     onPressed: () {
                       debugPrint("Student id is: " + _studentId);
                       Navigator.pushReplacementNamed(
-                          context, HomePageStudent.id);
+                          context, MainPageStudent.id);
                     },
                     child: const Text("Authinticate")))
           ],
