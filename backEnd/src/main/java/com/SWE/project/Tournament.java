@@ -2,6 +2,7 @@ package com.SWE.project;
 
 import java.util.Date;
 import java.util.Objects;
+import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
@@ -19,6 +20,10 @@ public abstract class Tournament {
     private double timeBetweenStages;
     @Column
     private TOURNAMENT_TYPES tournamentType;
+    @Column
+    private Set<Team> ParticipantingTeams;
+    @Column
+    private Set<Student> ParticipantingStudents;
 
     protected Tournament() {
 
