@@ -1,4 +1,4 @@
-package com.SWE.project;
+package com.SWE.project.Classes;
 
 import java.util.Objects;
 import java.util.Set;
@@ -6,32 +6,27 @@ import java.util.Set;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Students")
 public class Student {
-    @Column
+    @Column(name = "student_id")
     private @Id long id;
 
-    @Column
+    @Column(name = "student_name")
     private String name;
 
-    @Column
-    private double gpa;
-
-    @OneToMany
+    @ManyToMany(mappedBy = "ParticipantingStudents")
     private Set<Tournament> Tournaments;
 
-    public Student() {
+    @ManyToMany(mappedBy = "team_members")
+    private Set<Team> Teams;
 
-    }
-
-    public Student(long id, String name, double gpa) {
+    public Student(long id, String name) {
         this.id = id;
         this.name = name;
-        this.gpa = gpa;
     }
 
     public long getId() {
@@ -50,14 +45,6 @@ public class Student {
         this.name = name;
     }
 
-    public double getGpa() {
-        return this.gpa;
-    }
-
-    public void setGpa(double gpa) {
-        this.gpa = gpa;
-    }
-
     public Set<Tournament> getTournaments() {
         return this.Tournaments;
     }
@@ -74,13 +61,13 @@ public class Student {
             return false;
         }
         Student student = (Student) o;
-        return id == student.id && Objects.equals(name, student.name) && gpa == student.gpa
+        return id == student.id && Objects.equals(name, student.name)
                 && Objects.equals(Tournaments, student.Tournaments);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, gpa, Tournaments);
+        return Objects.hash(id, name, Tournaments);
     }
 
     @Override
@@ -88,7 +75,6 @@ public class Student {
         return "{" +
                 " id='" + getId() + "'" +
                 ", name='" + getName() + "'" +
-                ", gpa='" + getGpa() + "'" +
                 ", Tournaments='" + getTournaments() + "'" +
                 "}";
     }

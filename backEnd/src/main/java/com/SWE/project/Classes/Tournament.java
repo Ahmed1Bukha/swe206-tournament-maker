@@ -1,35 +1,46 @@
-package com.SWE.project;
+package com.SWE.project.Classes;
 
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
+import com.SWE.project.Enums.TOURNAMENT_TYPES;
+
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+@Entity
 @Table(name = "Tournaments")
 public abstract class Tournament {
-    @Column
+    @Column(name = "tournament_name")
     private @Id String name;
+
     @Column
     private Date startDate;
+
     @Column
     private Date endDate;
+
     @Column
     private double timeBetweenStages;
+
     @Column
     private TOURNAMENT_TYPES tournamentType;
-    @Column
+
+    @OneToMany(mappedBy = "tournament")
     private Set<Team> ParticipantingTeams;
-    @Column
+
+    @ManyToMany
+    @JoinTable(name = "Tournament_Students", joinColumns = @JoinColumn(name = "tournament_name"), inverseJoinColumns = @JoinColumn(name = "student_id"))
     private Set<Student> ParticipantingStudents;
 
-    protected Tournament() {
-
-    }
-
-    protected Tournament(String name, Date startDate, Date endDate, double timeBetweenStages,
+    public Tournament(String name, Date startDate, Date endDate, double timeBetweenStages,
             TOURNAMENT_TYPES tournamentType) {
         this.name = name;
         this.startDate = startDate;
@@ -78,6 +89,22 @@ public abstract class Tournament {
         this.tournamentType = tournamentType;
     }
 
+    public Set<Team> getParticipantingTeams() {
+        return this.ParticipantingTeams;
+    }
+
+    public void setParticipantingTeams(Set<Team> ParticipantingTeams) {
+        this.ParticipantingTeams = ParticipantingTeams;
+    }
+
+    public Set<Student> getParticipantingStudents() {
+        return this.ParticipantingStudents;
+    }
+
+    public void setParticipantingStudents(Set<Student> ParticipantingStudents) {
+        this.ParticipantingStudents = ParticipantingStudents;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -86,46 +113,31 @@ public abstract class Tournament {
             return false;
         }
         Tournament tournament = (Tournament) o;
-        return Objects.equals(name, tournament.name) && Objects.equals(startDate, tournament.startDate)
-                && Objects.equals(endDate, tournament.endDate) && timeBetweenStages == tournament.timeBetweenStages
-                && Objects.equals(tournamentType, tournament.tournamentType);
+        return Objects.equals(name, tournament.name)
+                && Objects.equals(startDate, tournament.startDate) && Objects.equals(endDate, tournament.endDate)
+                && timeBetweenStages == tournament.timeBetweenStages
+                && Objects.equals(tournamentType, tournament.tournamentType)
+                && Objects.equals(ParticipantingTeams, tournament.ParticipantingTeams)
+                && Objects.equals(ParticipantingStudents, tournament.ParticipantingStudents);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, startDate, endDate, timeBetweenStages, tournamentType);
+        return Objects.hash(name, startDate, endDate, timeBetweenStages, tournamentType, ParticipantingTeams,
+                ParticipantingStudents);
     }
 
     @Override
     public String toString() {
         return "{" +
-                " name='" + getName() + "'" +
+                " tournament_name='" + getName() + "'" +
                 ", startDate='" + getStartDate() + "'" +
                 ", endDate='" + getEndDate() + "'" +
                 ", timeBetweenStages='" + getTimeBetweenStages() + "'" +
                 ", tournamentType='" + getTournamentType() + "'" +
+                ", ParticipantingTeams='" + getParticipantingTeams() + "'" +
+                ", ParticipantingStudents='" + getParticipantingStudents() + "'" +
                 "}";
     }
-}
 
-class RoundRobinTournament extends Tournament {
-
-    RoundRobinTournament(String name, Date startDate, Date endDate, double timeBetweenStages,
-            TOURNAMENT_TYPES tournamentType) {
-        super(name, startDate, endDate, timeBetweenStages, tournamentType);
-    }
-
-}
-
-class EliminationTournament extends Tournament {
-
-    EliminationTournament(String name, Date startDate, Date endDate, double timeBetweenStages,
-            TOURNAMENT_TYPES tournamentType) {
-        super(name, startDate, endDate, timeBetweenStages, tournamentType);
-    }
-
-}
-
-enum TOURNAMENT_TYPES {
-    INDIVIDUAL, TEAM_BASED
 }

@@ -1,7 +1,9 @@
-package com.SWE.project;
+package com.SWE.project.Controllers;
 
+import java.util.HashMap;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,9 +12,14 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.SWE.project.Classes.Student;
+import com.SWE.project.Exceptions.StudentNotFoundException;
+import com.SWE.project.Repositories.StudentRepo;
+
 @RestController
 public class StudentController {
 
+    @Autowired
     private final StudentRepo repo;
 
     public StudentController(StudentRepo repo) {
@@ -36,9 +43,15 @@ public class StudentController {
 
     @PutMapping("/students/{id}")
     Student replaceStudent(@RequestBody Student newStudent, @PathVariable Long id) {
+        /*
+         * TODO:
+         * Properly change all properties of the object after completing the class
+         * structure.
+         */
+
         return repo.findById(id).map(student -> {
             student.setName(newStudent.getName());
-            student.setGpa(newStudent.getGpa());
+            // student.setGpa(newStudent.getGpa());
             return repo.save(student);
         }).orElseGet(() -> {
             newStudent.setId(id);
