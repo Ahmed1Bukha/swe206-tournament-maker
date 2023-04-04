@@ -11,7 +11,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Students")
-public class Student {
+public class Student implements Participent {
     @Column
     private @Id long id;
 

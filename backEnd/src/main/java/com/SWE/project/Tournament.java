@@ -1,12 +1,16 @@
 package com.SWE.project;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Objects;
 import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.criteria.CriteriaBuilder.Case;
 
 @Table(name = "Tournaments")
 public abstract class Tournament {
@@ -21,13 +25,11 @@ public abstract class Tournament {
     @Column
     private TOURNAMENT_TYPES tournamentType;
     @Column
-    private Set<Team> ParticipantingTeams;
+    protected Set<Participent> ParticipantingTeams;
     @Column
-    private Set<Student> ParticipantingStudents;
-
-    protected Tournament() {
-
-    }
+    protected Set<Participent> ParticipantingStudents;
+    private ArrayList<Match> tournamentMatches; 
+    protected Tournament() {}
 
     protected Tournament(String name, Date startDate, Date endDate, double timeBetweenStages,
             TOURNAMENT_TYPES tournamentType) {
@@ -77,6 +79,7 @@ public abstract class Tournament {
     public void setTournamentType(TOURNAMENT_TYPES tournamentType) {
         this.tournamentType = tournamentType;
     }
+    
 
     @Override
     public boolean equals(Object o) {
@@ -109,10 +112,19 @@ public abstract class Tournament {
 }
 
 class RoundRobinTournament extends Tournament {
-
+    HashMap<Participent,Integer> teamPoints;
     RoundRobinTournament(String name, Date startDate, Date endDate, double timeBetweenStages,
             TOURNAMENT_TYPES tournamentType) {
         super(name, startDate, endDate, timeBetweenStages, tournamentType);
+        switch(getTournamentType()){
+            case INDIVIDUAL: createPointMap(ParticipantingStudents);    
+            case TEAM_BASED: createPointMap(ParticipantingTeams);
+        }
+    }
+    private void createPointMap(Set<Participent> participents){
+        for(Participent i: participents){
+            teamPoints.put(i, 0);
+        }
     }
 
 }
@@ -122,6 +134,7 @@ class EliminationTournament extends Tournament {
     EliminationTournament(String name, Date startDate, Date endDate, double timeBetweenStages,
             TOURNAMENT_TYPES tournamentType) {
         super(name, startDate, endDate, timeBetweenStages, tournamentType);
+        
     }
 
 }

@@ -6,7 +6,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Table;
 
 @Table(name = "Teams")
-public class Team {
+public class Team implements Participent{
     @Column
     private String name;
     @Column
