@@ -28,7 +28,7 @@ public abstract class Tournament {
     protected Set<Participent> ParticipantingTeams;
     @Column
     protected Set<Participent> ParticipantingStudents;
-    private ArrayList<Match> tournamentMatches; 
+    protected ArrayList<Match> tournamentMatches; 
     protected Tournament() {}
 
     protected Tournament(String name, Date startDate, Date endDate, double timeBetweenStages,
@@ -79,6 +79,7 @@ public abstract class Tournament {
     public void setTournamentType(TOURNAMENT_TYPES tournamentType) {
         this.tournamentType = tournamentType;
     }
+    abstract void generateMatches();
     
 
     @Override
@@ -126,6 +127,17 @@ class RoundRobinTournament extends Tournament {
             teamPoints.put(i, 0);
         }
     }
+    public void generateMatches(){
+        Object[] array= teamPoints.keySet().toArray();
+        for (int i = 0; i < array.length -1; i++) {
+           for(int j=i+1;j<array.length;j++){
+            switch(getTournamentType()){
+                case INDIVIDUAL->  tournamentMatches.add(new Match((Student) array[i], (Student) array[j]) );   
+                case TEAM_BASED-> tournamentMatches.add(new Match((Team) array[i], (Team) array[j]) );
+            }
+           }
+        }
+    }
 
 }
 
@@ -136,7 +148,10 @@ class EliminationTournament extends Tournament {
         super(name, startDate, endDate, timeBetweenStages, tournamentType);
         
     }
-
+    //TODO: finish generate matches
+    public void generateMatches(){
+        
+    }
 }
 
 enum TOURNAMENT_TYPES {
