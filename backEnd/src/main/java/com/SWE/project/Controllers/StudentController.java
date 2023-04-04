@@ -1,6 +1,5 @@
 package com.SWE.project.Controllers;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +32,7 @@ public class StudentController {
 
     @PostMapping("/students")
     Student newStudent(@RequestBody Student newStudent) {
+        System.out.println(newStudent);
         return repo.save(newStudent);
     }
 

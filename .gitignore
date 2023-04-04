@@ -1,1 +1,8 @@
 backEnd/target/classes/com/SWE/project/*
+frontEnd/swe206/windows/flutter/generated_plugins.cmake
+frontEnd/swe206/windows/flutter/generated_plugin_registrant.h
+frontEnd/swe206/windows/flutter/generated_plugin_registrant.cc
+frontEnd/swe206/macos/Flutter/GeneratedPluginRegistrant.swift
+frontEnd/swe206/linux/flutter/generated_plugins.cmake
+frontEnd/swe206/linux/flutter/generated_plugin_registrant.h
+frontEnd/swe206/linux/flutter/generated_plugin_registrant.cc

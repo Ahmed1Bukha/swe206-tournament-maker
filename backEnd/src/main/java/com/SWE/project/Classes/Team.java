@@ -24,14 +24,14 @@ public class Team {
     private String name;
 
     @ManyToMany
-    @JoinTable(name = "Team_Members", joinColumns = @JoinColumn(name = "team_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
+    @JoinTable(name = "team_members", joinColumns = @JoinColumn(name = "team_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
     private Set<Student> team_members;
 
     @Column
     private GAME_TYPE gameType;
 
     @ManyToOne
-    @JoinColumn()
+    @JoinColumn(name = "tournament_name")
     private Tournament tournament;
 
     public Team(int team_id, String team_name, Set<Student> team_members, GAME_TYPE gameType, Tournament tournament) {

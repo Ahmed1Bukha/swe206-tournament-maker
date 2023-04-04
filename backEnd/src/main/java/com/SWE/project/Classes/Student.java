@@ -24,9 +24,19 @@ public class Student {
     @ManyToMany(mappedBy = "team_members")
     private Set<Team> Teams;
 
+    public Student() {
+    }
+
     public Student(long id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public Student(long id, String name, Set<Tournament> Tournaments, Set<Team> Teams) {
+        this.id = id;
+        this.name = name;
+        this.Tournaments = Tournaments;
+        this.Teams = Teams;
     }
 
     public long getId() {

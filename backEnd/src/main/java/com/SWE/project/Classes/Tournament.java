@@ -37,16 +37,19 @@ public abstract class Tournament {
     private Set<Team> ParticipantingTeams;
 
     @ManyToMany
-    @JoinTable(name = "Tournament_Students", joinColumns = @JoinColumn(name = "tournament_name"), inverseJoinColumns = @JoinColumn(name = "student_id"))
+    @JoinTable(name = "tournament_students", joinColumns = @JoinColumn(name = "tournament_name"), inverseJoinColumns = @JoinColumn(name = "student_id"))
     private Set<Student> ParticipantingStudents;
 
-    public Tournament(String name, Date startDate, Date endDate, double timeBetweenStages,
+    public Tournament(String name, long startDate, long endDate, double timeBetweenStages,
             TOURNAMENT_TYPES tournamentType) {
         this.name = name;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.startDate = new Date(System.currentTimeMillis() + startDate);
+        this.endDate = new Date(System.currentTimeMillis() + endDate);
         this.timeBetweenStages = timeBetweenStages;
         this.tournamentType = tournamentType;
+    }
+
+    public Tournament() {
     }
 
     public String getName() {

@@ -215,3 +215,9 @@ DROP TABLE team_members [42102-214]
 2023-04-03 02:37:18 jdbc[13]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TOURNAMENT_STUDENTS" not found; SQL statement:
 DROP TABLE tournament_students [42102-214]
+2023-04-03 21:25:10 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM STUDENTS TEAMS [*]TEAM_MEMBERS"; SQL statement:
+SELECT * FROM STUDENTS TEAMS TEAM_MEMBERS [42000-214]
+2023-04-03 21:35:03 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM TEAMS TOURNAMENT_STUDENTS [*]TOURNAMENTS"; SQL statement:
+SELECT * FROM TEAMS TOURNAMENT_STUDENTS TOURNAMENTS [42000-214]
