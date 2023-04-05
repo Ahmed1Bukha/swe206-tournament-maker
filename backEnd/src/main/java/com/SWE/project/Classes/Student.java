@@ -3,8 +3,6 @@ package com.SWE.project.Classes;
 import java.util.Objects;
 import java.util.Set;
 
-import com.SWE.project.Classes.Tournament.RoundRobinTournament;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
