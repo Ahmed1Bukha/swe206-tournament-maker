@@ -118,8 +118,8 @@ class RoundRobinTournament extends Tournament {
             TOURNAMENT_TYPES tournamentType) {
         super(name, startDate, endDate, timeBetweenStages, tournamentType);
         switch(getTournamentType()){
-            case INDIVIDUAL: createPointMap(ParticipantingStudents);    
-            case TEAM_BASED: createPointMap(ParticipantingTeams);
+            case INDIVIDUAL-> createPointMap(ParticipantingStudents);    
+            case TEAM_BASED-> createPointMap(ParticipantingTeams);
         }
     }
     private void createPointMap(Set<Participent> participents){
