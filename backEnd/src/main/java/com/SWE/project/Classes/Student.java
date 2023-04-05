@@ -3,40 +3,37 @@ package com.SWE.project.Classes;
 import java.util.Objects;
 import java.util.Set;
 
+import com.SWE.project.Classes.Tournament.RoundRobinTournament;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Students")
-public class Student {
-    @Column(name = "student_id")
+public class Student implements Participent {
+    @Column
     private @Id long id;
 
-    @Column(name = "student_name")
+    @Column
     private String name;
 
-    @ManyToMany(mappedBy = "ParticipantingStudents")
+    @Column
+    private double gpa;
+
+    @OneToMany
     private Set<Tournament> Tournaments;
 
-    @ManyToMany(mappedBy = "team_members")
-    private Set<Team> Teams;
-
     public Student() {
+
     }
 
-    public Student(long id, String name) {
+    public Student(long id, String name, double gpa) {
         this.id = id;
         this.name = name;
-    }
-
-    public Student(long id, String name, Set<Tournament> Tournaments, Set<Team> Teams) {
-        this.id = id;
-        this.name = name;
-        this.Tournaments = Tournaments;
-        this.Teams = Teams;
+        this.gpa = gpa;
     }
 
     public long getId() {
@@ -55,6 +52,14 @@ public class Student {
         this.name = name;
     }
 
+    public double getGpa() {
+        return this.gpa;
+    }
+
+    public void setGpa(double gpa) {
+        this.gpa = gpa;
+    }
+
     public Set<Tournament> getTournaments() {
         return this.Tournaments;
     }
@@ -71,13 +76,13 @@ public class Student {
             return false;
         }
         Student student = (Student) o;
-        return id == student.id && Objects.equals(name, student.name)
+        return id == student.id && Objects.equals(name, student.name) && gpa == student.gpa
                 && Objects.equals(Tournaments, student.Tournaments);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, Tournaments);
+        return Objects.hash(id, name, gpa, Tournaments);
     }
 
     @Override
@@ -85,6 +90,7 @@ public class Student {
         return "{" +
                 " id='" + getId() + "'" +
                 ", name='" + getName() + "'" +
+                ", gpa='" + getGpa() + "'" +
                 ", Tournaments='" + getTournaments() + "'" +
                 "}";
     }

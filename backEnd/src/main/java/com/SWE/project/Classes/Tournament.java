@@ -1,6 +1,8 @@
 package com.SWE.project.Classes;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.Set;
 
@@ -40,16 +42,18 @@ public abstract class Tournament {
     @JoinTable(name = "tournament_students", joinColumns = @JoinColumn(name = "tournament_name"), inverseJoinColumns = @JoinColumn(name = "student_id"))
     private Set<Student> ParticipantingStudents;
 
-    public Tournament(String name, long startDate, long endDate, double timeBetweenStages,
+    private ArrayList<Match> tournamentMatches;
+
+    protected Tournament() {
+    }
+
+    protected Tournament(String name, long startDate, long endDate, double timeBetweenStages,
             TOURNAMENT_TYPES tournamentType) {
         this.name = name;
         this.startDate = new Date(System.currentTimeMillis() + startDate);
         this.endDate = new Date(System.currentTimeMillis() + endDate);
         this.timeBetweenStages = timeBetweenStages;
         this.tournamentType = tournamentType;
-    }
-
-    public Tournament() {
     }
 
     public String getName() {
@@ -143,4 +147,35 @@ public abstract class Tournament {
                 "}";
     }
 
+    public class RoundRobinTournament extends Tournament {
+        HashMap<Participent, Integer> teamPoints;
+
+        RoundRobinTournament(String name, long startDate, long endDate, double timeBetweenStages,
+                TOURNAMENT_TYPES tournamentType) {
+            super(name, startDate, endDate, timeBetweenStages, tournamentType);
+            switch (getTournamentType()) {
+                case INDIVIDUAL:
+                    createPointMap(ParticipantingStudents);
+                case TEAM_BASED:
+                    createPointMap(ParticipantingTeams);
+            }
+        }
+
+        private void createPointMap(Set<? extends Participent> participents) {
+            for (Participent i : participents) {
+                teamPoints.put(i, 0);
+            }
+        }
+
+    }
+
+    public class EliminationTournament extends Tournament {
+
+        EliminationTournament(String name, long startDate, long endDate, double timeBetweenStages,
+                TOURNAMENT_TYPES tournamentType) {
+            super(name, startDate, endDate, timeBetweenStages, tournamentType);
+
+        }
+
+    }
 }

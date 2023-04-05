@@ -16,7 +16,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Teams")
-public class Team {
+public class Team implements Participent {
     @Column(name = "team_id")
     private @Id @GeneratedValue int id;
 

@@ -1,12 +1,14 @@
-package com.SWE.project.Classes;
+// package com.SWE.project.Classes;
 
-import com.SWE.project.Enums.TOURNAMENT_TYPES;
+// import com.SWE.project.Enums.TOURNAMENT_TYPES;
 
-public class EliminationTournament extends Tournament {
+// public class EliminationTournament extends Tournament {
 
-    EliminationTournament(String tournament_name, long startDate, long endDate, double timeBetweenStages,
-            TOURNAMENT_TYPES tournamentType) {
-        super(tournament_name, startDate, endDate, timeBetweenStages, tournamentType);
-    }
+// EliminationTournament(String tournament_name, long startDate, long endDate,
+// double timeBetweenStages,
+// TOURNAMENT_TYPES tournamentType) {
+// super(tournament_name, startDate, endDate, timeBetweenStages,
+// tournamentType);
+// }
 
-}
+// }
