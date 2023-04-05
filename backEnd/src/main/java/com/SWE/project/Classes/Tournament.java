@@ -6,52 +6,36 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.Set;
 
-import com.SWE.project.Enums.TOURNAMENT_TYPES;
-
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
-@Entity
 @Table(name = "Tournaments")
 public abstract class Tournament {
-    @Column(name = "tournament_name")
+    @Column
     private @Id String name;
-
     @Column
     private Date startDate;
-
     @Column
     private Date endDate;
-
     @Column
     private double timeBetweenStages;
-
     @Column
     private TOURNAMENT_TYPES tournamentType;
-
-    @OneToMany(mappedBy = "tournament")
-    private Set<Team> ParticipantingTeams;
-
-    @ManyToMany
-    @JoinTable(name = "tournament_students", joinColumns = @JoinColumn(name = "tournament_name"), inverseJoinColumns = @JoinColumn(name = "student_id"))
-    private Set<Student> ParticipantingStudents;
-
-    private ArrayList<Match> tournamentMatches;
+    @Column
+    protected Set<Participent> ParticipantingTeams;
+    @Column
+    protected Set<Participent> ParticipantingStudents;
+    protected ArrayList<Match> tournamentMatches;
 
     protected Tournament() {
     }
 
-    protected Tournament(String name, long startDate, long endDate, double timeBetweenStages,
+    protected Tournament(String name, Date startDate, Date endDate, double timeBetweenStages,
             TOURNAMENT_TYPES tournamentType) {
         this.name = name;
-        this.startDate = new Date(System.currentTimeMillis() + startDate);
-        this.endDate = new Date(System.currentTimeMillis() + endDate);
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.timeBetweenStages = timeBetweenStages;
         this.tournamentType = tournamentType;
     }
@@ -96,21 +80,7 @@ public abstract class Tournament {
         this.tournamentType = tournamentType;
     }
 
-    public Set<Team> getParticipantingTeams() {
-        return this.ParticipantingTeams;
-    }
-
-    public void setParticipantingTeams(Set<Team> ParticipantingTeams) {
-        this.ParticipantingTeams = ParticipantingTeams;
-    }
-
-    public Set<Student> getParticipantingStudents() {
-        return this.ParticipantingStudents;
-    }
-
-    public void setParticipantingStudents(Set<Student> ParticipantingStudents) {
-        this.ParticipantingStudents = ParticipantingStudents;
-    }
+    abstract void generateMatches();
 
     @Override
     public boolean equals(Object o) {
@@ -120,62 +90,74 @@ public abstract class Tournament {
             return false;
         }
         Tournament tournament = (Tournament) o;
-        return Objects.equals(name, tournament.name)
-                && Objects.equals(startDate, tournament.startDate) && Objects.equals(endDate, tournament.endDate)
-                && timeBetweenStages == tournament.timeBetweenStages
-                && Objects.equals(tournamentType, tournament.tournamentType)
-                && Objects.equals(ParticipantingTeams, tournament.ParticipantingTeams)
-                && Objects.equals(ParticipantingStudents, tournament.ParticipantingStudents);
+        return Objects.equals(name, tournament.name) && Objects.equals(startDate, tournament.startDate)
+                && Objects.equals(endDate, tournament.endDate) && timeBetweenStages == tournament.timeBetweenStages
+                && Objects.equals(tournamentType, tournament.tournamentType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, startDate, endDate, timeBetweenStages, tournamentType, ParticipantingTeams,
-                ParticipantingStudents);
+        return Objects.hash(name, startDate, endDate, timeBetweenStages, tournamentType);
     }
 
     @Override
     public String toString() {
         return "{" +
-                " tournament_name='" + getName() + "'" +
+                " name='" + getName() + "'" +
                 ", startDate='" + getStartDate() + "'" +
                 ", endDate='" + getEndDate() + "'" +
                 ", timeBetweenStages='" + getTimeBetweenStages() + "'" +
                 ", tournamentType='" + getTournamentType() + "'" +
-                ", ParticipantingTeams='" + getParticipantingTeams() + "'" +
-                ", ParticipantingStudents='" + getParticipantingStudents() + "'" +
                 "}";
     }
+}
 
-    public class RoundRobinTournament extends Tournament {
-        HashMap<Participent, Integer> teamPoints;
+class RoundRobinTournament extends Tournament {
+    HashMap<Participent, Integer> teamPoints;
 
-        RoundRobinTournament(String name, long startDate, long endDate, double timeBetweenStages,
-                TOURNAMENT_TYPES tournamentType) {
-            super(name, startDate, endDate, timeBetweenStages, tournamentType);
-            switch (getTournamentType()) {
-                case INDIVIDUAL:
-                    createPointMap(ParticipantingStudents);
-                case TEAM_BASED:
-                    createPointMap(ParticipantingTeams);
+    RoundRobinTournament(String name, Date startDate, Date endDate, double timeBetweenStages,
+            TOURNAMENT_TYPES tournamentType) {
+        super(name, startDate, endDate, timeBetweenStages, tournamentType);
+        switch (getTournamentType()) {
+            case INDIVIDUAL -> createPointMap(ParticipantingStudents);
+            case TEAM_BASED -> createPointMap(ParticipantingTeams);
+        }
+    }
+
+    private void createPointMap(Set<Participent> participents) {
+        for (Participent i : participents) {
+            teamPoints.put(i, 0);
+        }
+    }
+
+    public void generateMatches() {
+        Object[] array = teamPoints.keySet().toArray();
+        for (int i = 0; i < array.length - 1; i++) {
+            for (int j = i + 1; j < array.length; j++) {
+                switch (getTournamentType()) {
+                    case INDIVIDUAL -> tournamentMatches.add(new Match((Student) array[i], (Student) array[j]));
+                    case TEAM_BASED -> tournamentMatches.add(new Match((Team) array[i], (Team) array[j]));
+                }
             }
         }
+    }
 
-        private void createPointMap(Set<? extends Participent> participents) {
-            for (Participent i : participents) {
-                teamPoints.put(i, 0);
-            }
-        }
+}
+
+class EliminationTournament extends Tournament {
+
+    EliminationTournament(String name, Date startDate, Date endDate, double timeBetweenStages,
+            TOURNAMENT_TYPES tournamentType) {
+        super(name, startDate, endDate, timeBetweenStages, tournamentType);
 
     }
 
-    public class EliminationTournament extends Tournament {
-
-        EliminationTournament(String name, long startDate, long endDate, double timeBetweenStages,
-                TOURNAMENT_TYPES tournamentType) {
-            super(name, startDate, endDate, timeBetweenStages, tournamentType);
-
-        }
+    // TODO: finish generate matches
+    public void generateMatches() {
 
     }
+}
+
+enum TOURNAMENT_TYPES {
+    INDIVIDUAL, TEAM_BASED
 }
