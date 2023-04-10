@@ -12,6 +12,10 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "Students")
 public class Student implements Participent {
+    int goalsMade=0; 
+    int goalsRecieved=0;
+    int wins=0;
+    int points=0;
     @Column
     private @Id long id;
 
@@ -82,7 +86,25 @@ public class Student implements Participent {
     public int hashCode() {
         return Objects.hash(id, name, gpa, Tournaments);
     }
-
+    @Override
+    public void win(int goalsMade, int goalsRecieved) {
+        points+=3;
+        this.goalsMade+=goalsMade;
+        this.goalsRecieved+= goalsRecieved;
+        wins++;
+    }
+    @Override
+    public void lost(int goalsMade, int goalsRecieved) {
+        this.goalsMade+=goalsMade;
+        this.goalsRecieved+= goalsRecieved;
+    }
+    @Override
+    public void draw(int GoalsMade, int goalsRecieved) {
+        this.goalsMade+=goalsMade;
+        this.goalsRecieved+= goalsRecieved;
+        points+=1;
+        
+    }
     @Override
     public String toString() {
         return "{" +

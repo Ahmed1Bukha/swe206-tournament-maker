@@ -3,6 +3,7 @@ package com.SWE.project.Classes;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Set;
 
@@ -23,9 +24,9 @@ public abstract class Tournament {
     @Column
     private TOURNAMENT_TYPES tournamentType;
     @Column
-    protected Set<Participent> ParticipantingTeams;
-    @Column
-    protected Set<Participent> ParticipantingStudents;
+    protected Set<Participent> participents;
+    protected boolean open=true;
+    
     protected ArrayList<Match> tournamentMatches;
 
     protected Tournament() {
@@ -79,7 +80,10 @@ public abstract class Tournament {
     public void setTournamentType(TOURNAMENT_TYPES tournamentType) {
         this.tournamentType = tournamentType;
     }
-
+    protected void stopRegistration(){
+        open=false;
+    }
+    abstract void start();
     abstract void generateMatches();
 
     @Override
@@ -113,25 +117,25 @@ public abstract class Tournament {
 }
 
 class RoundRobinTournament extends Tournament {
-    HashMap<Participent, Integer> teamPoints;
+    HashMap<Participent, Integer> participentPoints;
 
     RoundRobinTournament(String name, Date startDate, Date endDate, double timeBetweenStages,
             TOURNAMENT_TYPES tournamentType) {
         super(name, startDate, endDate, timeBetweenStages, tournamentType);
-        switch (getTournamentType()) {
-            case INDIVIDUAL -> createPointMap(ParticipantingStudents);
-            case TEAM_BASED -> createPointMap(ParticipantingTeams);
-        }
+        
     }
-
+    void start() {
+        if(open) stopRegistration();
+        createPointMap(participents);
+    }
     private void createPointMap(Set<Participent> participents) {
         for (Participent i : participents) {
-            teamPoints.put(i, 0);
+            participentPoints.put(i, 0);
         }
     }
 
     public void generateMatches() {
-        Object[] array = teamPoints.keySet().toArray();
+        Object[] array = participentPoints.keySet().toArray();
         for (int i = 0; i < array.length - 1; i++) {
             for (int j = i + 1; j < array.length; j++) {
                 switch (getTournamentType()) {
@@ -142,6 +146,7 @@ class RoundRobinTournament extends Tournament {
         }
     }
 
+
 }
 
 class EliminationTournament extends Tournament {
@@ -151,7 +156,11 @@ class EliminationTournament extends Tournament {
         super(name, startDate, endDate, timeBetweenStages, tournamentType);
 
     }
-
+   
+    @Override
+    void start() {
+        //TODO: do start
+    }
     // TODO: finish generate matches
     public void generateMatches() {
 

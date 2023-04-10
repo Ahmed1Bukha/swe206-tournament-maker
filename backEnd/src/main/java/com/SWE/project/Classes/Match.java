@@ -38,8 +38,15 @@ public class Match {
             return participentA;
         return participentB;
     }
+    @Override
+    public boolean equals(Object obj) {
+        // TODO Auto-generated method stub
+        if(obj instanceof Match){
+            Match other= (Match) obj;
+            if(participentA==obj.participentA && obj.part)
+        }
+        return false;
+    }
 }
 
-interface Participent {
 
-}
