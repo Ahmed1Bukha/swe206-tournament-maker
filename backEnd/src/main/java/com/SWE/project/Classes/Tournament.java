@@ -3,9 +3,11 @@ package com.SWE.project.Classes;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeSet;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
@@ -25,9 +27,11 @@ public abstract class Tournament {
     private TOURNAMENT_TYPES tournamentType;
     @Column
     protected Set<Participent> participents;
-    protected boolean open=true;
     
-    protected ArrayList<Match> tournamentMatches;
+    protected Match currentMatch;
+    protected boolean open=true;
+    protected boolean finished=false;
+    protected ArrayList<Match> tournamentMatches= new ArrayList<>();
 
     protected Tournament() {
     }
@@ -39,6 +43,7 @@ public abstract class Tournament {
         this.endDate = endDate;
         this.timeBetweenStages = timeBetweenStages;
         this.tournamentType = tournamentType;
+        participents = new HashSet<>();
     }
 
     public String getName() {
@@ -84,7 +89,10 @@ public abstract class Tournament {
         open=false;
     }
     abstract void start();
+    
     abstract void generateMatches();
+
+    abstract void enterResults(int firstScore,int secondScore);
 
     @Override
     public boolean equals(Object o) {
@@ -114,11 +122,26 @@ public abstract class Tournament {
                 ", tournamentType='" + getTournamentType() + "'" +
                 "}";
     }
+    
+    public void addParticipent(Participent x){
+        if(!open) throw new IllegalArgumentException("Registiration finished");
+        switch(tournamentType){
+            case INDIVIDUAL->{
+                    if(x instanceof Team) throw new IllegalArgumentException("This is an Indivisuls tournament");
+                    participents.add(x);
+                    
+            }
+            case TEAM_BASED->{
+                if(x instanceof Student) throw new IllegalArgumentException("This is a Team's tournament");
+                    participents.add(x);
+        }
+
+    }
 }
-
+}
 class RoundRobinTournament extends Tournament {
-    HashMap<Participent, Integer> participentPoints;
-
+    
+    
     RoundRobinTournament(String name, Date startDate, Date endDate, double timeBetweenStages,
             TOURNAMENT_TYPES tournamentType) {
         super(name, startDate, endDate, timeBetweenStages, tournamentType);
@@ -126,27 +149,96 @@ class RoundRobinTournament extends Tournament {
     }
     void start() {
         if(open) stopRegistration();
-        createPointMap(participents);
+        currentMatch= tournamentMatches.get(0);
     }
-    private void createPointMap(Set<Participent> participents) {
-        for (Participent i : participents) {
-            participentPoints.put(i, 0);
-        }
-    }
+    
 
-    public void generateMatches() {
-        Object[] array = participentPoints.keySet().toArray();
-        for (int i = 0; i < array.length - 1; i++) {
-            for (int j = i + 1; j < array.length; j++) {
-                switch (getTournamentType()) {
-                    case INDIVIDUAL -> tournamentMatches.add(new Match((Student) array[i], (Student) array[j]));
-                    case TEAM_BASED -> tournamentMatches.add(new Match((Team) array[i], (Team) array[j]));
+    // public void generateMatches() {
+    //     Object[] array = participents.toArray();
+    //     for (int i = 0; i < array.length - 1; i++) {
+    //         for (int j = i + 1; j < array.length; j++) {
+    //             switch (getTournamentType()) {
+    //                 case INDIVIDUAL -> tournamentMatches.add(new Match((Student) array[i], (Student) array[j]));
+    //                 case TEAM_BASED -> tournamentMatches.add(new Match((Team) array[i], (Team) array[j]));
+    //             }
+    //         }
+    //     }
+    // }
+    @Override
+    void generateMatches() {
+        Object[] array;
+        if(!(participents.size() %2==0)){
+            array= new Object[participents.size()+1];
+            array[array.length-1]= null;
+        }
+        else{
+            array= new Object[participents.size()];
+        }
+        Object[] temp= participents.toArray();
+       for(int i=0;i<temp.length;i++){
+        array[i]= temp[i];
+       }
+       int numberOfRounds= array.length-1;
+       int numberOfMatchesPerRound=array.length/2;
+       for(int i=0;i<numberOfRounds;i++){
+        for(int j=0;j<numberOfMatchesPerRound;j++){
+            switch (getTournamentType()) {
+                case INDIVIDUAL -> {
+                    Participent a = (Student) array[(i+j)%array.length];
+                    Participent b = (Student) array[(i+array.length-j-1)%array.length];
+                    if(a==null) tournamentMatches.add(new Match(b));
+                    else if(b==null) tournamentMatches.add(new Match(a));
+                    else tournamentMatches.add(new Match(a, b));
+                }
+                case TEAM_BASED -> {
+                    Participent a = (Team) array[(i+j)%array.length];
+                    Participent b = (Team) array[(i+array.length-j-1)%array.length];
+                    if(a==null) tournamentMatches.add(new Match(b));
+                    else if(b==null) tournamentMatches.add(new Match(a));
+                    else tournamentMatches.add(new Match(a, b));
                 }
             }
         }
+       }
     }
 
 
+    public void displayMatches(){
+        for(Match i:tournamentMatches){
+            System.out.println(i);
+        }
+    }
+
+    @Override
+    void enterResults(int winnerScore, int loserScore) {
+        
+        currentMatch.enterResults(winnerScore, loserScore);
+        int index=tournamentMatches.indexOf(currentMatch);
+        currentMatch.getWinner().win(winnerScore, loserScore);
+        
+        currentMatch.getLoser().lost(loserScore, winnerScore);
+        if(!(index==tournamentMatches.size()-1)) currentMatch = tournamentMatches.get(index+1);
+        else finished=true;
+        if(currentMatch.dummyMatch){
+            if(!(index+1==tournamentMatches.size()-1)) currentMatch = tournamentMatches.get(index+2);
+            else finished=true;
+        }
+    }
+    public void printPoints(){
+        for(Participent i: participents){
+           
+            switch(getTournamentType()){
+                case INDIVIDUAL->{
+                        Student temp= (Student) i;
+                        System.out.println(temp.getName()+" "+temp.points);
+                }
+                case TEAM_BASED->{
+                    Team temp= (Team) i;
+                    System.out.println(temp.getName()+" "+temp.points);
+            }
+            }
+        }
+    }
 }
 
 class EliminationTournament extends Tournament {
@@ -164,6 +256,11 @@ class EliminationTournament extends Tournament {
     // TODO: finish generate matches
     public void generateMatches() {
 
+    }
+    @Override
+    void enterResults(int firstScore, int secondScore) {
+        // TODO Auto-generated method stub
+        
     }
 }
 
