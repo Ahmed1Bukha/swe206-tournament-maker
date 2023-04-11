@@ -166,40 +166,53 @@ class RoundRobinTournament extends Tournament {
     // }
     @Override
     void generateMatches() {
-        Object[] array;
+        ArrayList<Participent> array= new ArrayList<>(participents);
         if(!(participents.size() %2==0)){
-            array= new Object[participents.size()+1];
-            array[array.length-1]= null;
+            array.add(null);
+        }
+        int numberOfRounds= array.size()-1;
+        int numberOfMatchesPerRound=array.size()/2;
+        Participent firstTeam=array.get(0);
+        array.remove(0);
+
+       for(int i=0;i<numberOfRounds;i++){
+            int specialIndex= i%array.size();
+            Participent b = (Student) array.get((specialIndex));
+
+            if(b==null) tournamentMatches.add(new Match(firstTeam));
+            else tournamentMatches.add(new Match(firstTeam, b));
+
+        for(int j=1;j<numberOfMatchesPerRound;j++){
+            Participent a =  array.get((i+j)%array.size());
+            b =  array.get((i+array.size()-j)%array.size());
+
+            if(a==null) tournamentMatches.add(new Match(b));
+            else if(b==null) tournamentMatches.add(new Match(a));
+            else tournamentMatches.add(new Match(a, b));
+            
+        }
+       }
+    }
+
+    public ArrayList<ArrayList<Match>> getRounds() {
+        ArrayList<ArrayList<Match>> temp = new ArrayList<>();
+        int numberOfRounds,numberOfMatchesPerRound;
+        if(!(participents.size() %2==0)){
+            numberOfRounds= participents.size();
+            numberOfMatchesPerRound=participents.size()/2+1;
         }
         else{
-            array= new Object[participents.size()];
+            numberOfRounds= participents.size()-1;
+            numberOfMatchesPerRound=participents.size()/2;
+
         }
-        Object[] temp= participents.toArray();
-       for(int i=0;i<temp.length;i++){
-        array[i]= temp[i];
-       }
-       int numberOfRounds= array.length-1;
-       int numberOfMatchesPerRound=array.length/2;
-       for(int i=0;i<numberOfRounds;i++){
-        for(int j=0;j<numberOfMatchesPerRound;j++){
-            switch (getTournamentType()) {
-                case INDIVIDUAL -> {
-                    Participent a = (Student) array[(i+j)%array.length];
-                    Participent b = (Student) array[(i+array.length-j-1)%array.length];
-                    if(a==null) tournamentMatches.add(new Match(b));
-                    else if(b==null) tournamentMatches.add(new Match(a));
-                    else tournamentMatches.add(new Match(a, b));
-                }
-                case TEAM_BASED -> {
-                    Participent a = (Team) array[(i+j)%array.length];
-                    Participent b = (Team) array[(i+array.length-j-1)%array.length];
-                    if(a==null) tournamentMatches.add(new Match(b));
-                    else if(b==null) tournamentMatches.add(new Match(a));
-                    else tournamentMatches.add(new Match(a, b));
-                }
+        for (int i = 0; i < numberOfRounds; i++) {
+            temp.add(new ArrayList<Match>());
+            for (int j = 0; j < numberOfMatchesPerRound; j++) {
+                temp.get(i).add(tournamentMatches.get(j));
             }
         }
-       }
+        return temp;
     }
 
 
