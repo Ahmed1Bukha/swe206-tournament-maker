@@ -13,7 +13,12 @@ public class test {
         robinTournament.addParticipent(d);
         robinTournament.stopRegistration();
         robinTournament.generateMatches();
- 
-        System.out.println(robinTournament.getRounds());
+        robinTournament.start();
+        while(!robinTournament.finished){
+            robinTournament.enterResults(1, 0);
+        }
+        robinTournament.printPoints();
+
+        System.out.println(robinTournament.getWinner());
     }
 }

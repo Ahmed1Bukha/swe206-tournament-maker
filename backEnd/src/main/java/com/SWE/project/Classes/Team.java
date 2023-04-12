@@ -104,4 +104,8 @@ public class Team implements Participent {
         points+=1;
         
     }
+    @Override
+    public int getPoints() {
+        return points;
+    }
 }

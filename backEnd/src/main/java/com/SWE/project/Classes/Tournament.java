@@ -1,6 +1,7 @@
 package com.SWE.project.Classes;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -140,7 +141,7 @@ public abstract class Tournament {
 }
 }
 class RoundRobinTournament extends Tournament {
-    
+    //TODO incorprate error validation for finished
     
     RoundRobinTournament(String name, Date startDate, Date endDate, double timeBetweenStages,
             TOURNAMENT_TYPES tournamentType) {
@@ -251,6 +252,27 @@ class RoundRobinTournament extends Tournament {
             }
             }
         }
+    }
+    public Participent getWinner(){
+        Comparator poinComparator= new Comparator<Participent>() {
+            public int compare(Participent a,Participent b) {
+                return a.getPoints()-b.getPoints();
+            }
+
+        };
+        ArrayList<Participent> array= new ArrayList<>(participents);
+        array.sort(poinComparator);
+        return array.get(array.size()-1);
+    }
+    public  ArrayList<Participent> getLeaderBoard(){
+        Comparator poinComparator= new Comparator<Participent>() {
+            public int compare(Participent a,Participent b) {
+                return a.getPoints()-b.getPoints();
+            }
+        };
+        ArrayList<Participent> array= new ArrayList<>(participents);
+        array.sort(poinComparator);
+        return array;
     }
 }
 
