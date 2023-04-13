@@ -114,5 +114,8 @@ public class Student implements Participent {
                 ", Tournaments='" + getTournaments() + "'" +
                 "}";
     }
-
+    @Override
+    public int getPoints() {
+        return points;
+    }
 }
