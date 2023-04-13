@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:swe206/authintication/auth.dart';
+import 'package:swe206/classes/tournamentsManager.dart';
 import 'package:swe206/home_student/home_page_student.dart';
 import 'package:swe206/home_student/search_page_student.dart';
 
 class MainPageStudent extends StatefulWidget {
-  MainPageStudent({super.key});
+  MainPageStudent(this.tournamentsManager, {super.key});
   static String id = "MainPageStudent";
+  TournamentsManager tournamentsManager;
   @override
   State<MainPageStudent> createState() => _MainPageStudentState();
   int _selectedIndex = 0;
 }
 
 class _MainPageStudentState extends State<MainPageStudent> {
-  static const List<Widget> _widgetOptions = <Widget>[
-    HomePageStudent(),
-    SearchPageStudent(),
-    Text("LogOut")
-  ];
   @override
   Widget build(BuildContext context) {
+    final List<Widget> _widgetOptions = <Widget>[
+      HomePageStudent(widget.tournamentsManager),
+      SearchPageStudent(widget.tournamentsManager),
+      const Text("LogOut")
+    ];
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: widget._selectedIndex,

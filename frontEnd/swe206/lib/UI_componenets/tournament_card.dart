@@ -15,7 +15,10 @@ class TournamentWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, TournamentPage.id);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => TournamentPage(this)),
+        );
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
