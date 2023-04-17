@@ -11,19 +11,16 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Students")
-public class Student implements Participent {
-    int goalsMade=0; 
-    int goalsRecieved=0;
-    int wins=0;
-    int points=0;
+public class Student implements Participant {
+    int goalsMade = 0;
+    int goalsRecieved = 0;
+    int wins = 0;
+    int points = 0;
     @Column
     private @Id long id;
 
     @Column
     private String name;
-
-    @Column
-    private double gpa;
 
     @OneToMany
     private Set<Tournament> Tournaments;
@@ -32,10 +29,9 @@ public class Student implements Participent {
 
     }
 
-    public Student(long id, String name, double gpa) {
+    public Student(long id, String name) {
         this.id = id;
         this.name = name;
-        this.gpa = gpa;
     }
 
     public long getId() {
@@ -54,14 +50,6 @@ public class Student implements Participent {
         this.name = name;
     }
 
-    public double getGpa() {
-        return this.gpa;
-    }
-
-    public void setGpa(double gpa) {
-        this.gpa = gpa;
-    }
-
     public Set<Tournament> getTournaments() {
         return this.Tournaments;
     }
@@ -78,42 +66,47 @@ public class Student implements Participent {
             return false;
         }
         Student student = (Student) o;
-        return id == student.id && Objects.equals(name, student.name) && gpa == student.gpa
+        return goalsMade == student.goalsMade && goalsRecieved == student.goalsRecieved && wins == student.wins
+                && points == student.points && id == student.id && Objects.equals(name, student.name)
                 && Objects.equals(Tournaments, student.Tournaments);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, gpa, Tournaments);
+        return Objects.hash(goalsMade, goalsRecieved, wins, points, id, name, Tournaments);
     }
+
     @Override
     public void win(int goalsMade, int goalsRecieved) {
-        points+=3;
-        this.goalsMade+=goalsMade;
-        this.goalsRecieved+= goalsRecieved;
+        points += 3;
+        this.goalsMade += goalsMade;
+        this.goalsRecieved += goalsRecieved;
         wins++;
     }
+
     @Override
     public void lost(int goalsMade, int goalsRecieved) {
-        this.goalsMade+=goalsMade;
-        this.goalsRecieved+= goalsRecieved;
+        this.goalsMade += goalsMade;
+        this.goalsRecieved += goalsRecieved;
     }
+
     @Override
     public void draw(int GoalsMade, int goalsRecieved) {
-        this.goalsMade+=goalsMade;
-        this.goalsRecieved+= goalsRecieved;
-        points+=1;
-        
+        this.goalsMade += goalsMade;
+        this.goalsRecieved += goalsRecieved;
+        points += 1;
+
     }
+
     @Override
     public String toString() {
         return "{" +
                 " id='" + getId() + "'" +
                 ", name='" + getName() + "'" +
-                ", gpa='" + getGpa() + "'" +
                 ", Tournaments='" + getTournaments() + "'" +
                 "}";
     }
+
     @Override
     public int getPoints() {
         return points;

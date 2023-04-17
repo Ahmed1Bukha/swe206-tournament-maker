@@ -9,14 +9,14 @@ import jakarta.persistence.Id;
 @Entity
 public class Match {
     private @Id @GeneratedValue long id;
-    protected Participent participentA;
-    protected Participent participentB;
+    protected Participant participentA;
+    protected Participant participentB;
     int scoreA, scoreB;
     Boolean finished;
     Boolean dummyMatch; // dummy matches are used when team number are odd
     private Date endDate;
 
-    Match(Participent participentA, Participent participentB) {
+    Match(Participant participentA, Participant participentB) {
 
         this.participentA = participentA;
         this.participentB = participentB;
@@ -24,7 +24,7 @@ public class Match {
         dummyMatch = false;
     }
 
-    Match(Participent participentA) {
+    Match(Participant participentA) {
         this.participentA = participentA;
         participentB = null;
         dummyMatch = true;
@@ -38,7 +38,7 @@ public class Match {
 
     }
 
-    public Participent getWinner() {
+    public Participant getWinner() {
         if (dummyMatch)
             return participentA;
         if (scoreA > scoreB)
@@ -46,7 +46,7 @@ public class Match {
         return participentB;
     }
 
-    public Participent getLoser() {
+    public Participant getLoser() {
         if (scoreA < scoreB)
             return participentA;
         return participentB;
@@ -77,20 +77,5 @@ public class Match {
                 || other.participentB == participentA || other.participentA == participentB)
             return true;
         return false;
-    }}
-
-    
-
-    
-
-    
-
-    
-
-
-
-    
-
-    
-
- 
+    }
+}
