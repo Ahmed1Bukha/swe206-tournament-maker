@@ -9,23 +9,24 @@ import jakarta.persistence.Id;
 @Entity
 public class Match {
     private @Id @GeneratedValue long id;
-    protected Participant participantA;
-    protected Participant participantB;
+    protected Participent participentA;
+    protected Participent participentB;
     int scoreA, scoreB;
     Boolean finished;
     Boolean dummyMatch; // dummy matches are used when team number are odd
     private Date endDate;
 
-    Match(Participant participentA, Participant participentB) {
-        this.participantA = participentA;
-        this.participantB = participentB;
+    Match(Participent participentA, Participent participentB) {
+
+        this.participentA = participentA;
+        this.participentB = participentB;
         finished = false;
         dummyMatch = false;
     }
 
-    Match(Participant participantA) {
-        this.participantA = participantA;
-        participantB = null;
+    Match(Participent participentA) {
+        this.participentA = participentA;
+        participentB = null;
         dummyMatch = true;
         finished = true;
     }
@@ -37,16 +38,18 @@ public class Match {
 
     }
 
-    public Participant getWinner() {
+    public Participent getWinner() {
+        if (dummyMatch)
+            return participentA;
         if (scoreA > scoreB)
-            return participantA;
-        return participantB;
+            return participentA;
+        return participentB;
     }
 
-    public Participant getLoser() {
+    public Participent getLoser() {
         if (scoreA < scoreB)
-            return participantA;
-        return participantB;
+            return participentA;
+        return participentB;
     }
 
     @Override
@@ -54,8 +57,8 @@ public class Match {
 
         if (obj instanceof Match) {
             Match other = (Match) obj;
-            if ((participantA == other.participantA && participantB == other.participantB)
-                    || (participantB == other.participantA && participantA == other.participantB))
+            if ((participentA == other.participentA && participentB == other.participentB)
+                    || (participentB == other.participentA && participentA == other.participentB))
                 return true;
             return false;
         }
@@ -65,14 +68,29 @@ public class Match {
     @Override
     public String toString() {
         if (dummyMatch)
-            return participantA.getName() + " Dummy";
-        return participantA.getName() + " " + participantB.getName();
+            return participentA.getName() + " Dummy";
+        return participentA.getName() + " " + participentB.getName();
     }
 
     public boolean contains(Match other) {
-        if (other.participantA == participantA || other.participantB == participantB
-                || other.participantB == participantA || other.participantA == participantB)
+        if (other.participentA == participentA || other.participentB == participentB
+                || other.participentB == participentA || other.participentA == participentB)
             return true;
         return false;
-    }
-}
+    }}
+
+    
+
+    
+
+    
+
+    
+
+
+
+    
+
+    
+
+ 
