@@ -162,7 +162,7 @@ public abstract class Tournament {
                 "}";
     }
 
-    public void addParticipent(Participant x) {
+    public void addParticipant(Participant x) {
         if (!open)
             throw new IllegalArgumentException("Registiration finished");
         switch (tournamentType) {

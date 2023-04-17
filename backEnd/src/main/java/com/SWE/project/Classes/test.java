@@ -1,5 +1,7 @@
 package com.SWE.project.Classes;
 
+import com.SWE.project.Enums.TOURNAMENT_TYPES;
+
 public class test {
     public static void main(String[] args) {
         RoundRobinTournament robinTournament = new RoundRobinTournament("Test", null, null, 100,
