@@ -1,7 +1,8 @@
 com\SWE\project\Classes\Tournament.class
-com\SWE\project\Classes\RoundRobinTournament.class
 com\SWE\project\Repositories\StudentRepo.class
+com\SWE\project\Classes\Participent.class
 com\SWE\project\Classes\Student.class
+com\SWE\project\Controllers\TeamController.class
 com\SWE\project\Enums\GAME_TYPE.class
 com\SWE\project\Exceptions\TournamentNotFoundAdvice.class
 com\SWE\project\Exceptions\StudentNotFoundAdvice.class
@@ -12,5 +13,9 @@ com\SWE\project\Controllers\StudentController.class
 com\SWE\project\Controllers\TournamentController.class
 com\SWE\project\Exceptions\TournamentNotFoundException.class
 com\SWE\project\Main.class
-com\SWE\project\Classes\EliminationTournament.class
+com\SWE\project\Classes\Tournament$EliminationTournament.class
+com\SWE\project\Classes\Match.class
+com\SWE\project\Repositories\TeamRepo.class
+com\SWE\project\Classes\Tournament$1.class
+com\SWE\project\Classes\Tournament$RoundRobinTournament.class
 com\SWE\project\Repositories\TournamentRepo.class

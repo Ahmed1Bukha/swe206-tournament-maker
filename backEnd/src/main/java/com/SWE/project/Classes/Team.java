@@ -16,7 +16,11 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Teams")
-public class Team {
+public class Team implements Participant {
+    int goalsMade = 0;
+    int goalsRecieved = 0;
+    int points = 0;
+    int wins = 0;
     @Column(name = "team_id")
     private @Id @GeneratedValue int id;
 
@@ -80,5 +84,32 @@ public class Team {
 
     public void setMembers(Set<Student> members) {
         this.team_members = members;
+    }
+
+    @Override
+    public void win(int goalsMade, int goalsRecieved) {
+        points += 3;
+        this.goalsMade += goalsMade;
+        this.goalsRecieved += goalsRecieved;
+        wins++;
+    }
+
+    @Override
+    public void lost(int goalsMade, int goalsRecieved) {
+        this.goalsMade += goalsMade;
+        this.goalsRecieved += goalsRecieved;
+    }
+
+    @Override
+    public void draw(int GoalsMade, int goalsRecieved) {
+        this.goalsMade += goalsMade;
+        this.goalsRecieved += goalsRecieved;
+        points += 1;
+
+    }
+
+    @Override
+    public int getPoints() {
+        return points;
     }
 }

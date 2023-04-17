@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:swe206/UI_componenets/tournament_card.dart';
+import 'package:swe206/classes/tournamentsManager.dart';
 
 class HomePageStudent extends StatefulWidget {
-  const HomePageStudent({super.key});
+  const HomePageStudent(this.tournamentsManager, {super.key});
   static String id = "HomePageStudent";
-
+  final TournamentsManager tournamentsManager;
   @override
   State<HomePageStudent> createState() => _HomePageStudentState();
 }
@@ -13,62 +14,6 @@ class _HomePageStudentState extends State<HomePageStudent> {
   int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
-    List<TournamentWidget> myTournaments() => const [
-          TournamentWidget(
-            "3rd Football lmfao",
-            "Football",
-            "Elemniation",
-            "Open for register",
-          ),
-          TournamentWidget(
-            "Gold gg",
-            "Football",
-            "Robin table",
-            "On going",
-          ),
-          TournamentWidget(
-            "3rd Football lmfao",
-            "Football",
-            "Elemniation",
-            "Open for register",
-          ),
-          TournamentWidget(
-            "3rd Football lmfao",
-            "Football",
-            "Elemniation",
-            "Open for register",
-          ),
-          TournamentWidget(
-            "Gold gg",
-            "Football",
-            "Robin table",
-            "On going",
-          ),
-          TournamentWidget(
-            "3rd Football lmfao",
-            "Football",
-            "Elemniation",
-            "Open for register",
-          ),
-          TournamentWidget(
-            "3rd Football lmfao",
-            "Football",
-            "Elemniation",
-            "Open for register",
-          ),
-          TournamentWidget(
-            "Gold gg",
-            "Football",
-            "Robin table",
-            "On going",
-          ),
-          TournamentWidget(
-            "3rd Football lmfao",
-            "Football",
-            "Elemniation",
-            "Open for register",
-          )
-        ];
     return Scaffold(
       appBar: AppBar(title: const Text("Student Home Page")),
       body: Padding(
@@ -82,7 +27,7 @@ class _HomePageStudentState extends State<HomePageStudent> {
                 "Current Tournaments: ",
                 style: TextStyle(fontSize: 20),
               ),
-              ...myTournaments(),
+              ...widget.tournamentsManager.getTournaments(),
             ],
           ),
         ),
