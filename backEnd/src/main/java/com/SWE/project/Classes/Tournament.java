@@ -2,12 +2,15 @@ package com.SWE.project.Classes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+
+import com.SWE.project.Enums.TOURNAMENT_TYPES;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,12 +35,29 @@ public abstract class Tournament {
     @Column
     private TOURNAMENT_TYPES tournamentType;
     @OneToMany(mappedBy = "tournament")
-    private Set<Team> ParticipantingTeams;
+    private Set<Participant> ParticipantingTeams;
 
     @ManyToMany
     @JoinTable(name = "tournament_students", joinColumns = @JoinColumn(name = "tournament_name"), inverseJoinColumns = @JoinColumn(name = "student_id"))
-    private Set<Student> ParticipantingStudents;
-    protected ArrayList<Match> tournamentMatches;
+    private Set<Participant> ParticipantingStudents;
+
+    protected Match currentMatch;
+    protected boolean open = true;
+    protected boolean finished = false;
+    protected ArrayList<Match> tournamentMatches = new ArrayList<>();
+
+    @Column
+    protected Set<Participant> participants;
+
+    protected Tournament(String name, Date startDate, Date endDate, double timeBetweenStages,
+            TOURNAMENT_TYPES tournamentType) {
+        this.name = name;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.timeBetweenStages = timeBetweenStages;
+        this.tournamentType = tournamentType;
+        participants = new HashSet<>();
+    }
 
     public Set<Participant> getParticipantingTeams() {
         return this.ParticipantingTeams;
@@ -61,18 +81,6 @@ public abstract class Tournament {
 
     public void setTournamentMatches(ArrayList<Match> tournamentMatches) {
         this.tournamentMatches = tournamentMatches;
-    }
-
-    protected Tournament() {
-    }
-
-    protected Tournament(String name, Date startDate, Date endDate, double timeBetweenStages,
-            TOURNAMENT_TYPES tournamentType) {
-        this.name = name;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.timeBetweenStages = timeBetweenStages;
-        this.tournamentType = tournamentType;
     }
 
     public String getName() {
@@ -115,7 +123,15 @@ public abstract class Tournament {
         this.tournamentType = tournamentType;
     }
 
+    protected void stopRegistration() {
+        open = false;
+    }
+
+    abstract void start();
+
     abstract void generateMatches();
+
+    abstract void enterResults(int firstScore, int secondScore);
 
     @Override
     public boolean equals(Object o) {
@@ -145,6 +161,25 @@ public abstract class Tournament {
                 ", tournamentType='" + getTournamentType() + "'" +
                 "}";
     }
+
+    public void addParticipent(Participant x) {
+        if (!open)
+            throw new IllegalArgumentException("Registiration finished");
+        switch (tournamentType) {
+            case INDIVIDUAL -> {
+                if (x instanceof Team)
+                    throw new IllegalArgumentException("This is an individual's tournament");
+                participants.add(x);
+
+            }
+            case TEAM_BASED -> {
+                if (x instanceof Student)
+                    throw new IllegalArgumentException("This is a Team's tournament");
+                participants.add(x);
+            }
+
+        }
+    }
 }
 
 class RoundRobinTournament extends Tournament {
@@ -154,27 +189,141 @@ class RoundRobinTournament extends Tournament {
             TOURNAMENT_TYPES tournamentType) {
         super(name, startDate, endDate, timeBetweenStages, tournamentType);
         switch (getTournamentType()) {
-            case INDIVIDUAL -> createPointMap(ParticipantingStudents);
-            case TEAM_BASED -> createPointMap(ParticipantingTeams);
+            case INDIVIDUAL -> createPointMap(getParticipantingStudents());
+            case TEAM_BASED -> createPointMap(getParticipantingTeams());
         }
     }
 
-    private void createPointMap(Set<Participant> participents) {
-        for (Participant i : participents) {
+    private void createPointMap(Set<Participant> participants) {
+        for (Participant i : participants) {
             teamPoints.put(i, 0);
         }
     }
 
-    public void generateMatches() {
-        Object[] array = teamPoints.keySet().toArray();
-        for (int i = 0; i < array.length - 1; i++) {
-            for (int j = i + 1; j < array.length; j++) {
-                switch (getTournamentType()) {
-                    case INDIVIDUAL -> tournamentMatches.add(new Match((Student) array[i], (Student) array[j]));
-                    case TEAM_BASED -> tournamentMatches.add(new Match((Team) array[i], (Team) array[j]));
+    void start() {
+        if (open)
+            stopRegistration();
+        currentMatch = tournamentMatches.get(0);
+    }
+
+    @Override
+    void generateMatches() {
+        ArrayList<Participant> array = new ArrayList<>(participants);
+        if (!(participants.size() % 2 == 0)) {
+            array.add(null);
+        }
+        int numberOfRounds = array.size() - 1;
+        int numberOfMatchesPerRound = array.size() / 2;
+        Participant firstTeam = array.get(0);
+        array.remove(0);
+
+        for (int i = 0; i < numberOfRounds; i++) {
+            int specialIndex = i % array.size();
+            Participant b = (Student) array.get((specialIndex));
+
+            if (b == null)
+                tournamentMatches.add(new Match(firstTeam));
+            else
+                tournamentMatches.add(new Match(firstTeam, b));
+
+            for (int j = 1; j < numberOfMatchesPerRound; j++) {
+                Participant a = array.get((i + j) % array.size());
+                b = array.get((i + array.size() - j) % array.size());
+
+                if (a == null)
+                    tournamentMatches.add(new Match(b));
+                else if (b == null)
+                    tournamentMatches.add(new Match(a));
+                else
+                    tournamentMatches.add(new Match(a, b));
+
+            }
+        }
+    }
+
+    public ArrayList<ArrayList<Match>> getRounds() {
+        ArrayList<ArrayList<Match>> temp = new ArrayList<>();
+        int numberOfRounds, numberOfMatchesPerRound;
+        if (!(participants.size() % 2 == 0)) {
+            numberOfRounds = participants.size();
+            numberOfMatchesPerRound = participants.size() / 2 + 1;
+        } else {
+            numberOfRounds = participants.size() - 1;
+            numberOfMatchesPerRound = participants.size() / 2;
+
+        }
+        for (int i = 0; i < numberOfRounds; i++) {
+            temp.add(new ArrayList<Match>());
+            for (int j = 0; j < numberOfMatchesPerRound; j++) {
+                temp.get(i).add(tournamentMatches.get(j));
+            }
+        }
+        return temp;
+    }
+
+    public void displayMatches() {
+        for (Match i : tournamentMatches) {
+            System.out.println(i);
+        }
+    }
+
+    @Override
+    void enterResults(int winnerScore, int loserScore) {
+
+        currentMatch.enterResults(winnerScore, loserScore);
+        int index = tournamentMatches.indexOf(currentMatch);
+        currentMatch.getWinner().win(winnerScore, loserScore);
+
+        currentMatch.getLoser().lost(loserScore, winnerScore);
+        if (!(index == tournamentMatches.size() - 1))
+            currentMatch = tournamentMatches.get(index + 1);
+        else
+            finished = true;
+        if (currentMatch.dummyMatch) {
+            if (!(index + 1 == tournamentMatches.size() - 1))
+                currentMatch = tournamentMatches.get(index + 2);
+            else
+                finished = true;
+        }
+    }
+
+    public void printPoints() {
+        for (Participant i : participants) {
+
+            switch (getTournamentType()) {
+                case INDIVIDUAL -> {
+                    Student temp = (Student) i;
+                    System.out.println(temp.getName() + " " + temp.points);
+                }
+                case TEAM_BASED -> {
+                    Team temp = (Team) i;
+                    System.out.println(temp.getName() + " " + temp.points);
                 }
             }
         }
+    }
+
+    public Participant getWinner() {
+        Comparator<Participant> poinComparator = new Comparator<Participant>() {
+            public int compare(Participant a, Participant b) {
+                return a.getPoints() - b.getPoints();
+            }
+
+        };
+        ArrayList<Participant> array = new ArrayList<>(participants);
+        array.sort(poinComparator);
+        return array.get(array.size() - 1);
+    }
+
+    public ArrayList<Participant> getLeaderBoard() {
+        Comparator<Participant> poinComparator = new Comparator<Participant>() {
+            public int compare(Participant a, Participant b) {
+                return a.getPoints() - b.getPoints();
+            }
+        };
+        ArrayList<Participant> array = new ArrayList<>(participants);
+        array.sort(poinComparator);
+        return array;
     }
 
 }
@@ -204,8 +353,16 @@ class EliminationTournament extends Tournament {
             matchUps.add(Arrays.asList((Participant) (set.toArray()[num1]), (Participant) (set.toArray()[num2])));
         }
     }
-}
 
-enum TOURNAMENT_TYPES {
-    INDIVIDUAL, TEAM_BASED
+    @Override
+    void start() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'start'");
+    }
+
+    @Override
+    void enterResults(int firstScore, int secondScore) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'enterResults'");
+    }
 }
