@@ -1,5 +1,6 @@
 package com.SWE.project.Classes;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -179,6 +180,7 @@ public abstract class Tournament {
             }
 
         }
+        x.addTournament(this);
     }
 }
 
@@ -188,17 +190,10 @@ class RoundRobinTournament extends Tournament {
     RoundRobinTournament(String name, Date startDate, Date endDate, double timeBetweenStages,
             TOURNAMENT_TYPES tournamentType) {
         super(name, startDate, endDate, timeBetweenStages, tournamentType);
-        switch (getTournamentType()) {
-            case INDIVIDUAL -> createPointMap(getParticipantingStudents());
-            case TEAM_BASED -> createPointMap(getParticipantingTeams());
-        }
+        
     }
 
-    private void createPointMap(Set<Participant> participants) {
-        for (Participant i : participants) {
-            teamPoints.put(i, 0);
-        }
-    }
+  
 
     void start() {
         if (open)
@@ -329,40 +324,104 @@ class RoundRobinTournament extends Tournament {
 }
 
 class EliminationTournament extends Tournament {
-    Set<List<Participant>> matchUps = new HashSet<List<Participant>>();
-
+  
+    ArrayList<Set<Match>> allRounds= new ArrayList<>();
+    int remainingMatchesInRound;
+    ArrayList<Participant> currentPlayers= new ArrayList<>(); 
+    
+    
     EliminationTournament(String name, Date startDate, Date endDate, double timeBetweenStages,
             TOURNAMENT_TYPES tournamentType) {
         super(name, startDate, endDate, timeBetweenStages, tournamentType);
-
+       
     }
-
+    
     public void generateMatches() {
-        Set<Participant> set = getTournamentType() == TOURNAMENT_TYPES.INDIVIDUAL ? getParticipantingStudents()
-                : getParticipantingTeams();
+        Set<Match> matchUps = new HashSet<>();
+        Set<Participant> set= new HashSet<>(currentPlayers);
+        if(currentPlayers.size()==1){
+            finished=true;
+            return;
+        }
         if (set.size() % 2 == 1)
             set.add(null);
-
-        while (!set.isEmpty()) {
+        ArrayList<Participant> temp = new ArrayList<>(set);
+        while (matchUps.size()!=set.size()/2) {
             int num1 = (int) (Math.random() * set.size());
             int num2 = (int) (Math.random() * set.size());
-
+            
+            
             if (num1 == num2)
                 continue;
+            if(temp.get(num1)!=null && temp.get(num2)!=null){
+                matchUps.add(new Match(temp.get(num1),temp.get(num2)));
+            }
+            else if(temp.get(num1)!=null){
+                matchUps.add(new Match(temp.get(num1)));
+            }
+            else{
+                matchUps.add(new Match(temp.get(num2)));
+            }
 
-            matchUps.add(Arrays.asList((Participant) (set.toArray()[num1]), (Participant) (set.toArray()[num2])));
         }
+        tournamentMatches= new ArrayList<>(matchUps);
+        allRounds.add(matchUps);
+        remainingMatchesInRound= tournamentMatches.size();
     }
 
     @Override
     void start() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'start'");
-    }
+        if(open) stopRegistration();
+     
 
+        currentMatch=tournamentMatches.get(0);
+        remainingMatchesInRound--;
+    }
+    @Override
+    protected void stopRegistration() {
+        open=false;
+        currentPlayers.addAll(participants);
+    }
     @Override
     void enterResults(int firstScore, int secondScore) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'enterResults'");
+        
+        currentMatch.enterResults(firstScore, secondScore);
+        int index = tournamentMatches.indexOf(currentMatch);
+        currentPlayers.remove(currentMatch.getLoser());
+        if(remainingMatchesInRound>0){
+            remainingMatchesInRound--;
+            if(!tournamentMatches.get(index+1).dummyMatch){
+                currentMatch= tournamentMatches.get(index+1);
+            }
+            remainingMatchesInRound--;
+            if(remainingMatchesInRound>0){
+                currentMatch=tournamentMatches.get(index+2);
+            }
+            generateMatches();
+            currentMatch= tournamentMatches.get(0);
+            remainingMatchesInRound--;
+        }
+        else{
+        generateMatches();
+        currentMatch= tournamentMatches.get(0);
+        remainingMatchesInRound--;
+    }}
+    
+    public Participant getWinner() {
+        if(finished){
+            return currentPlayers.get(0);
+        }
+        throw new IllegalAccessError("Unfinished tournament");
+        
+    }
+    public Participant getSecondPlace(){
+        if(finished){
+            Match lastRound=(Match) allRounds.get(allRounds.size()-1).toArray()[0];
+            return lastRound.getLoser();
+        }
+
+        throw new IllegalAccessError("Unfinished tournament");
+     
     }
 }

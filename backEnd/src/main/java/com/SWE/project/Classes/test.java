@@ -4,7 +4,7 @@ import com.SWE.project.Enums.TOURNAMENT_TYPES;
 
 public class test {
     public static void main(String[] args) {
-        RoundRobinTournament robinTournament = new RoundRobinTournament("Test", null, null, 100,
+        EliminationTournament robinTournament = new EliminationTournament("Test", null, null, 100,
                 TOURNAMENT_TYPES.INDIVIDUAL);
         Student a = new Student(0, "1");
         Student b = new Student(0, "2");
@@ -17,11 +17,12 @@ public class test {
         robinTournament.stopRegistration();
         robinTournament.generateMatches();
         robinTournament.start();
+        
         while (!robinTournament.finished) {
             robinTournament.enterResults(1, 0);
         }
-        robinTournament.printPoints();
-
+        System.out.println(robinTournament.allRounds);
+        
         System.out.println(robinTournament.getWinner());
     }
 }

@@ -54,7 +54,6 @@ public class Match {
 
     @Override
     public boolean equals(Object obj) {
-
         if (obj instanceof Match) {
             Match other = (Match) obj;
             if ((participentA == other.participentA && participentB == other.participentB)

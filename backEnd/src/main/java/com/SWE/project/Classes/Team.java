@@ -112,4 +112,12 @@ public class Team implements Participant {
     public int getPoints() {
         return points;
     }
+    
+    @Override
+    public void addTournament(Tournament tournament) {
+        this.tournament=tournament;
+        for(Student i: team_members){
+            i.addTournament(tournament);
+        }
+    }
 }

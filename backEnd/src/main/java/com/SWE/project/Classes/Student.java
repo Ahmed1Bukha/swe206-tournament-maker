@@ -1,5 +1,6 @@
 package com.SWE.project.Classes;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -23,7 +24,7 @@ public class Student implements Participant {
     private String name;
 
     @OneToMany
-    private Set<Tournament> Tournaments;
+    private Set<Tournament> Tournaments= new HashSet<>();
 
     public Student() {
 
@@ -110,5 +111,10 @@ public class Student implements Participant {
     @Override
     public int getPoints() {
         return points;
+    }
+
+    @Override
+    public void addTournament(Tournament tournament) {
+        this.Tournaments.add(tournament);
     }
 }
