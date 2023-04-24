@@ -22,6 +22,9 @@ public class Team extends Participant {
     @Column
     private GAME_TYPE gameType;
 
+    @ManyToOne // How does this even run?
+    private Tournament tournament;
+
     public Team() {
     }
 
@@ -91,5 +94,13 @@ public class Team extends Participant {
     @Override
     public int getPoints() {
         return points;
+    }
+
+    @Override
+    public void addTournament(Tournament tournament) {
+        this.tournament = tournament;
+        for (Student i : team_members) {
+            i.addTournament(tournament);
+        }
     }
 }

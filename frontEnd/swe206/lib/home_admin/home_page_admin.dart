@@ -14,6 +14,9 @@ class _HomePageAdminState extends State<HomePageAdmin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("Home page admin"),
+      ),
       body: Container(
         child: const Text("Hello"),
       ),

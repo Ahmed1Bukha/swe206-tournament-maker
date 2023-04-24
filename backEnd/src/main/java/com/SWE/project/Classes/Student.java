@@ -92,4 +92,9 @@ public class Student extends Participant {
     public int getPoints() {
         return points;
     }
+
+    @Override
+    public void addTournament(Tournament tournament) {
+        this.tournaments.add(tournament);
+    }
 }

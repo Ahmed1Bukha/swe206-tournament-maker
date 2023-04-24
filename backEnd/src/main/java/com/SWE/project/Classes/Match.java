@@ -60,7 +60,6 @@ public class Match {
 
     @Override
     public boolean equals(Object obj) {
-
         if (obj instanceof Match) {
             Match other = (Match) obj;
             if ((match_participants[0] == other.match_participants[0]

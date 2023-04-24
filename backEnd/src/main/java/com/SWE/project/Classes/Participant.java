@@ -40,6 +40,8 @@ public abstract class Participant {
     public Participant() {
     }
 
+    abstract void addTournament(Tournament tournament);
+
     abstract void win(int GoalsMade, int goalsRecieved);
 
     abstract void draw(int GoalsMade, int goalsRecieved);

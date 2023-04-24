@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:swe206/authintication/auth.dart';
+import 'package:swe206/authintication/auth_page_student.dart';
 import 'package:swe206/classes/tournamentsManager.dart';
 import 'package:swe206/home_admin/home_page_admin.dart';
+import 'package:swe206/home_admin/main_page_admin.dart';
 import 'package:swe206/home_student/home_page_student.dart';
 import 'package:swe206/home_student/main_page_student.dart';
 import 'package:swe206/home_student/search_page_student.dart';
@@ -88,6 +89,7 @@ class MyApp extends StatelessWidget {
         HomePageStudent.id: (context) => HomePageStudent(tournamentsManager),
         SearchPageStudent.id: (context) =>
             SearchPageStudent(tournamentsManager),
+        MainPageAdmin.id: (context) => MainPageAdmin()
       },
     );
   }
