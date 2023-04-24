@@ -6,11 +6,13 @@ import 'package:swe206/home_student/home_page_student.dart';
 import 'package:swe206/home_student/main_page_student.dart';
 import 'package:swe206/home_student/search_page_student.dart';
 import 'package:swe206/home_student/tournament_page.dart';
+import 'package:swe206/requests.dart';
 
 import 'UI_componenets/tournament_card.dart';
 
 void main() {
   runApp(const MyApp());
+  Requests.close();
 }
 
 class MyApp extends StatelessWidget {

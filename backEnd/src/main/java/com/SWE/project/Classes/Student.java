@@ -1,32 +1,19 @@
 package com.SWE.project.Classes;
 
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Students")
-public class Student implements Participant {
-    int goalsMade = 0;
-    int goalsRecieved = 0;
-    int wins = 0;
-    int points = 0;
-    @Column
-    private @Id long id;
-
-    @Column
-    private String name;
-
-    @OneToMany
-    private Set<Tournament> Tournaments;
+public class Student extends Participant {
+    @JdbcTypeCode(SqlTypes.JSON)
+    @ManyToMany(mappedBy = "team_members")
+    private Set<Team> teams; // Done
 
     public Student() {
-
     }
 
     public Student(long id, String name) {
@@ -50,14 +37,6 @@ public class Student implements Participant {
         this.name = name;
     }
 
-    public Set<Tournament> getTournaments() {
-        return this.Tournaments;
-    }
-
-    public void setTournaments(Set<Tournament> Tournaments) {
-        this.Tournaments = Tournaments;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -67,13 +46,15 @@ public class Student implements Participant {
         }
         Student student = (Student) o;
         return goalsMade == student.goalsMade && goalsRecieved == student.goalsRecieved && wins == student.wins
-                && points == student.points && id == student.id && Objects.equals(name, student.name)
-                && Objects.equals(Tournaments, student.Tournaments);
+                && points == student.points && id == student.id && Objects.equals(name,
+                        student.name)
+                && Objects.equals(tournaments, student.tournaments);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(goalsMade, goalsRecieved, wins, points, id, name, Tournaments);
+        return Objects.hash(goalsMade, goalsRecieved, wins, points, id, name,
+                tournaments);
     }
 
     @Override

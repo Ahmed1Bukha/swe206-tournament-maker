@@ -2,54 +2,60 @@ package com.SWE.project.Classes;
 
 import java.sql.Date;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+import jakarta.persistence.*;
 
 @Entity
 public class Match {
-    private @Id @GeneratedValue long id;
-    protected Participant participentA;
-    protected Participant participentB;
+    @Id
+    @GeneratedValue
+    @Column(name = "match_id")
+    private long id;
+
+    @ManyToOne
+    private Participant[] match_participants;
+
+    @ManyToOne
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "match_id")
+    private Tournament tournament;
+
     int scoreA, scoreB;
     Boolean finished;
     Boolean dummyMatch; // dummy matches are used when team number are odd
     private Date endDate;
 
-    Match(Participant participentA, Participant participentB) {
-
-        this.participentA = participentA;
-        this.participentB = participentB;
-        finished = false;
-        dummyMatch = false;
+    public Match() {
     }
 
-    Match(Participant participentA) {
-        this.participentA = participentA;
-        participentB = null;
-        dummyMatch = true;
-        finished = true;
+    Match(Participant[] match_participants, boolean dummyMatch) {
+        this.match_participants[0] = match_participants[0];
+        this.match_participants[1] = match_participants[1];
+        finished = dummyMatch;
+        this.dummyMatch = dummyMatch;
     }
 
     public void enterResults(int scoreA, int scoreB) {
         this.scoreA = scoreA;
         this.scoreB = scoreB;
         finished = true;
-
     }
 
     public Participant getWinner() {
         if (dummyMatch)
-            return participentA;
+            return match_participants[0];
         if (scoreA > scoreB)
-            return participentA;
-        return participentB;
+            return match_participants[0];
+        return match_participants[1];
     }
 
     public Participant getLoser() {
         if (scoreA < scoreB)
-            return participentA;
-        return participentB;
+            return match_participants[0];
+        return match_participants[1];
     }
 
     @Override
@@ -57,8 +63,10 @@ public class Match {
 
         if (obj instanceof Match) {
             Match other = (Match) obj;
-            if ((participentA == other.participentA && participentB == other.participentB)
-                    || (participentB == other.participentA && participentA == other.participentB))
+            if ((match_participants[0] == other.match_participants[0]
+                    && match_participants[1] == other.match_participants[1])
+                    || (match_participants[1] == other.match_participants[0]
+                            && match_participants[0] == other.match_participants[1]))
                 return true;
             return false;
         }
@@ -68,13 +76,16 @@ public class Match {
     @Override
     public String toString() {
         if (dummyMatch)
-            return participentA.getName() + " Dummy";
-        return participentA.getName() + " " + participentB.getName();
+            return match_participants[0].getName() + " Dummy";
+        return match_participants[0].getName() + " " +
+                match_participants[1].getName();
     }
 
     public boolean contains(Match other) {
-        if (other.participentA == participentA || other.participentB == participentB
-                || other.participentB == participentA || other.participentA == participentB)
+        if (other.match_participants[0] == match_participants[0] ||
+                other.match_participants[1] == match_participants[1]
+                || other.match_participants[1] == match_participants[0]
+                || other.match_participants[0] == match_participants[1])
             return true;
         return false;
     }

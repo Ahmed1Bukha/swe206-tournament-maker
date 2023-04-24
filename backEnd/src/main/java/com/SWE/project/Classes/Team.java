@@ -1,65 +1,45 @@
 package com.SWE.project.Classes;
 
-import java.util.Set;
+import java.util.*;
 
-import com.SWE.project.Enums.GAME_TYPE;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.SWE.project.Enums.*;
+
+import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Teams")
-public class Team implements Participant {
-    int goalsMade = 0;
-    int goalsRecieved = 0;
-    int points = 0;
-    int wins = 0;
-    @Column(name = "team_id")
-    private @Id @GeneratedValue int id;
-
+public class Team extends Participant {
     @Column(name = "team_name")
     private String name;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @ManyToMany
     @JoinTable(name = "team_members", joinColumns = @JoinColumn(name = "team_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
-    private Set<Student> team_members;
+    private Set<Student> team_members; // Done
 
     @Column
     private GAME_TYPE gameType;
 
-    @ManyToOne
-    @JoinColumn(name = "tournament_name")
-    private Tournament tournament;
+    public Team() {
+    }
 
-    public Team(int team_id, String team_name, Set<Student> team_members, GAME_TYPE gameType, Tournament tournament) {
+    public Team(int team_id, String team_name, Set<Student> team_members,
+            GAME_TYPE gameType, Tournament tournament) {
         this.id = team_id;
         this.name = team_name;
         this.team_members = team_members;
         this.gameType = gameType;
-        this.tournament = tournament;
+        this.tournaments = new HashSet<Tournament>(Arrays.asList(tournament));
     }
 
-    public int getId() {
+    public long getId() {
         return this.id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
-    }
-
-    public Tournament getTournament() {
-        return this.tournament;
-    }
-
-    public void setTournament(Tournament tournament) {
-        this.tournament = tournament;
     }
 
     public GAME_TYPE getGameType() {

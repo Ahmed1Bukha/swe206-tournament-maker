@@ -1,23 +1,13 @@
 package com.SWE.project.Controllers;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.SWE.project.Classes.Match;
-import com.SWE.project.Classes.Participant;
-import com.SWE.project.Classes.Tournament;
-import com.SWE.project.Exceptions.TournamentNotFoundException;
-import com.SWE.project.Repositories.TournamentRepo;
+import com.SWE.project.Classes.*;
+import com.SWE.project.Exceptions.*;
+import com.SWE.project.Repositories.*;
 
 @RestController
 public class TournamentController {
@@ -43,22 +33,13 @@ public class TournamentController {
         return temp.get().getTournamentMatches();
     }
 
-    @GetMapping("/Tournaments/getStudents/{TournamentName}")
+    @GetMapping("/Tournaments/getParticipants/{TournamentName}")
     Set<Participant> getStudents(@PathVariable String name) {
         Optional<Tournament> temp = repo.findById(name);
         if (temp.isEmpty())
             throw new TournamentNotFoundException(name);
 
-        return temp.get().getParticipantingStudents();
-    }
-
-    @GetMapping("/Tournaments/getTeams/{TournamentName}")
-    Set<Participant> getTeams(@PathVariable String name) {
-        Optional<Tournament> temp = repo.findById(name);
-        if (temp.isEmpty())
-            throw new TournamentNotFoundException(name);
-
-        return temp.get().getParticipantingTeams();
+        return temp.get().getParticipants();
     }
 
     @PostMapping("/Tournaments")
@@ -72,7 +53,8 @@ public class TournamentController {
     }
 
     @PutMapping("/Tournaments/{TournamentName}")
-    Tournament replaceTournament(@RequestBody Tournament newTournament, @PathVariable String name) {
+    Tournament replaceTournament(@RequestBody Tournament newTournament,
+            @PathVariable String name) {
         return repo.findById(name).map(Tournament -> {
             Tournament.setName(newTournament.getName());
             Tournament.setStartDate(newTournament.getStartDate());
