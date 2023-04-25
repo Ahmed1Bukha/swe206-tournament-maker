@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:swe206/UI_componenets/tournament_card.dart';
-import 'package:swe206/classes/tournamentsManager.dart';
+import 'package:swe206/UI_componenets/tournament_card_student.dart';
+import 'package:swe206/classes/controller_student.dart';
 
 class SearchPageStudent extends StatefulWidget {
   SearchPageStudent(this.tournamentsManager, {super.key});
-  TournamentsManager tournamentsManager;
+  ControllerStudent tournamentsManager;
   static String id = "SeachPageStudent";
   @override
   State<SearchPageStudent> createState() => _SearchPageStudentState();
 }
 
 class _SearchPageStudentState extends State<SearchPageStudent> {
-  List<TournamentWidget> searchResult = [];
   String searchTerm = "";
-  List<TournamentWidget> getSearchResult() => searchResult;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

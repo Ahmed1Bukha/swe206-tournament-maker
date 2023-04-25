@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:swe206/UI_componenets/tournament_card.dart';
+import 'package:swe206/UI_componenets/tournament_card_student.dart';
 
 class TournamentPage extends StatefulWidget {
   const TournamentPage(this.tournamentWidget, {super.key});
   static String id = "TournamentPage";
-  final TournamentWidget tournamentWidget;
+  final TournamentCardStudent tournamentWidget;
 
   @override
   State<TournamentPage> createState() => _TournamentPageState();

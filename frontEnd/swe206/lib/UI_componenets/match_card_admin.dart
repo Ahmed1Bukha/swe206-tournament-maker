@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:swe206/home_student/tournament_page.dart';
 
-class TournamentWidget extends StatelessWidget {
-  const TournamentWidget(this.title, this.game, this.type, this.status,
+import '../home_admin/match_page_admin.dart';
+
+class MatchCardAdmin extends StatelessWidget {
+  const MatchCardAdmin(this.participantA, this.participantB, this.game,
+      this.date, this.scoreA, this.scoreB, this.name,
       {super.key});
-  final String title;
+  final String participantA;
+  final String participantB;
   final String game;
-  final String type;
-  final String status;
-
+  final String date;
+  final int scoreA;
+  final int scoreB;
+  final String name;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => TournamentPage(this)),
+          MaterialPageRoute(builder: (context) => MatchPageAdmin(this)),
         );
       },
       child: Padding(
@@ -36,13 +40,12 @@ class TournamentWidget extends StatelessWidget {
                 decoration: const BoxDecoration(color: Color(0xff9AB6FF)),
                 child: Text(
                   textAlign: TextAlign.center,
-                  title,
+                  "${participantA} vs ${participantB} ",
                   style: const TextStyle(fontSize: 30),
                 ),
               ),
               Text("Game: $game"),
-              Text("Tournament type: $type"),
-              Text("Current status: $status")
+              Text("Date: $date"),
             ],
           ),
         ),
