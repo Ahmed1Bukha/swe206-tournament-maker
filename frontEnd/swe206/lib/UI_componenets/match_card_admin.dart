@@ -21,7 +21,9 @@ class MatchCardAdmin extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MatchPageAdmin(this)),
+          MaterialPageRoute(
+            builder: (context) => MatchPageAdmin(this),
+          ),
         );
       },
       child: Padding(
