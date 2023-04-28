@@ -21,37 +21,48 @@ class _CreatePageState extends State<CreatePage> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const CreateEleminationPage(),
-                    ),
-                  );
-                },
-                child: const Text(
-                  "Elimination",
+              const Center(
+                child: Text(
+                  "Select type of the tournament: ",
                   style: TextStyle(fontSize: 25),
                 ),
               ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const CreateRoundPage(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CreateEleminationPage(),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      "Elimination",
+                      style: TextStyle(fontSize: 25),
                     ),
-                  );
-                },
-                child: const Text(
-                  "Round robin table",
-                  style: TextStyle(fontSize: 25),
-                ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CreateRoundPage(),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      "Round robin table",
+                      style: TextStyle(fontSize: 25),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
