@@ -5,6 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "java",
+            "name": "test",
+            "request": "launch",
+            "mainClass": "com.SWE.project.Classes.test",
+            "projectName": "project"
+        },
+        {
             "name": "swe206",
             "cwd": "frontEnd/swe206",
             "request": "launch",
