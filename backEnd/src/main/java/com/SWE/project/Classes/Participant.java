@@ -2,14 +2,11 @@ package com.SWE.project.Classes;
 
 import java.util.Set;
 
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
-
 import jakarta.persistence.*;
+import java.util.Objects;
 
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-// @Table(name = "Participants")
+// @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Participant {
     @Id
     @GeneratedValue
@@ -30,9 +27,8 @@ public abstract class Participant {
     @Column
     protected String name;
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @ManyToMany(mappedBy = "participants")
-    protected Set<Tournament> tournaments; // Done
+    @ManyToMany(mappedBy = "participants", targetEntity = com.SWE.project.Classes.Tournament.class)
+    protected Set<Tournament> tournaments;
 
     @OneToMany(mappedBy = "match_participants")
     protected Set<Match> matches;
@@ -50,8 +46,6 @@ public abstract class Participant {
 
     abstract String getName();
 
-    abstract int getPoints();
-
     public long getId() {
         return this.id;
     }
@@ -68,4 +62,61 @@ public abstract class Participant {
         this.tournaments = tournaments;
     }
 
+    public int getGoalsMade() {
+        return this.goalsMade;
+    }
+
+    public void setGoalsMade(int goalsMade) {
+        this.goalsMade = goalsMade;
+    }
+
+    public int getGoalsRecieved() {
+        return this.goalsRecieved;
+    }
+
+    public void setGoalsRecieved(int goalsRecieved) {
+        this.goalsRecieved = goalsRecieved;
+    }
+
+    public int getWins() {
+        return this.wins;
+    }
+
+    public void setWins(int wins) {
+        this.wins = wins;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Set<Match> getMatches() {
+        return this.matches;
+    }
+
+    public void setMatches(Set<Match> matches) {
+        this.matches = matches;
+    }
+
+    @Override
+    public String toString() {
+        System.out.println("P ts");
+        return "{" +
+                " id='" + getId() + "'" +
+                ", goalsMade='" + getGoalsMade() + "'" +
+                ", goalsRecieved='" + getGoalsRecieved() + "'" +
+                ", wins='" + getWins() + "'" +
+                ", points='" + getPoints() + "'" +
+                ", name='" + getName() + "'" +
+                ", matches='" + getMatches() + "'" +
+                "}";
+    }
 }

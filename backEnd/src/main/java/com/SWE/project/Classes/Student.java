@@ -2,59 +2,22 @@ package com.SWE.project.Classes;
 
 import java.util.*;
 
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
-
 import jakarta.persistence.*;
 
 @Entity
 public class Student extends Participant {
-    @JdbcTypeCode(SqlTypes.JSON)
     @ManyToMany(mappedBy = "team_members")
     private Set<Team> teams; // Done
+
+    @Column
+    private long studentId;
 
     public Student() {
     }
 
-    public Student(long id, String name) {
-        this.id = id;
+    public Student(long studentId, String name) {
+        this.studentId = studentId;
         this.name = name;
-    }
-
-    public long getId() {
-        return this.id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == this)
-            return true;
-        if (!(o instanceof Student)) {
-            return false;
-        }
-        Student student = (Student) o;
-        return goalsMade == student.goalsMade && goalsRecieved == student.goalsRecieved && wins == student.wins
-                && points == student.points && id == student.id && Objects.equals(name,
-                        student.name)
-                && Objects.equals(tournaments, student.tournaments);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(goalsMade, goalsRecieved, wins, points, id, name,
-                tournaments);
     }
 
     @Override
@@ -76,25 +39,55 @@ public class Student extends Participant {
         this.goalsMade += goalsMade;
         this.goalsRecieved += goalsRecieved;
         points += 1;
-
-    }
-
-    @Override
-    public String toString() {
-        return "{" +
-                " id='" + getId() + "'" +
-                ", name='" + getName() + "'" +
-                ", Tournaments='" + getTournaments() + "'" +
-                "}";
-    }
-
-    @Override
-    public int getPoints() {
-        return points;
     }
 
     @Override
     public void addTournament(Tournament tournament) {
         this.tournaments.add(tournament);
+    }
+
+    public long getStudentId() {
+        return this.studentId;
+    }
+
+    public void setStudentId(long studentId) {
+        this.studentId = studentId;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        System.out.println("S e");
+        if (o == this)
+            return true;
+        if (!(o instanceof Student)) {
+            return false;
+        }
+        Student student = (Student) o;
+        return goalsMade == student.goalsMade && goalsRecieved == student.goalsRecieved && wins == student.wins
+                && points == student.points && id == student.id && Objects.equals(name,
+                        student.name);
+    }
+
+    @Override
+    public int hashCode() {
+        System.out.println("S hc");
+        return Objects.hash(goalsMade, goalsRecieved, wins, points, id, name);
+    }
+
+    @Override
+    public String toString() {
+        System.out.println("S ts");
+        return "{" + super.toString().substring(1, super.toString().length() - 1) +
+                "id='" + getId() + "'" +
+                ", name='" + getName() + "'" +
+                "}";
     }
 }

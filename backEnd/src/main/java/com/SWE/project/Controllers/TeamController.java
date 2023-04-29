@@ -23,7 +23,4 @@ public class TeamController {
     Team oneTournament(@PathVariable long id) {
         return repo.findById(id).orElseThrow(() -> new TeamNotFoundException(id));
     }
-
 }
-
-    

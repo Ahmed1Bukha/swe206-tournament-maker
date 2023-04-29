@@ -221,3 +221,12 @@ SELECT * FROM STUDENTS TEAMS TEAM_MEMBERS [42000-214]
 2023-04-03 21:35:03 jdbc[13]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM TEAMS TOURNAMENT_STUDENTS [*]TOURNAMENTS"; SQL statement:
 SELECT * FROM TEAMS TOURNAMENT_STUDENTS TOURNAMENTS [42000-214]
+2023-04-26 04:45:35 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "Bad Minton Something Something"; SQL statement:
+select e1_0.tournament_name,c1_0.match_id,c1_0.dummy_match,c1_0.end_date,c1_0.finished,m1_0.id,m1_0.clazz_,m1_0.goals_made,m1_0.goals_recieved,m1_0.name,m1_0.points,m1_0.wins,m1_0.game_type,c1_0.scorea,c1_0.scoreb,e1_0.end_date,e1_0.finished,e1_0.open,e1_0.start_date,e1_0.time_between_stages,e1_0.tournament_type,e1_0.remaining_matches_in_round from tournaments e1_0 left join match c1_0 on e1_0.tournament_name=c1_0.match_id left join ( select id, goals_made, goals_recieved, name, points, wins, null as game_type, 1 as clazz_ from student union all select id, goals_made, goals_recieved, name, points, wins, game_type, 2 as clazz_ from team ) m1_0 on m1_0.id=c1_0.match_participants_id where e1_0.dtype='EliminationTournament' and e1_0.tournament_name=? [22018-214]
+2023-04-26 04:47:07 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "Bad Minton Something Somethi"; SQL statement:
+select e1_0.tournament_name,c1_0.match_id,c1_0.dummy_match,c1_0.end_date,c1_0.finished,m1_0.id,m1_0.clazz_,m1_0.goals_made,m1_0.goals_recieved,m1_0.name,m1_0.points,m1_0.wins,m1_0.game_type,c1_0.scorea,c1_0.scoreb,e1_0.end_date,e1_0.finished,e1_0.open,e1_0.start_date,e1_0.time_between_stages,e1_0.tournament_type,e1_0.remaining_matches_in_round from tournaments e1_0 left join match c1_0 on e1_0.tournament_name=c1_0.match_id left join ( select id, goals_made, goals_recieved, name, points, wins, null as game_type, 1 as clazz_ from student union all select id, goals_made, goals_recieved, name, points, wins, game_type, 2 as clazz_ from team ) m1_0 on m1_0.id=c1_0.match_participants_id where e1_0.dtype='EliminationTournament' and e1_0.tournament_name=? [22018-214]
+2023-04-29 02:04:34 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM PARTICIPANT STUDENT [*]STUDENT"; SQL statement:
+SELECT * FROM PARTICIPANT STUDENT STUDENT [42000-214]
