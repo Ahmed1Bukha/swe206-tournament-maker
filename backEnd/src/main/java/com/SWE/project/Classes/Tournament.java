@@ -228,5 +228,4 @@ public abstract class Tournament {
                 ", tournamentMatches='" + getTournamentMatches() + "'" +
                 "}";
     }
-    //
 }

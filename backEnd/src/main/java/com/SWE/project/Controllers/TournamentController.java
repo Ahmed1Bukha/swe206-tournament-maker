@@ -1,6 +1,5 @@
 package com.SWE.project.Controllers;
 
-import java.lang.reflect.Method;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,16 +42,17 @@ public class TournamentController {
     }
 
     @GetMapping("/Tournaments")
-    String allTournaments() {
-        String str = "{";
-        for (Tournament t : tournamentRepo.findAll()) {
-            str = str.concat(t.toString());
-        }
-        return str.concat("}");
+    List<Tournament> allTournaments() {
+        // String str = "{";
+        // for (Tournament t : tournamentRepo.findAll()) {
+        // str = str.concat(t.toString());
+        // }
+        // return str.concat("}");
+        return tournamentRepo.findAll();
     }
 
     @GetMapping("/Tournaments/getMatches/{TournamentId}")
-    String getMatches(@PathVariable Long id) {
+    String getMatches(@PathVariable("TournamentId") Long id) {
         String str = "{";
         Optional<Tournament> temp = tournamentRepo.findById(id);
         if (temp.isEmpty())
@@ -65,7 +65,7 @@ public class TournamentController {
     }
 
     @GetMapping("/Tournaments/getParticipants/{TournamentId}")
-    String getParticipants(@PathVariable long id) {
+    String getParticipants(@PathVariable("TournamentId") long id) {
         String str = "{";
         Optional<Tournament> temp = tournamentRepo.findById(id);
         if (temp.isEmpty())
@@ -88,13 +88,13 @@ public class TournamentController {
     }
 
     @GetMapping("/Tournaments/{TournamentId}")
-    String oneTournament(@PathVariable long id) {
+    String oneTournament(@PathVariable("TournamentId") long id) {
         return tournamentRepo.findById(id).orElseThrow(() -> new TournamentNotFoundException(id)).toString();
     }
 
     @PutMapping("/Tournaments/{TournamentId}")
     String replaceTournament(@RequestBody Tournament newTournament,
-            @PathVariable long id) {
+            @PathVariable("TournamentId") long id) {
         return tournamentRepo.findById(id).map(tournament -> {
             tournament.setTournamentMatches(newTournament.getTournamentMatches());
             tournament.setTimeBetweenStages(newTournament.getTimeBetweenStages());
@@ -112,8 +112,8 @@ public class TournamentController {
         });
     }
 
-    @DeleteMapping("/Tournaments/{TournamentName}")
-    void deleteTournament(@PathVariable long id) {
+    @DeleteMapping("/Tournaments/{TournamentId}")
+    void deleteTournament(@PathVariable("TournamentId") long id) {
         tournamentRepo.deleteById(id);
     }
 
