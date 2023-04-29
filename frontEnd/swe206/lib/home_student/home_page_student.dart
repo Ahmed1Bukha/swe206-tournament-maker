@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:swe206/UI_componenets/tournament_card.dart';
-import 'package:swe206/classes/tournamentsManager.dart';
+import 'package:swe206/UI_componenets/tournament_card_student.dart';
+import 'package:swe206/classes/controller_student.dart';
 
 class HomePageStudent extends StatefulWidget {
   const HomePageStudent(this.tournamentsManager, {super.key});
   static String id = "HomePageStudent";
-  final TournamentsManager tournamentsManager;
+  final ControllerStudent tournamentsManager;
   @override
   State<HomePageStudent> createState() => _HomePageStudentState();
 }

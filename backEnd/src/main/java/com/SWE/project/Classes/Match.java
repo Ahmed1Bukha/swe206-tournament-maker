@@ -42,6 +42,7 @@ public class Match {
     }
 
     Match(Participant[] match_participants, boolean dummyMatch) {
+        this.match_participants= new Participant[2];
         this.match_participants[0] = match_participants[0];
         this.match_participants[1] = match_participants[1];
         finished = dummyMatch;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:swe206/home_admin/create_types_pages/create_elimination.dart';
+import 'package:swe206/home_admin/create_types_pages/round_robin.dart';
 
 class CreatePage extends StatefulWidget {
   const CreatePage({super.key});
@@ -12,6 +12,62 @@ class CreatePage extends StatefulWidget {
 class _CreatePageState extends State<CreatePage> {
   @override
   Widget build(BuildContext context) {
-    return Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        title: (const Text(
+          "Create Tournament",
+        )),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Center(
+                child: Text(
+                  "Select type of the tournament: ",
+                  style: TextStyle(fontSize: 25),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CreateEleminationPage(),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      "Elimination",
+                      style: TextStyle(fontSize: 25),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CreateRoundPage(),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      "Round robin table",
+                      style: TextStyle(fontSize: 25),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

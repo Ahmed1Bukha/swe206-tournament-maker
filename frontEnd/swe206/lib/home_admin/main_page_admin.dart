@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:swe206/classes/controller_admin.dart';
 import 'package:swe206/home_admin/create_tournament_page.dart';
 import 'package:swe206/home_admin/home_page_admin.dart';
 import 'package:swe206/home_admin/modify_page.dart';
@@ -9,9 +10,9 @@ import 'package:swe206/home_admin/search_page_admin.dart';
 import '../authintication/auth_page_student.dart';
 
 class MainPageAdmin extends StatefulWidget {
-  MainPageAdmin({super.key});
+  MainPageAdmin(this._tournamentManagerAdmin, {super.key});
   static String id = "mainAdmin";
-
+  ControllerAdmin _tournamentManagerAdmin;
   @override
   State<MainPageAdmin> createState() => _MainPageAdminState();
   int _selectedIndex = 0;
@@ -21,7 +22,7 @@ class _MainPageAdminState extends State<MainPageAdmin> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> _widgetOptions = <Widget>[
-      const HomePageAdmin(),
+      HomePageAdmin(widget._tournamentManagerAdmin),
       const ModifyPage(),
       const CreatePage(),
       const SearchPageAdmin(),

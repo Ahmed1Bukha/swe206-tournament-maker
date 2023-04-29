@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:swe206/classes/tournamentsManager.dart';
+import 'package:swe206/classes/controller_student.dart';
 import 'package:swe206/authintication/auth_page_admin.dart';
 import 'package:swe206/home_student/home_page_student.dart';
 import 'package:swe206/home_student/main_page_student.dart';
 
-import '../UI_componenets/tournament_card.dart';
+import '../UI_componenets/tournament_card_student.dart';
 
 class AuthPage extends StatefulWidget {
   AuthPage({super.key});

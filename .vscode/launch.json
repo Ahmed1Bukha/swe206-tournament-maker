@@ -1,0 +1,35 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "test",
+            "request": "launch",
+            "mainClass": "com.SWE.project.Classes.test",
+            "projectName": "project"
+        },
+        {
+            "name": "swe206",
+            "cwd": "frontEnd/swe206",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "swe206 (profile mode)",
+            "cwd": "frontEnd/swe206",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "swe206 (release mode)",
+            "cwd": "frontEnd/swe206",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}

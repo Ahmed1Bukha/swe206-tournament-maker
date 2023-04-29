@@ -64,8 +64,10 @@ public class RoundRobinTournament extends Tournament {
                     tournamentMatches.add(new Match(new Participant[] { b }, true));
                 else if (b == null)
                     tournamentMatches.add(new Match(new Participant[] { a }, true));
+
                 else
                     tournamentMatches.add(new Match(new Participant[] { a, b }, false));
+
             }
         }
     }
@@ -79,6 +81,7 @@ public class RoundRobinTournament extends Tournament {
         } else {
             numberOfRounds = participants.size() - 1;
             numberOfMatchesPerRound = participants.size() / 2;
+
         }
         for (int i = 0; i < numberOfRounds; i++) {
             temp.add(new ArrayList<Match>());
@@ -136,6 +139,7 @@ public class RoundRobinTournament extends Tournament {
             public int compare(Participant a, Participant b) {
                 return a.getPoints() - b.getPoints();
             }
+
         };
         ArrayList<Participant> array = new ArrayList<>(participants);
         array.sort(poinComparator);

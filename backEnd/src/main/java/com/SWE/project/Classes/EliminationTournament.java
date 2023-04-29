@@ -59,12 +59,13 @@ public class EliminationTournament extends Tournament {
             if (num1 == num2)
                 continue;
             if (temp.get(num1) != null && temp.get(num2) != null) {
-                matchUps.add(new Match(new Participant[] { temp.get(num1), temp.get(num2) },
-                        false));
+                matchUps.add(new Match(new Participant[] { temp.get(num1), temp.get(num2) }, false));
             } else if (temp.get(num1) != null) {
-                matchUps.add(new Match(new Participant[] { temp.get(num1) }, true));
+                matchUps.add(new Match(new Participant[] { temp.get(num1), null }, true));
+
             } else {
-                matchUps.add(new Match(new Participant[] { temp.get(num2) }, true));
+                matchUps.add(new Match(new Participant[] { temp.get(num2), null }, true));
+
             }
 
         }

@@ -1,16 +1,17 @@
+
 import 'package:flutter/material.dart';
 
-import '../UI_componenets/tournament_card.dart';
+import '../UI_componenets/tournament_card_student.dart';
 
-class TournamentsManager {
-  TournamentsManager(this.tournamentsList);
-  List<TournamentWidget> tournamentsList = [];
+class ControllerStudent {
+  ControllerStudent(this.tournamentsList);
+  List<TournamentCardStudent> tournamentsList = [];
 
-  List<TournamentWidget> getTournaments() => tournamentsList;
+  List<TournamentCardStudent> getTournaments() => tournamentsList;
 
   searchResult(String inputSearch) {
-    List<TournamentWidget> results = [];
-    for (TournamentWidget name in tournamentsList) {
+    List<TournamentCardStudent> results = [];
+    for (TournamentCardStudent name in tournamentsList) {
       if (name.title.toLowerCase().contains(inputSearch.toLowerCase())) {
         results.add(name);
       }
