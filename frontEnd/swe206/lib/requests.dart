@@ -5,16 +5,18 @@ import 'package:http/http.dart' as http;
 
 class Requests {
   static var client = http.Client();
-  String url = '10.0.2.2:8080';
-  Map<String, String> header = {"Content-Type": "application/json"};
+  static String url = '127.0.0.1:8080';
+  static Map<String, String> header = {"Content-Type": "application/json"};
 
-  Future<Map> getRequest(String endpoint) async {
+  static Future<String> getRequest(String endpoint) async {
     try {
       var response = await client.get(
         Uri.http(url, "/$endpoint"),
         headers: header,
       );
-      var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+
+      var decodedResponse = utf8.decode(response.bodyBytes);
+
       return decodedResponse;
     } catch (e) {
       throw HttpException("Get request to /$endpoint failed");

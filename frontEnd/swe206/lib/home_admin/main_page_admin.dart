@@ -23,7 +23,6 @@ class _MainPageAdminState extends State<MainPageAdmin> {
   Widget build(BuildContext context) {
     final List<Widget> _widgetOptions = <Widget>[
       HomePageAdmin(widget._tournamentManagerAdmin),
-      const ModifyPage(),
       const CreatePage(),
       const SearchPageAdmin(),
       const Text("LogOut")
@@ -45,10 +44,6 @@ class _MainPageAdminState extends State<MainPageAdmin> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: "Home",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: "Modify",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.plus_one),

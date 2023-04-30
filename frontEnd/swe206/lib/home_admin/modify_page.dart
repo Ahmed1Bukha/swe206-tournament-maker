@@ -1,9 +1,9 @@
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter/material.dart';
+import 'package:swe206/UI_componenets/tournament_card_admin.dart';
 
 class ModifyPage extends StatefulWidget {
-  const ModifyPage({super.key});
-
+  ModifyPage(this.tournamentCardAdmin, {super.key});
+  TournamentCardAdmin tournamentCardAdmin;
   @override
   State<ModifyPage> createState() => _ModifyPageState();
 }
@@ -11,6 +11,10 @@ class ModifyPage extends StatefulWidget {
 class _ModifyPageState extends State<ModifyPage> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Modify Tournament Page"),
+      ),
+    );
   }
 }

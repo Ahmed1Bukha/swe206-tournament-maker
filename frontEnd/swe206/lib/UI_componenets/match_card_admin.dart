@@ -5,16 +5,28 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import '../home_admin/match_page_admin.dart';
 
 class MatchCardAdmin extends StatelessWidget {
-  const MatchCardAdmin(this.participantA, this.participantB, this.game,
-      this.date, this.scoreA, this.scoreB, this.name,
+  const MatchCardAdmin(
+      this.id,
+      this.participantA,
+      this.participantB,
+      this.game,
+      this.date,
+      this.scoreA,
+      this.scoreB,
+      this.title,
+      this.endDate,
+      this.finished,
       {super.key});
+  final int id;
   final String participantA;
   final String participantB;
   final String game;
   final String date;
   final int scoreA;
   final int scoreB;
-  final String name;
+  final String title;
+  final bool endDate;
+  final bool finished;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

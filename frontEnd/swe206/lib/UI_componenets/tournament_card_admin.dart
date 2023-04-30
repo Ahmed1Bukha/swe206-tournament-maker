@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:swe206/UI_componenets/match_card_admin.dart';
 
@@ -5,13 +7,31 @@ import '../home_admin/tournament_page_admin.dart';
 
 class TournamentCardAdmin extends StatelessWidget {
   const TournamentCardAdmin(
-      this.title, this.game, this.type, this.status, this.matches,
+      this.id,
+      this.title,
+      this.game,
+      this.type,
+      this.status,
+      this.matches,
+      this.startDate,
+      this.endDate,
+      this.timeBetween,
+      this.tournamentBased,
+      this.isOpen,
+      this.isFinished,
       {super.key});
+  final Long id;
   final String title;
   final String game;
   final String type;
   final String status;
+  final String startDate;
+  final String endDate;
+  final int timeBetween;
+  final String tournamentBased;
   final Map<String, List<MatchCardAdmin>> matches;
+  final bool isOpen;
+  final bool isFinished;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
