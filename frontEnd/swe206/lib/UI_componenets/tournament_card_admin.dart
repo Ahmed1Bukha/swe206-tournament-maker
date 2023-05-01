@@ -7,20 +7,20 @@ import '../home_admin/tournament_page_admin.dart';
 
 class TournamentCardAdmin extends StatelessWidget {
   const TournamentCardAdmin(
-      this.id,
-      this.title,
-      this.game,
-      this.type,
-      this.status,
-      this.matches,
-      this.startDate,
-      this.endDate,
-      this.timeBetween,
-      this.tournamentBased,
-      this.isOpen,
-      this.isFinished,
-      {super.key});
-  final Long id;
+      {required this.id,
+      required this.title,
+      required this.game,
+      required this.type,
+      required this.status,
+      required this.matches,
+      required this.startDate,
+      required this.endDate,
+      required this.timeBetween,
+      required this.tournamentBased,
+      required this.isOpen,
+      required this.isFinished,
+      super.key});
+  final int id;
   final String title;
   final String game;
   final String type;

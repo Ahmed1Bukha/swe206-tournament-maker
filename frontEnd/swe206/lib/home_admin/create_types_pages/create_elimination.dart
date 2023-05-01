@@ -76,7 +76,7 @@ class _CreateEleminationPageState extends State<CreateEleminationPage> {
                 Center(
                   child: ElevatedButton(
                     onPressed: () => _showMyDialog(),
-                    child: Text("Add a game"),
+                    child: const Text("Add a game"),
                   ),
                 ),
                 const SizedBox(

@@ -4,7 +4,7 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:swe206/classes/controller_admin.dart';
 import 'package:swe206/home_admin/create_tournament_page.dart';
 import 'package:swe206/home_admin/home_page_admin.dart';
-import 'package:swe206/home_admin/modify_page.dart';
+import 'package:swe206/home_admin/modify_pages/modify_page_tournament.dart';
 import 'package:swe206/home_admin/search_page_admin.dart';
 
 import '../authintication/auth_page_student.dart';
@@ -24,7 +24,7 @@ class _MainPageAdminState extends State<MainPageAdmin> {
     final List<Widget> _widgetOptions = <Widget>[
       HomePageAdmin(widget._tournamentManagerAdmin),
       const CreatePage(),
-      const SearchPageAdmin(),
+      SearchPageAdmin(widget._tournamentManagerAdmin),
       const Text("LogOut")
     ];
     return Scaffold(
@@ -36,7 +36,7 @@ class _MainPageAdminState extends State<MainPageAdmin> {
           setState(() {
             widget._selectedIndex = value;
           });
-          if (widget._selectedIndex == 4) {
+          if (widget._selectedIndex == 3) {
             Navigator.pushReplacementNamed(context, AuthPage.id);
           }
         },

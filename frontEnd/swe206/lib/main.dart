@@ -44,35 +44,36 @@ class MyApp extends StatelessWidget {
         "Finished",
       ),
     ];
-    List<TournamentCardAdmin> myTournamentsAdmin = const [
+    List<TournamentCardAdmin> myTournamentsAdmin = [
       TournamentCardAdmin(
-        "3rd Football lmfao",
-        "Football",
-        "Elemniation",
-        "Open for register",
-        {
+        id: 2,
+        title: "Volleyball al7asa",
+        type: "Elemination",
+        game: "VolleyBall",
+        status: "Open for register",
+        matches: const {
           "32": [
             MatchCardAdmin(
-                "Ahmed", "Qasim", "Football", "13/13/2013", 1, 2, "name"),
-            MatchCardAdmin(
-                "Ahmed", "Qasim", "Football", "14/13/2013", 1, 2, "name"),
+              id: 1,
+              participantA: "Ahmed",
+              participantB: "Mohammed",
+              game: "VolleyBall",
+              date: "13/13/2013",
+              scoreA: 0,
+              scoreB: 0,
+              title: "lmfao",
+              endDate: false,
+              finished: false,
+            ),
           ]
         },
-      ),
-      TournamentCardAdmin(
-        "Golf gg",
-        "Football",
-        "Robin table",
-        "On going",
-        {},
-      ),
-      TournamentCardAdmin(
-        "Volley-ball 7asa",
-        "Volley-ball",
-        "Elemniation",
-        "Finished",
-        {},
-      ),
+        startDate: "13/13/2013",
+        endDate: "14/14/2013",
+        timeBetween: 2,
+        tournamentBased: "Individual",
+        isOpen: false,
+        isFinished: false,
+      )
     ];
     ControllerStudent tournamentsManager = ControllerStudent(myTournaments);
     ControllerAdmin tournamentManagerAdmin =

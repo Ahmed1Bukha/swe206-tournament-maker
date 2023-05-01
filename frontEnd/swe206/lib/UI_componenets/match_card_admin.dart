@@ -6,17 +6,17 @@ import '../home_admin/match_page_admin.dart';
 
 class MatchCardAdmin extends StatelessWidget {
   const MatchCardAdmin(
-      this.id,
-      this.participantA,
-      this.participantB,
-      this.game,
-      this.date,
-      this.scoreA,
-      this.scoreB,
-      this.title,
-      this.endDate,
-      this.finished,
-      {super.key});
+      {required this.id,
+      required this.participantA,
+      required this.participantB,
+      required this.game,
+      required this.date,
+      required this.scoreA,
+      required this.scoreB,
+      required this.title,
+      required this.endDate,
+      required this.finished,
+      super.key});
   final int id;
   final String participantA;
   final String participantB;

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:swe206/UI_componenets/tournament_card_admin.dart';
-import 'package:swe206/home_admin/modify_page.dart';
+import 'package:swe206/home_admin/modify_pages/modify_page_tournament.dart';
 
 class TournamentPageAdmin extends StatefulWidget {
   const TournamentPageAdmin(this.tournamentCard, {super.key});
@@ -57,7 +57,7 @@ class _TournamentPageAdminState extends State<TournamentPageAdmin> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              ModifyPage(widget.tournamentCard)),
+                              ModifyTournamentPage(widget.tournamentCard)),
                     );
                   },
                   child: Text("Modifiy tournament"),
