@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:swe206/home_student/tournament_page.dart';
+import 'package:swe206/home_student/tournament_page_student.dart';
 
 class TournamentCardStudent extends StatelessWidget {
-  const TournamentCardStudent(this.title, this.game, this.type, this.status,
-      {super.key});
+  const TournamentCardStudent(
+      this.title, this.game, this.type, this.status, this.based,
+      {this.numberOfParticipant = 1, super.key});
   final String title;
   final String game;
   final String type;
   final String status;
+  final String based;
+  final int numberOfParticipant;
 
   @override
   Widget build(BuildContext context) {

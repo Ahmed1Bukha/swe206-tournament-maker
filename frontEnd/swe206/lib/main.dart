@@ -8,7 +8,7 @@ import 'package:swe206/home_admin/main_page_admin.dart';
 import 'package:swe206/home_student/home_page_student.dart';
 import 'package:swe206/home_student/main_page_student.dart';
 import 'package:swe206/home_student/search_page_student.dart';
-import 'package:swe206/home_student/tournament_page.dart';
+import 'package:swe206/home_student/tournament_page_student.dart';
 import 'package:swe206/requests.dart';
 
 import 'UI_componenets/tournament_card_admin.dart';
@@ -19,9 +19,14 @@ void main() {
   Requests.close();
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     List<TournamentCardStudent> myTournaments = const [
@@ -30,28 +35,32 @@ class MyApp extends StatelessWidget {
         "Football",
         "Elemniation",
         "Open for register",
+        "TEAM_BASED",
+        numberOfParticipant: 4,
       ),
       TournamentCardStudent(
         "Golf gg",
         "Football",
         "Robin table",
         "On going",
+        "Individual",
       ),
       TournamentCardStudent(
         "Volley-ball 7asa",
         "Volley-ball",
         "Elemniation",
         "Finished",
+        "Individual",
       ),
     ];
     List<TournamentCardAdmin> myTournamentsAdmin = [
-      TournamentCardAdmin(
+      const TournamentCardAdmin(
         id: 2,
         title: "Volleyball al7asa",
         type: "Elemination",
         game: "VolleyBall",
         status: "Open for register",
-        matches: const {
+        matches: {
           "32": [
             MatchCardAdmin(
               id: 1,

@@ -8,22 +8,24 @@ class Requests {
   static String url = '127.0.0.1:8080';
   static Map<String, String> header = {"Content-Type": "application/json"};
 
-  static Future<String> getRequest(String endpoint) async {
+  static Future getRequest(String endpoint) async {
     try {
       var response = await client.get(
         Uri.http(url, "/$endpoint"),
         headers: header,
       );
+      print("1");
 
       var decodedResponse = utf8.decode(response.bodyBytes);
 
+      print("decodedResponse");
       return decodedResponse;
     } catch (e) {
       throw HttpException("Get request to /$endpoint failed");
     }
   }
 
-  Future<Map> postRequest(String endpoint, Map body) async {
+  static Future<Map> postRequest(String endpoint, Map body) async {
     try {
       var response = await client.post(
         Uri.http(url, "/$endpoint"),
@@ -36,6 +38,10 @@ class Requests {
       throw HttpException("Post request to /$endpoint with body $body failed");
     }
   }
+
+  // static Future<Map> getTournaments() async {
+  //   return getRequest("Tournaments");
+  // }
 
   // Future<Map> putRequest(String endpoint) async {
   //   try {
