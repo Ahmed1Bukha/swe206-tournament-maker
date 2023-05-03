@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 public class Student extends Participant {
     @ManyToMany(mappedBy = "team_members")
     private Set<Team> teams; // Done
-
+    
     @Column
     private long studentId;
 
@@ -88,6 +88,10 @@ public class Student extends Participant {
         return "{" + super.toString().substring(1, super.toString().length() - 1) +
                 "id='" + getId() + "'" +
                 ", name='" + getName() + "'" +
+                "Tournaments" +","+
                 "}";
+    }
+    public Set<Tournament> getTournaments(){
+        return tournaments;
     }
 }

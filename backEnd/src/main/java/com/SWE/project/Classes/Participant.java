@@ -3,6 +3,8 @@ package com.SWE.project.Classes;
 import java.util.Set;
 
 import jakarta.persistence.*;
+
+import java.util.HashSet;
 import java.util.Objects;
 
 @Entity
@@ -28,7 +30,7 @@ public abstract class Participant {
     protected String name;
 
     @ManyToMany(mappedBy = "participants", targetEntity = com.SWE.project.Classes.Tournament.class)
-    protected Set<Tournament> tournaments;
+    protected Set<Tournament> tournaments= new HashSet<>();
 
     @OneToMany(mappedBy = "match_participants")
     protected Set<Match> matches;
