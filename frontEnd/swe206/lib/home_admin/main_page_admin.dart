@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:swe206/authintication/welcome_page.dart';
 import 'package:swe206/classes/controller_admin.dart';
 import 'package:swe206/home_admin/create_tournament_page.dart';
 import 'package:swe206/home_admin/home_page_admin.dart';
@@ -37,7 +38,7 @@ class _MainPageAdminState extends State<MainPageAdmin> {
             widget._selectedIndex = value;
           });
           if (widget._selectedIndex == 3) {
-            Navigator.pushReplacementNamed(context, AuthPage.id);
+            Navigator.pushReplacementNamed(context, WelcomePage.id);
           }
         },
         items: const [

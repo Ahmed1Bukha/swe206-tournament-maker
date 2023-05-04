@@ -4,6 +4,8 @@ import 'package:swe206/classes/controller_student.dart';
 import 'package:swe206/home_student/home_page_student.dart';
 import 'package:swe206/home_student/search_page_student.dart';
 
+import '../authintication/welcome_page.dart';
+
 class MainPageStudent extends StatefulWidget {
   MainPageStudent(this.tournamentsManager, {super.key});
   static String id = "MainPageStudent";
@@ -29,7 +31,7 @@ class _MainPageStudentState extends State<MainPageStudent> {
             widget._selectedIndex = value;
           });
           if (widget._selectedIndex == 2) {
-            Navigator.pushReplacementNamed(context, AuthPage.id);
+            Navigator.pushReplacementNamed(context, WelcomePage.id);
           }
         },
         items: const [

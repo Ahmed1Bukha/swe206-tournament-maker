@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:swe206/UI_componenets/match_card_admin.dart';
+import 'package:swe206/authintication/auth_page_admin.dart';
 import 'package:swe206/authintication/auth_page_student.dart';
+import 'package:swe206/authintication/welcome_page.dart';
 import 'package:swe206/classes/controller_admin.dart';
 import 'package:swe206/classes/controller_student.dart';
 import 'package:swe206/home_admin/home_page_admin.dart';
@@ -90,9 +92,11 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'homeManager',
       theme: ThemeData(),
-      initialRoute: AuthPage.id,
+      initialRoute: WelcomePage.id,
       routes: {
-        AuthPage.id: (context) => AuthPage(),
+        WelcomePage.id: (context) => const WelcomePage(),
+        AuthPageStudent.id: (context) => AuthPageStudent(),
+        AuthPageAdmin.id: (context) => const AuthPageAdmin(),
         MainPageStudent.id: (context) => MainPageStudent(tournamentsManager),
         HomePageStudent.id: (context) => HomePageStudent(tournamentsManager),
         SearchPageStudent.id: (context) =>
