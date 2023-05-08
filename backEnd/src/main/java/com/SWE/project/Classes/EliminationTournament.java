@@ -7,31 +7,46 @@ import java.util.List;
 import java.util.Set;
 
 import com.SWE.project.Enums.TOURNAMENT_TYPES;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
 import java.util.Objects;
 
 @Entity
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", defaultImpl = EliminationTournament.class)
+@DiscriminatorValue("ET")
+@JsonTypeName("ET")
 public class EliminationTournament extends Tournament {
     @OneToMany(targetEntity = com.SWE.project.Classes.Match.class)
+    @JsonView(Views.Public.class)
     List<Set<Match>> allRounds = new ArrayList<Set<Match>>();
 
+    @JsonView(Views.Public.class)
     @ManyToMany // WTF? i have never been more confused in my whole life
-    @JoinTable(name = "elimination_tournament_current_participants", joinColumns = @JoinColumn(name = "tournament_name"), inverseJoinColumns = @JoinColumn(name = "participant_id"))
+    @JoinTable(name = "elimination_tournament_current_participants", joinColumns = @JoinColumn(name = "tournament_id"), inverseJoinColumns = @JoinColumn(name = "participant_id"))
     List<Participant> currentPlayers = new ArrayList<>();
 
     @Column
-    int remainingMatchesInRound;
+    @JsonView(Views.Public.class)
+    Integer remainingMatchesInRound;
 
     public EliminationTournament() {
     }
 
-    public EliminationTournament(String name, long startDate, long endDate, double timeBetweenStages,
+    public EliminationTournament(String name, long startDate, long endDate,
+            double timeBetweenStages,
             String tournamentType) {
         super(name, new Date(startDate), new Date(endDate), timeBetweenStages,
                 tournamentType == "INDIVIDUAL" ? TOURNAMENT_TYPES.INDIVIDUAL : TOURNAMENT_TYPES.TEAM_BASED);
@@ -41,6 +56,29 @@ public class EliminationTournament extends Tournament {
             TOURNAMENT_TYPES tournamentType) {
         super(name, startDate, endDate, timeBetweenStages, tournamentType);
     }
+
+    // @JsonCreator
+    // public EliminationTournament(@JsonProperty("id") Long id,
+    // @JsonProperty("name") String name,
+    // @JsonProperty("startDate") Date startDate, @JsonProperty("endDate") Date
+    // endDate,
+    // @JsonProperty("timeBetweenStages") Double timeBetweenStages,
+    // @JsonProperty("tournamentType") TOURNAMENT_TYPES tournamentType,
+    // @JsonProperty("participants") Set<Participant> participants,
+    // @JsonProperty("currentMatch") Match currentMatch, @JsonProperty("open")
+    // Boolean open,
+    // @JsonProperty("finished") Boolean finished,
+    // @JsonProperty("tournamentMatches") List<Match> tournamentMatches,
+    // @JsonProperty("allRounds") List<Set<Match>> allRounds,
+    // @JsonProperty("currentPlayers") List<Participant> currentPlayers,
+    // @JsonProperty("remainingMatchesInRound") Integer remainingMatchesInRound) {
+    // super(id, name, startDate, endDate, timeBetweenStages, tournamentType,
+    // participants, currentMatch, open,
+    // finished, tournamentMatches);
+    // this.allRounds = null;
+    // this.currentPlayers = null;
+    // this.remainingMatchesInRound = -1;
+    // }
 
     public void generateMatches() {
         Set<Match> matchUps = new HashSet<>();
@@ -115,14 +153,14 @@ public class EliminationTournament extends Tournament {
         }
     }
 
-    public Participant getWinner() {
+    public Participant winner() {
         if (finished) {
             return currentPlayers.get(0);
         }
         throw new IllegalAccessError("Unfinished tournament");
     }
 
-    public Participant getSecondPlace() {
+    public Participant secondPlace() {
         if (finished) {
             Match lastRound = (Match) allRounds.get(allRounds.size() - 1).toArray()[0];
             return lastRound.getLoser();
@@ -146,11 +184,11 @@ public class EliminationTournament extends Tournament {
         this.currentPlayers = currentPlayers;
     }
 
-    public int getRemainingMatchesInRound() {
+    public Integer getRemainingMatchesInRound() {
         return this.remainingMatchesInRound;
     }
 
-    public void setRemainingMatchesInRound(int remainingMatchesInRound) {
+    public void setRemainingMatchesInRound(Integer remainingMatchesInRound) {
         this.remainingMatchesInRound = remainingMatchesInRound;
     }
 

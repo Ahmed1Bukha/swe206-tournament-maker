@@ -3,24 +3,29 @@ package com.SWE.project.Classes;
 import java.util.*;
 
 import com.SWE.project.Enums.*;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import jakarta.persistence.*;
-import java.util.Objects;
 
 @Entity
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", defaultImpl = Team.class)
+@DiscriminatorValue("Team")
+@JsonTypeName("Team")
 public class Team extends Participant {
     @Column(name = "team_name")
+    @JsonView(Views.Public.class)
     private String name;
 
     @ManyToMany
+    @JsonView(Views.Public.class)
     @JoinTable(name = "team_members", joinColumns = @JoinColumn(name = "team_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
     private Set<Student> team_members;
 
     @Column
+    @JsonView(Views.Public.class)
     private GAME_TYPE gameType;
-
-    @ManyToOne // How does this even run?
-    private Tournament tournament;
 
     public Team() {
     }
@@ -29,7 +34,6 @@ public class Team extends Participant {
         this.name = name;
         this.team_members = team_members;
         this.gameType = gameType;
-        this.tournament = tournament;
         this.tournaments = new HashSet<Tournament>(Arrays.asList(tournament));
     }
 
@@ -95,22 +99,22 @@ public class Team extends Participant {
         this.team_members = members;
     }
 
-    public Tournament getTournament() {
-        return this.tournament;
+    public Set<Tournament> getTournaments() {
+        return this.tournaments;
     }
 
-    public void setTournament(Tournament tournament) {
-        this.tournament = tournament;
+    public void setTournaments(Tournament tournament) {
+        this.tournaments = new HashSet<Tournament>(Arrays.asList(tournament));
     }
 
     @Override
     public String toString() {
         System.out.println("T ts");
         return "{" + super.toString().substring(1, super.toString().length() - 1) +
-                "name='" + getName() + "'" +
+                ", name='" + getName() + "'" +
                 ", team_members='" + getTeam_members() + "'" +
                 ", gameType='" + getGameType() + "'" +
-                ", tournament='" + getTournament() + "'" +
+                ", tournament='" + getTournaments() + "'" +
                 "}";
     }
 

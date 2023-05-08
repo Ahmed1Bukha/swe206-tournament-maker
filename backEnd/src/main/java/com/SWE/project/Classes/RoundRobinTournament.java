@@ -3,18 +3,41 @@ package com.SWE.project.Classes;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.SWE.project.Enums.TOURNAMENT_TYPES;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.JsonView;
 
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.MapKeyJoinColumn;
 import jakarta.persistence.OneToMany;
 import java.util.Objects;
 
 @Entity
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", defaultImpl = RoundRobinTournament.class)
+@DiscriminatorValue("RRT")
+@JsonTypeName("RRT")
 public class RoundRobinTournament extends Tournament {
     @OneToMany(targetEntity = com.SWE.project.Classes.Participant.class)
-    private Map<Participant, Integer> teamPoints;
+    @JsonView(Views.Internal.class)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @ElementCollection
+    @CollectionTable(name = "team_points", joinColumns = @JoinColumn(name = "tournament_id"))
+    @Column(name = "points")
+    @MapKeyJoinColumn(name = "team_id")
+    private Map<Participant, Integer> teamPoints = new HashMap<Participant, Integer>();
 
     public RoundRobinTournament() {
     }
@@ -23,12 +46,32 @@ public class RoundRobinTournament extends Tournament {
             String tournamentType) {
         super(name, new Date(startDate), new Date(endDate), timeBetweenStages,
                 tournamentType == "INDIVIDUAL" ? TOURNAMENT_TYPES.INDIVIDUAL : TOURNAMENT_TYPES.TEAM_BASED);
+        System.out.println("RRT C");
     }
 
     public RoundRobinTournament(String name, Date startDate, Date endDate, double timeBetweenStages,
             TOURNAMENT_TYPES tournamentType) {
         super(name, startDate, endDate, timeBetweenStages, tournamentType);
     }
+
+    // @JsonCreator
+    // public RoundRobinTournament(@JsonProperty("id") Long id,
+    // @JsonProperty("name") String name,
+    // @JsonProperty("startDate") Date startDate, @JsonProperty("endDate") Date
+    // endDate,
+    // @JsonProperty("timeBetweenStages") Double timeBetweenStages,
+    // @JsonProperty("tournamentType") TOURNAMENT_TYPES tournamentType,
+    // @JsonProperty("participants") Set<Participant> participants,
+    // @JsonProperty("currentMatch") Match currentMatch, @JsonProperty("open")
+    // Boolean open,
+    // @JsonProperty("finished") Boolean finished,
+    // @JsonProperty("tournamentMatches") List<Match> tournamentMatches,
+    // @JsonProperty("teamPoints") Map<Participant, Integer> teamPoints) {
+    // super(id, name, startDate, endDate, timeBetweenStages, tournamentType,
+    // participants, currentMatch, open,
+    // finished, tournamentMatches);
+    // this.teamPoints = teamPoints;
+    // }
 
     void start() {
         if (open)
@@ -134,7 +177,7 @@ public class RoundRobinTournament extends Tournament {
         }
     }
 
-    public Participant getWinner() {
+    public Participant findWinner() {
         Comparator<Participant> poinComparator = new Comparator<Participant>() {
             public int compare(Participant a, Participant b) {
                 return a.getPoints() - b.getPoints();
@@ -170,7 +213,7 @@ public class RoundRobinTournament extends Tournament {
         System.out.println("RT ts");
         return "{" +
                 super.toString().substring(1, super.toString().length() - 1) +
-                " teamPoints='" + getTeamPoints() + "'" +
+                // ", teamPoints='" + getTeamPoints() + "'" +
                 "}";
     }
 

@@ -3,63 +3,121 @@ package com.SWE.project.Classes;
 import java.util.*;
 
 import com.SWE.project.Enums.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "Tournaments")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = EliminationTournament.class, name = "EliminationTournament"),
+        @JsonSubTypes.Type(value = RoundRobinTournament.class, name = "RoundRobinTournament")
+})
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@DiscriminatorColumn(name = "DISCRIM", discriminatorType = DiscriminatorType.STRING)
+// @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Tournament {
     @Column
     @Id
     @GeneratedValue
-    private long id;
+    @JsonView(Views.Public.class)
+    protected Long id;
 
     @Column(name = "tournament_name")
-    private String name;
+    @JsonView(Views.Public.class)
+    protected String name;
 
     @Column
-    private Date startDate;
+    @JsonView(Views.Public.class)
+    protected Date startDate;
 
     @Column
-    private Date endDate;
+    @JsonView(Views.Public.class)
+    protected Date endDate;
 
     @Column
-    private double timeBetweenStages;
+    @JsonView(Views.Public.class)
+    protected double timeBetweenStages;
 
     @Column
-    private TOURNAMENT_TYPES tournamentType;
+    @JsonView(Views.Public.class)
+    protected TOURNAMENT_TYPES tournamentType;
 
+    // @JsonIgnore
+    @JsonView(Views.Public.class)
     @ManyToMany(targetEntity = com.SWE.project.Classes.Participant.class)
-    @JoinTable(name = "tournament_participants", joinColumns = @JoinColumn(name = "tournament_name"), inverseJoinColumns = @JoinColumn(name = "participant_id"))
-    protected Set<Participant> participants;
+    @JoinTable(name = "tournament_participants", joinColumns = @JoinColumn(name = "tournament_id", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "participant_id", referencedColumnName = "ID"))
+    @JsonIgnoreProperties({ "tournaments", "goalsMade", "goalsRecieved", "wins", "points", "matches", "teams" })
+    protected Set<Participant> participants = new HashSet<Participant>();
 
     @OneToOne(mappedBy = "tournament") // Possible issue
     @PrimaryKeyJoinColumn
+    @JsonView(Views.Public.class)
     protected Match currentMatch;
 
     @Column
+    @JsonView(Views.Public.class)
     protected boolean open = true;
 
     @Column
+    @JsonView(Views.Public.class)
     protected boolean finished = false;
 
     @OneToMany(mappedBy = "tournament")
+    @JsonView(Views.Public.class)
     protected List<Match> tournamentMatches = new ArrayList<>();
 
     // Game object
 
-    protected Tournament() {
-    }
-
-    protected Tournament(String name, Date startDate, Date endDate, double timeBetweenStages,
+    protected Tournament(String name, Date startDate,
+            Date endDate, double timeBetweenStages,
             TOURNAMENT_TYPES tournamentType) {
-        this.name = name;
+        System.out.println("T C");
+        // this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
         this.timeBetweenStages = timeBetweenStages;
         this.tournamentType = tournamentType;
         participants = new HashSet<>();
     }
+
+    public Tournament() {
+
+    }
+
+    // @JsonCreator
+    // public Tournament(@JsonProperty("id") Long id, @JsonProperty("name") String
+    // name,
+    // @JsonProperty("startDate") Date startDate, @JsonProperty("endDate") Date
+    // endDate,
+    // @JsonProperty("timeBetweenStages") Double timeBetweenStages,
+    // @JsonProperty("tournamentType") TOURNAMENT_TYPES tournamentType,
+    // @JsonProperty("participants") Set<Participant> participants,
+    // @JsonProperty("currentMatch") Match currentMatch, @JsonProperty("open")
+    // Boolean open,
+    // @JsonProperty("finished") Boolean finished,
+    // @JsonProperty("tournamentMatches") List<Match> tournamentMatches) {
+    // this.id = id;
+    // this.name = name;
+    // this.startDate = startDate;
+    // this.endDate = endDate;
+    // this.timeBetweenStages = timeBetweenStages;
+    // this.tournamentType = tournamentType;
+    // this.participants = null;
+    // this.currentMatch = null;
+    // this.open = true;
+    // this.finished = false;
+    // this.tournamentMatches = null;
+    // }
 
     abstract void start();
 
@@ -75,14 +133,12 @@ public abstract class Tournament {
                 if (x instanceof Team)
                     throw new IllegalArgumentException("This is an individual's tournament");
                 participants.add(x);
-
             }
             case TEAM_BASED -> {
                 if (x instanceof Student)
                     throw new IllegalArgumentException("This is a Team's tournament");
                 participants.add(x);
             }
-
         }
         x.addTournament(this);
     }

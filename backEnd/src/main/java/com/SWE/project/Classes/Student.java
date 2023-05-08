@@ -2,20 +2,29 @@ package com.SWE.project.Classes;
 
 import java.util.*;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.JsonView;
+
 import jakarta.persistence.*;
 
 @Entity
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", defaultImpl = Student.class)
+@DiscriminatorValue("Student")
+@JsonTypeName("Student")
 public class Student extends Participant {
     @ManyToMany(mappedBy = "team_members")
+    @JsonView(Views.Internal.class)
     private Set<Team> teams; // Done
 
     @Column
-    private long studentId;
+    @JsonView(Views.Public.class)
+    private Long studentId;
 
     public Student() {
     }
 
-    public Student(long studentId, String name) {
+    public Student(Long studentId, String name) {
         this.studentId = studentId;
         this.name = name;
     }
@@ -44,6 +53,7 @@ public class Student extends Participant {
     @Override
     public void addTournament(Tournament tournament) {
         this.tournaments.add(tournament);
+        System.out.println(tournaments.size());
     }
 
     public long getStudentId() {
@@ -86,7 +96,7 @@ public class Student extends Participant {
     public String toString() {
         System.out.println("S ts");
         return "{" + super.toString().substring(1, super.toString().length() - 1) +
-                "id='" + getId() + "'" +
+                ", studentId='" + getStudentId() + "'" +
                 ", name='" + getName() + "'" +
                 "}";
     }

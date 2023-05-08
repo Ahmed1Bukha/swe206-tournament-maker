@@ -1,36 +1,63 @@
 package com.SWE.project.Classes;
 
+import java.util.HashSet;
 import java.util.Set;
 
-import jakarta.persistence.*;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import jakarta.persistence.*;
+
+// @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 // @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Team.class, name = "Team"),
+        @JsonSubTypes.Type(value = Student.class, name = "Student")
+})
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@DiscriminatorColumn(name = "DISCRIM", discriminatorType = DiscriminatorType.STRING)
 public abstract class Participant {
     @Id
     @GeneratedValue
-    protected long id;
+    @JsonView(Views.Public.class)
+    protected Long id;
 
     @Column
-    protected int goalsMade = 0;
+    @JsonView(Views.Public.class)
+    protected Integer goalsMade = 0;
 
     @Column
-    protected int goalsRecieved = 0;
+    @JsonView(Views.Public.class)
+    protected Integer goalsRecieved = 0;
 
     @Column
-    protected int wins = 0;
+    @JsonView(Views.Public.class)
+    protected Integer wins = 0;
 
     @Column
-    protected int points = 0;
+    @JsonView(Views.Public.class)
+    protected Integer points = 0;
 
     @Column
+    @JsonView(Views.Public.class)
     protected String name;
 
-    @ManyToMany(mappedBy = "participants", targetEntity = com.SWE.project.Classes.Tournament.class)
-    protected Set<Tournament> tournaments;
+    // @JsonIgnore
+    @JsonView(Views.Public.class)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "participants", targetEntity = com.SWE.project.Classes.Tournament.class)
+    @JsonIgnoreProperties({ "type", "startDate", "endDate", "timeBetweenStages", "tournamentType", "participants",
+            "currentMatch", "open", "finished", "tournamentMatches", "allRounds", "currentPlayers",
+            "remainingMatchesInRound" })
+    protected Set<Tournament> tournaments = new HashSet<Tournament>();
 
     @OneToMany(mappedBy = "match_participants")
+    @JsonView(Views.Internal.class)
     protected Set<Match> matches;
 
     public Participant() {
@@ -110,7 +137,7 @@ public abstract class Participant {
     public String toString() {
         System.out.println("P ts");
         return "{" +
-                " id='" + getId() + "'" +
+                "id='" + getId() + "'" +
                 ", goalsMade='" + getGoalsMade() + "'" +
                 ", goalsRecieved='" + getGoalsRecieved() + "'" +
                 ", wins='" + getWins() + "'" +
