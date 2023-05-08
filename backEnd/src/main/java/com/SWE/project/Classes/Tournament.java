@@ -36,6 +36,8 @@ public abstract class Tournament {
     @JsonView(Views.Public.class)
     protected String name;
 
+    protected int ParticipantCount;
+
     @Column
     @JsonView(Views.Public.class)
     protected Date startDate;
@@ -78,11 +80,12 @@ public abstract class Tournament {
 
     // Game object
 
-    protected Tournament(String name, Date startDate,
+    protected Tournament(String name, int participantCount, Date startDate,
             Date endDate, double timeBetweenStages,
             TOURNAMENT_TYPES tournamentType) {
         System.out.println("T C");
-        // this.name = name;
+        this.name = name;
+        this.ParticipantCount = participantCount;
         this.startDate = startDate;
         this.endDate = endDate;
         this.timeBetweenStages = timeBetweenStages;

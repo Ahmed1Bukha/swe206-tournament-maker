@@ -45,16 +45,16 @@ public class EliminationTournament extends Tournament {
     public EliminationTournament() {
     }
 
-    public EliminationTournament(String name, long startDate, long endDate,
+    public EliminationTournament(String name, int participantCount, long startDate, long endDate,
             double timeBetweenStages,
             String tournamentType) {
-        super(name, new Date(startDate), new Date(endDate), timeBetweenStages,
+        super(name, participantCount, new Date(startDate), new Date(endDate), timeBetweenStages,
                 tournamentType == "INDIVIDUAL" ? TOURNAMENT_TYPES.INDIVIDUAL : TOURNAMENT_TYPES.TEAM_BASED);
     }
 
-    EliminationTournament(String name, Date startDate, Date endDate, double timeBetweenStages,
+    EliminationTournament(String name, int participantCount, Date startDate, Date endDate, double timeBetweenStages,
             TOURNAMENT_TYPES tournamentType) {
-        super(name, startDate, endDate, timeBetweenStages, tournamentType);
+        super(name, participantCount, startDate, endDate, timeBetweenStages, tournamentType);
     }
 
     // @JsonCreator

@@ -42,16 +42,18 @@ public class RoundRobinTournament extends Tournament {
     public RoundRobinTournament() {
     }
 
-    public RoundRobinTournament(String name, long startDate, long endDate, double timeBetweenStages,
+    public RoundRobinTournament(String name, int participantCount, long startDate, long endDate,
+            double timeBetweenStages,
             String tournamentType) {
-        super(name, new Date(startDate), new Date(endDate), timeBetweenStages,
+        super(name, participantCount, new Date(startDate), new Date(endDate), timeBetweenStages,
                 tournamentType == "INDIVIDUAL" ? TOURNAMENT_TYPES.INDIVIDUAL : TOURNAMENT_TYPES.TEAM_BASED);
         System.out.println("RRT C");
     }
 
-    public RoundRobinTournament(String name, Date startDate, Date endDate, double timeBetweenStages,
+    public RoundRobinTournament(String name, int participantCount, Date startDate, Date endDate,
+            double timeBetweenStages,
             TOURNAMENT_TYPES tournamentType) {
-        super(name, startDate, endDate, timeBetweenStages, tournamentType);
+        super(name, participantCount, startDate, endDate, timeBetweenStages, tournamentType);
     }
 
     // @JsonCreator
@@ -104,9 +106,9 @@ public class RoundRobinTournament extends Tournament {
                 b = array.get((i + array.size() - j) % array.size());
 
                 if (a == null)
-                    tournamentMatches.add(new Match(new Participant[] { b ,null}, true));
+                    tournamentMatches.add(new Match(new Participant[] { b, null }, true));
                 else if (b == null)
-                    tournamentMatches.add(new Match(new Participant[] { a ,null}, true));
+                    tournamentMatches.add(new Match(new Participant[] { a, null }, true));
 
                 else
                     tournamentMatches.add(new Match(new Participant[] { a, b }, false));
