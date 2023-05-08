@@ -12,6 +12,8 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+
 // @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 // @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)

@@ -16,7 +16,7 @@ public class Student extends Participant {
     @ManyToMany(mappedBy = "team_members")
     @JsonView(Views.Internal.class)
     private Set<Team> teams; // Done
-
+    
     @Column
     @JsonView(Views.Public.class)
     private Long studentId;
@@ -98,6 +98,10 @@ public class Student extends Participant {
         return "{" + super.toString().substring(1, super.toString().length() - 1) +
                 ", studentId='" + getStudentId() + "'" +
                 ", name='" + getName() + "'" +
+                "Tournaments" +","+
                 "}";
+    }
+    public Set<Tournament> getTournaments(){
+        return tournaments;
     }
 }

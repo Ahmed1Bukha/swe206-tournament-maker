@@ -6,6 +6,27 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Login",
+            "request": "launch",
+            "mainClass": "com.SWE.project.Classes.Login",
+            "projectName": "project"
+        },
+        {
+            "type": "java",
+            "name": "HelloWorld",
+            "request": "launch",
+            "mainClass": "com.SWE.project.Classes.HelloWorld",
+            "projectName": "project"
+        },
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "com.SWE.project.Main",
+            "projectName": "project"
+        },
+        {
+            "type": "java",
             "name": "test",
             "request": "launch",
             "mainClass": "com.SWE.project.Classes.test",

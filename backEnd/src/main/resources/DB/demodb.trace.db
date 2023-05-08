@@ -230,6 +230,7 @@ select e1_0.tournament_name,c1_0.match_id,c1_0.dummy_match,c1_0.end_date,c1_0.fi
 2023-04-29 02:04:34 jdbc[13]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM PARTICIPANT STUDENT [*]STUDENT"; SQL statement:
 SELECT * FROM PARTICIPANT STUDENT STUDENT [42000-214]
+<<<<<<< HEAD
 2023-05-01 00:24:26 jdbc[13]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM STUDENT TEAM [*]TOURNAMENTS_CURRENT_PLAYERS"; SQL statement:
 SELECT * FROM STUDENT TEAM TOURNAMENTS_CURRENT_PLAYERS [42000-214]
@@ -579,3 +580,8 @@ drop table ELIMINATION_TOURNAMENT [90107-214]
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
 	at java.base/java.lang.Thread.run(Thread.java:1589)
+=======
+2023-05-01 14:10:12 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]TEAM_ID"; expected "TRUNCATE"; SQL statement:
+TEAM_ID [42001-214]
+>>>>>>> bc52579cc44001766b69ee09a8537177e2575390

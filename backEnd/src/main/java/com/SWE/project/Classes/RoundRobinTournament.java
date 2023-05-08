@@ -104,9 +104,9 @@ public class RoundRobinTournament extends Tournament {
                 b = array.get((i + array.size() - j) % array.size());
 
                 if (a == null)
-                    tournamentMatches.add(new Match(new Participant[] { b }, true));
+                    tournamentMatches.add(new Match(new Participant[] { b ,null}, true));
                 else if (b == null)
-                    tournamentMatches.add(new Match(new Participant[] { a }, true));
+                    tournamentMatches.add(new Match(new Participant[] { a ,null}, true));
 
                 else
                     tournamentMatches.add(new Match(new Participant[] { a, b }, false));

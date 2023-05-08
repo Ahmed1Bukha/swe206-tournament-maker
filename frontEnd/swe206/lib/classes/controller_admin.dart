@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:swe206/UI_componenets/match_card_admin.dart';
 import 'package:swe206/UI_componenets/tournament_card_admin.dart';
 
@@ -28,4 +29,20 @@ class ControllerAdmin {
   }
 
   List<TournamentCardAdmin> getTournaments() => tournamentsList;
+
+  searchResult(String inputSearch) {
+    List<TournamentCardAdmin> results = [];
+    for (TournamentCardAdmin name in tournamentsList) {
+      if (name.title.toLowerCase().contains(inputSearch.toLowerCase())) {
+        results.add(name);
+      }
+    }
+    print(results);
+    if (results.isEmpty) {
+      return [const Text("No search found :(")];
+    } else if (inputSearch == "") {
+      return [];
+    }
+    return results;
+  }
 }

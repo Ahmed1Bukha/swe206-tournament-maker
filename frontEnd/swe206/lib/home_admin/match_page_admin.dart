@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:swe206/UI_componenets/match_card_admin.dart';
+import 'package:swe206/home_admin/modify_pages/modify_page_match.dart';
 
 class MatchPageAdmin extends StatelessWidget {
   MatchPageAdmin(this.matchCardAdmin, {super.key});
@@ -46,7 +47,11 @@ class MatchPageAdmin extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ModifyMatchPage(matchCardAdmin),
+                  ));
             },
             child: Text("Edit match"),
           )
