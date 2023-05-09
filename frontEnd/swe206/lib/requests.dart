@@ -49,14 +49,20 @@ class Requests {
       var response = await client.get(
         authUrl,
       );
-      print(response.headers);
+      print(0);
+      print(response);
 
       if (response.statusCode == 200) {
         print("Pog user");
         var decoderes = jsonDecode(utf8.decode(response.bodyBytes));
+        if (decoderes["type"] == "student") {
+          return "IsStudent";
+        } else if (decoderes["type"] == "admin") {
+          return "IsAdmin";
+        }
         print(decoderes);
       } else if (response.statusCode == 403) {
-        print("Not pog user");
+        return "Error";
       }
     } catch (e) {
       print(e);
