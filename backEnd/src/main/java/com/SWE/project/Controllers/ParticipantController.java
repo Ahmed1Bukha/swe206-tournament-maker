@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.SWE.project.Classes.Student;
-import com.SWE.project.Classes.Views;
 import com.SWE.project.Exceptions.StudentNotFoundException;
 import com.SWE.project.Repositories.ParticipantRepo;
 import com.SWE.project.Repositories.StudentRepo;
@@ -21,9 +20,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 
 @RestController
 public class ParticipantController {
@@ -77,7 +74,7 @@ public class ParticipantController {
             student.setGoalsRecieved(newStudent.getGoalsRecieved());
             student.setTournaments(newStudent.getTournaments());
             student.setGoalsMade(newStudent.getGoalsMade());
-            student.setMatches(newStudent.getMatches());
+            // student.setMatches(newStudent.getMatches());
             student.setPoints(newStudent.getPoints());
             student.setWins(newStudent.getWins());
             student.setName(newStudent.getName());
