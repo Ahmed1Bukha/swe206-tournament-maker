@@ -17,9 +17,7 @@ import 'UI_componenets/tournament_card_admin.dart';
 import 'UI_componenets/tournament_card_student.dart';
 
 void main() async {
-  await Requests.authUser("9215", "6199");
   runApp(const MyApp());
-  Requests.close();
 }
 
 class MyApp extends StatefulWidget {
