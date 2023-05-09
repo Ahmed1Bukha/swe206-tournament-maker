@@ -3,6 +3,7 @@ package com.SWE.project.Classes;
 import java.util.*;
 
 import com.SWE.project.Enums.*;
+import com.SWE.project.Exceptions.TournamentRegistrationClosedException;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -102,20 +103,22 @@ public abstract class Tournament {
     abstract void enterResults(int firstScore, int secondScore);
 
     public void addParticipant(Participant x) {
-        if (!open)
-            throw new IllegalArgumentException("Registiration finished");
+        if (ParticipantCount == participants.size() || !open) {
+            this.open = false;
+            throw new TournamentRegistrationClosedException(this.id);
+        }
         switch (tournamentType) {
             case INDIVIDUAL -> {
                 if (x instanceof Team)
                     throw new IllegalArgumentException("This is an individual's tournament");
-                participants.add(x);
+                // participants.add(x);
             }
             case TEAM_BASED -> {
                 if (x instanceof Student)
                     throw new IllegalArgumentException("This is a Team's tournament");
-                participants.add(x);
             }
         }
+        participants.add(x);
         x.addTournament(this);
     }
 
