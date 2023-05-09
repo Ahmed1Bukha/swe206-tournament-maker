@@ -1,6 +1,9 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 class Requests {
@@ -14,11 +17,8 @@ class Requests {
         Uri.http(url, "/$endpoint"),
         headers: header,
       );
-      print("1");
-
-      var decodedResponse = utf8.decode(response.bodyBytes);
-
-      print("decodedResponse");
+      print(response.statusCode);
+      var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
       return decodedResponse;
     } catch (e) {
       throw HttpException("Get request to /$endpoint failed");
@@ -36,6 +36,31 @@ class Requests {
       return decodedResponse;
     } catch (e) {
       throw HttpException("Post request to /$endpoint with body $body failed");
+    }
+  }
+
+  static Future authUser(String userName, String password) async {
+    //TODO make sure that u make the difference between admin and student/
+    var authUrl = Uri.parse(
+        "https://us-central1-swe206-221.cloudfunctions.net/app/UserSignIn?username=${userName}&password=${password}");
+    print(0);
+    try {
+      print(authUrl);
+      var response = await client.get(
+        authUrl,
+      );
+      print(response.headers);
+
+      if (response.statusCode == 200) {
+        print("Pog user");
+        var decoderes = jsonDecode(utf8.decode(response.bodyBytes));
+        print(decoderes);
+      } else if (response.statusCode == 403) {
+        print("Not pog user");
+      }
+    } catch (e) {
+      print(e);
+      throw HttpException("failed");
     }
   }
 
