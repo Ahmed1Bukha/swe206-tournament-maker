@@ -27,6 +27,7 @@ public class Student extends Participant {
     }
 
     public Student(Long studentId, String name) {
+        
         this.studentId = studentId;
         this.name = name;
     }

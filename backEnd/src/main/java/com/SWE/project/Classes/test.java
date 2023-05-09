@@ -5,7 +5,7 @@ import com.SWE.project.Enums.TOURNAMENT_TYPES;
 public class test {
     public static void main(String[] args) {
         EliminationTournament robinTournament = new EliminationTournament("Test",
-                0, null, null, 100,
+                4, null, null, 100,
                 TOURNAMENT_TYPES.INDIVIDUAL);
         Student a = new Student(0L, "1");
         Student b = new Student(0L, "2");

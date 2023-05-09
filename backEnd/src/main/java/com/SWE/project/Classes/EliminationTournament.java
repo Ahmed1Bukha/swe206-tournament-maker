@@ -3,6 +3,7 @@ package com.SWE.project.Classes;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -64,12 +65,12 @@ public class EliminationTournament extends Tournament {
         if (set.size() % 2 == 1)
             set.add(null);
         ArrayList<Participant> temp = new ArrayList<>(set);
-        while (matchUps.size() != set.size() / 2) {
-            int num1 = (int) (Math.random() * set.size());
-            int num2 = (int) (Math.random() * set.size());
-
-            if (num1 == num2)
-                continue;
+        if(open){
+            Collections.shuffle(temp);
+        }
+        for(int i=0;i<temp.size();i+=2){
+            int num1 = i;
+            int num2 = i+1;
             if (temp.get(num1) != null && temp.get(num2) != null) {
                 matchUps.add(new Match(new Participant[] { temp.get(num1), temp.get(num2) },
                         false));
@@ -78,10 +79,8 @@ public class EliminationTournament extends Tournament {
 
             } else {
                 matchUps.add(new Match(new Participant[] { temp.get(num2), null }, true));
-
-            }
-
         }
+    }
         tournamentMatches = new ArrayList<>(matchUps);
         allRounds.add(matchUps);
         remainingMatchesInRound = tournamentMatches.size();
@@ -104,23 +103,29 @@ public class EliminationTournament extends Tournament {
 
     @Override
     void enterResults(int firstScore, int secondScore) {
-        // TODO Auto-generated method stub
 
         currentMatch.enterResults(firstScore, secondScore);
         int index = tournamentMatches.indexOf(currentMatch);
         currentPlayers.remove(currentMatch.decideLoser());
+
         if (remainingMatchesInRound > 0) {
             remainingMatchesInRound--;
             if (!tournamentMatches.get(index + 1).dummyMatch) {
                 currentMatch = tournamentMatches.get(index + 1);
             }
+            else{
+            currentPlayers.remove(tournamentMatches.get(index+1).decideLoser());
             remainingMatchesInRound--;
+
             if (remainingMatchesInRound > 0) {
                 currentMatch = tournamentMatches.get(index + 2);
             }
-            generateMatches();
-            currentMatch = tournamentMatches.get(0);
-            remainingMatchesInRound--;
+            else{
+                generateMatches();
+                currentMatch = tournamentMatches.get(0);
+                remainingMatchesInRound--;
+            }
+        }
         } else {
             generateMatches();
             currentMatch = tournamentMatches.get(0);

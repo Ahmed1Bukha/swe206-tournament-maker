@@ -28,7 +28,7 @@ public abstract class Participant {
     @Id
     @GeneratedValue
     @JsonView(Views.Public.class)
-    protected Long id;
+    protected Long id=0L;
 
     @Column
     @JsonView(Views.Public.class)

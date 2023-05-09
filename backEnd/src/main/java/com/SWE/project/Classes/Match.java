@@ -84,6 +84,7 @@ public class Match {
     }
 
     public Participant decideLoser() {
+        if(dummyMatch) return match_participants[1];
         if (scoreA < scoreB)
             return match_participants[0];
         return match_participants[1];
