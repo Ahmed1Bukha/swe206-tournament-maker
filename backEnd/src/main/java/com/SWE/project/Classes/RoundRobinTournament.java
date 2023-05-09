@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.SWE.project.Enums.TOURNAMENT_TYPES;
@@ -19,8 +18,6 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.MapKeyJoinColumn;
 import jakarta.persistence.OneToMany;
 import java.util.Objects;
@@ -55,25 +52,6 @@ public class RoundRobinTournament extends Tournament {
             TOURNAMENT_TYPES tournamentType) {
         super(name, participantCount, startDate, endDate, timeBetweenStages, tournamentType);
     }
-
-    // @JsonCreator
-    // public RoundRobinTournament(@JsonProperty("id") Long id,
-    // @JsonProperty("name") String name,
-    // @JsonProperty("startDate") Date startDate, @JsonProperty("endDate") Date
-    // endDate,
-    // @JsonProperty("timeBetweenStages") Double timeBetweenStages,
-    // @JsonProperty("tournamentType") TOURNAMENT_TYPES tournamentType,
-    // @JsonProperty("participants") Set<Participant> participants,
-    // @JsonProperty("currentMatch") Match currentMatch, @JsonProperty("open")
-    // Boolean open,
-    // @JsonProperty("finished") Boolean finished,
-    // @JsonProperty("tournamentMatches") List<Match> tournamentMatches,
-    // @JsonProperty("teamPoints") Map<Participant, Integer> teamPoints) {
-    // super(id, name, startDate, endDate, timeBetweenStages, tournamentType,
-    // participants, currentMatch, open,
-    // finished, tournamentMatches);
-    // this.teamPoints = teamPoints;
-    // }
 
     void start() {
         if (open)
@@ -112,12 +90,11 @@ public class RoundRobinTournament extends Tournament {
 
                 else
                     tournamentMatches.add(new Match(new Participant[] { a, b }, false));
-
             }
         }
     }
 
-    public ArrayList<ArrayList<Match>> getRounds() {
+    public ArrayList<ArrayList<Match>> generateRounds() {
         ArrayList<ArrayList<Match>> temp = new ArrayList<>();
         int numberOfRounds, numberOfMatchesPerRound;
         if (!(participants.size() % 2 == 0)) {

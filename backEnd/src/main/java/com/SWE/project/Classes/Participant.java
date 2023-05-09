@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.*;
 
-import java.util.HashSet;
+import java.util.Objects;
 
 // @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
@@ -73,7 +73,9 @@ public abstract class Participant {
 
     abstract void lost(int GoalsMade, int goalsRecieved);
 
-    abstract String getName();
+    public String getName() {
+        return this.name;
+    }
 
     public long getId() {
         return this.id;
@@ -136,6 +138,25 @@ public abstract class Participant {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof Participant)) {
+            return false;
+        }
+        Participant participant = (Participant) o;
+        return Objects.equals(id, participant.id) && Objects.equals(goalsMade, participant.goalsMade)
+                && Objects.equals(goalsRecieved, participant.goalsRecieved) && Objects.equals(wins, participant.wins)
+                && Objects.equals(points, participant.points) && Objects.equals(name, participant.name);
+    }
+
+    @Override
+    public int hashCode() {
+        System.out.println("P hc");
+        return Objects.hash(id, goalsMade, goalsRecieved, wins, points, name);
+    }
+
+    @Override
     public String toString() {
         System.out.println("P ts");
         return "{" +
@@ -145,7 +166,6 @@ public abstract class Participant {
                 ", wins='" + getWins() + "'" +
                 ", points='" + getPoints() + "'" +
                 ", name='" + getName() + "'" +
-                ", matches='" + getMatches() + "'" +
                 "}";
     }
 }

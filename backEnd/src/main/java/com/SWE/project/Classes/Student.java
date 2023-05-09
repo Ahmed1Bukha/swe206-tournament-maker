@@ -2,6 +2,7 @@ package com.SWE.project.Classes;
 
 import java.util.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -15,8 +16,9 @@ import jakarta.persistence.*;
 public class Student extends Participant {
     @ManyToMany(mappedBy = "team_members")
     @JsonView(Views.Internal.class)
+    @JsonIgnoreProperties({ "team_members" })
     private Set<Team> teams; // Done
-    
+
     @Column
     @JsonView(Views.Public.class)
     private Long studentId;
@@ -53,23 +55,22 @@ public class Student extends Participant {
     @Override
     public void addTournament(Tournament tournament) {
         this.tournaments.add(tournament);
-        System.out.println(tournaments.size());
     }
 
-    public long getStudentId() {
+    public Set<Team> getTeams() {
+        return this.teams;
+    }
+
+    public void setTeams(Set<Team> teams) {
+        this.teams = teams;
+    }
+
+    public Long getStudentId() {
         return this.studentId;
     }
 
-    public void setStudentId(long studentId) {
+    public void setStudentId(Long studentId) {
         this.studentId = studentId;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     @Override
@@ -89,19 +90,15 @@ public class Student extends Participant {
     @Override
     public int hashCode() {
         System.out.println("S hc");
-        return Objects.hash(goalsMade, goalsRecieved, wins, points, id, name);
+        return 31 * super.hashCode() + Objects.hash(goalsMade, goalsRecieved, wins, points, id, name);
     }
 
     @Override
     public String toString() {
         System.out.println("S ts");
         return "{" + super.toString().substring(1, super.toString().length() - 1) +
-                ", studentId='" + getStudentId() + "'" +
-                ", name='" + getName() + "'" +
-                "Tournaments" +","+
+        // ", studentId='" + getStudentId() + "'" +
+        // "Tournaments" +
                 "}";
-    }
-    public Set<Tournament> getTournaments(){
-        return tournaments;
     }
 }

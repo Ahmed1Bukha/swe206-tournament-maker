@@ -4,11 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import com.SWE.project.Classes.Student;
-import com.SWE.project.Classes.Views;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.modelmapper.ModelMapper;
 
 @SpringBootApplication
@@ -24,4 +20,3 @@ public class Main {
 	}
 
 }
-	

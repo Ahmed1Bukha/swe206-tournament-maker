@@ -3,11 +3,8 @@ package com.SWE.project.Classes;
 import java.util.*;
 
 import com.SWE.project.Enums.*;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -36,6 +33,7 @@ public abstract class Tournament {
     @JsonView(Views.Public.class)
     protected String name;
 
+    @Column
     protected int ParticipantCount;
 
     @Column
@@ -96,31 +94,6 @@ public abstract class Tournament {
     public Tournament() {
 
     }
-
-    // @JsonCreator
-    // public Tournament(@JsonProperty("id") Long id, @JsonProperty("name") String
-    // name,
-    // @JsonProperty("startDate") Date startDate, @JsonProperty("endDate") Date
-    // endDate,
-    // @JsonProperty("timeBetweenStages") Double timeBetweenStages,
-    // @JsonProperty("tournamentType") TOURNAMENT_TYPES tournamentType,
-    // @JsonProperty("participants") Set<Participant> participants,
-    // @JsonProperty("currentMatch") Match currentMatch, @JsonProperty("open")
-    // Boolean open,
-    // @JsonProperty("finished") Boolean finished,
-    // @JsonProperty("tournamentMatches") List<Match> tournamentMatches) {
-    // this.id = id;
-    // this.name = name;
-    // this.startDate = startDate;
-    // this.endDate = endDate;
-    // this.timeBetweenStages = timeBetweenStages;
-    // this.tournamentType = tournamentType;
-    // this.participants = null;
-    // this.currentMatch = null;
-    // this.open = true;
-    // this.finished = false;
-    // this.tournamentMatches = null;
-    // }
 
     abstract void start();
 

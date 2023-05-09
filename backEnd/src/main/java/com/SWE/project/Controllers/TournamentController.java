@@ -1,25 +1,18 @@
 package com.SWE.project.Controllers;
 
 import java.util.*;
-import java.util.stream.Stream;
-
-import org.apache.catalina.mapper.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import com.SWE.project.Classes.*;
 import com.SWE.project.Exceptions.*;
 import com.SWE.project.Repositories.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-
-import io.micrometer.core.instrument.MeterRegistry.Config;
 
 @RestController
 public class TournamentController {
@@ -73,17 +66,19 @@ public class TournamentController {
         // return null;
     }
 
-    @GetMapping("/Tournaments/getMatches/{TournamentId}")
-    List<Match> getMatches(@PathVariable("TournamentId") Long id) throws JsonMappingException, JsonProcessingException {
-        // return om.readValue(om.writerWithView(Views.Public.class)
-        // .writeValueAsString(tournamentRepo.findById(id).orElseThrow(() -> new
-        // TournamentNotFoundException(id))
-        // .getTournamentMatches()),
-        // new TypeReference<List<Match>>() {
-        // });
-        return tournamentRepo.findById(id).orElseThrow(() -> new TournamentNotFoundException(id))
-                .getTournamentMatches();
-    }
+    // @GetMapping("/Tournaments/getMatches/{TournamentId}")
+    // List<Match> getMatches(@PathVariable("TournamentId") Long id) throws
+    // JsonMappingException, JsonProcessingException {
+    // // return om.readValue(om.writerWithView(Views.Public.class)
+    // // .writeValueAsString(tournamentRepo.findById(id).orElseThrow(() -> new
+    // // TournamentNotFoundException(id))
+    // // .getTournamentMatches()),
+    // // new TypeReference<List<Match>>() {
+    // // });
+    // return tournamentRepo.findById(id).orElseThrow(() -> new
+    // TournamentNotFoundException(id))
+    // .getTournamentMatches();
+    // }
 
     @GetMapping("/Tournaments/getParticipants/{TournamentId}")
     Set<Participant> getParticipants(@PathVariable("TournamentId") long id)
@@ -135,7 +130,7 @@ public class TournamentController {
             throws TournamentNotFoundException, JsonMappingException,
             JsonProcessingException {
         return tournamentRepo.findById(id).map(tournament -> {
-            tournament.setTournamentMatches(newTournament.getTournamentMatches());
+            // tournament.setTournamentMatches(newTournament.getTournamentMatches());
             tournament.setTimeBetweenStages(newTournament.getTimeBetweenStages());
             tournament.setTournamentType(newTournament.getTournamentType());
             tournament.setCurrentMatch(newTournament.getCurrentMatch());
@@ -181,8 +176,9 @@ public class TournamentController {
                     throw new TournamentRegistrationClosedException(tournamentId);
                 // Check if full
                 t.addParticipant(p);
-                participantRepo.save(p);
                 tournamentRepo.save(t);
+                participantRepo.save(p);
+                // tournamentRepo.
             }, () -> {
                 throw new ParticipantNotFoundException(participantId);
             });

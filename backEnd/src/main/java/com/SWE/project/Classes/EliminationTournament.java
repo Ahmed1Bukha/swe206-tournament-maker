@@ -2,13 +2,10 @@ package com.SWE.project.Classes;
 
 import java.util.Date;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import com.SWE.project.Enums.TOURNAMENT_TYPES;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -20,8 +17,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-
 import java.util.Objects;
 
 @Entity
@@ -36,6 +31,7 @@ public class EliminationTournament extends Tournament {
     @JsonView(Views.Public.class)
     @ManyToMany // WTF? i have never been more confused in my whole life
     @JoinTable(name = "elimination_tournament_current_participants", joinColumns = @JoinColumn(name = "tournament_id"), inverseJoinColumns = @JoinColumn(name = "participant_id"))
+    // @JsonIgnoreProperties({""})
     List<Participant> currentPlayers = new ArrayList<>();
 
     @Column
@@ -80,78 +76,79 @@ public class EliminationTournament extends Tournament {
     // this.remainingMatchesInRound = -1;
     // }
 
-    public void generateMatches() {
-        Set<Match> matchUps = new HashSet<>();
-        Set<Participant> set = new HashSet<>(currentPlayers);
-        if (currentPlayers.size() == 1) {
-            finished = true;
-            return;
-        }
-        if (set.size() % 2 == 1)
-            set.add(null);
-        ArrayList<Participant> temp = new ArrayList<>(set);
-        while (matchUps.size() != set.size() / 2) {
-            int num1 = (int) (Math.random() * set.size());
-            int num2 = (int) (Math.random() * set.size());
+    // public void generateMatches() {
+    // Set<Match> matchUps = new HashSet<>();
+    // Set<Participant> set = new HashSet<>(currentPlayers);
+    // if (currentPlayers.size() == 1) {
+    // finished = true;
+    // return;
+    // }
+    // if (set.size() % 2 == 1)
+    // set.add(null);
+    // ArrayList<Participant> temp = new ArrayList<>(set);
+    // while (matchUps.size() != set.size() / 2) {
+    // int num1 = (int) (Math.random() * set.size());
+    // int num2 = (int) (Math.random() * set.size());
 
-            if (num1 == num2)
-                continue;
-            if (temp.get(num1) != null && temp.get(num2) != null) {
-                matchUps.add(new Match(new Participant[] { temp.get(num1), temp.get(num2) }, false));
-            } else if (temp.get(num1) != null) {
-                matchUps.add(new Match(new Participant[] { temp.get(num1), null }, true));
+    // if (num1 == num2)
+    // continue;
+    // if (temp.get(num1) != null && temp.get(num2) != null) {
+    // matchUps.add(new Match(new Participant[] { temp.get(num1), temp.get(num2) },
+    // false));
+    // } else if (temp.get(num1) != null) {
+    // matchUps.add(new Match(new Participant[] { temp.get(num1), null }, true));
 
-            } else {
-                matchUps.add(new Match(new Participant[] { temp.get(num2), null }, true));
+    // } else {
+    // matchUps.add(new Match(new Participant[] { temp.get(num2), null }, true));
 
-            }
+    // }
 
-        }
-        tournamentMatches = new ArrayList<>(matchUps);
-        allRounds.add(matchUps);
-        remainingMatchesInRound = tournamentMatches.size();
-    }
+    // }
+    // tournamentMatches = new ArrayList<>(matchUps);
+    // allRounds.add(matchUps);
+    // remainingMatchesInRound = tournamentMatches.size();
+    // }
 
-    @Override
-    void start() {
-        if (open)
-            stopRegistration();
+    // @Override
+    // void start() {
+    // if (open)
+    // stopRegistration();
 
-        currentMatch = tournamentMatches.get(0);
-        remainingMatchesInRound--;
-    }
+    // currentMatch = tournamentMatches.get(0);
+    // remainingMatchesInRound--;
+    // }
 
-    @Override
-    protected void stopRegistration() {
-        open = false;
-        currentPlayers.addAll(participants);
-    }
+    // @Override
+    // protected void stopRegistration() {
+    // open = false;
+    // currentPlayers.addAll(participants);
+    // }
 
-    @Override
-    void enterResults(int firstScore, int secondScore) {
-        // TODO Auto-generated method stub
+    // @Override
+    // void enterResults(int firstScore, int secondScore) {
+    // // TODO Auto-generated method stub
 
-        currentMatch.enterResults(firstScore, secondScore);
-        int index = tournamentMatches.indexOf(currentMatch);
-        currentPlayers.remove(currentMatch.getLoser());
-        if (remainingMatchesInRound > 0) {
-            remainingMatchesInRound--;
-            if (!tournamentMatches.get(index + 1).dummyMatch) {
-                currentMatch = tournamentMatches.get(index + 1);
-            }
-            remainingMatchesInRound--;
-            if (remainingMatchesInRound > 0) {
-                currentMatch = tournamentMatches.get(index + 2);
-            }
-            generateMatches();
-            currentMatch = tournamentMatches.get(0);
-            remainingMatchesInRound--;
-        } else {
-            generateMatches();
-            currentMatch = tournamentMatches.get(0);
-            remainingMatchesInRound--;
-        }
-    }
+    // currentMatch.enterResults(firstScore, secondScore);
+    // int index = tournamentMatches.indexOf(currentMatch);
+    // currentPlayers.remove(currentMatch.getLoser());
+    // if (remainingMatchesInRound > 0) {
+    // remainingMatchesInRound--;
+    // if (!tournamentMatches.get(index + 1).dummyMatch) {
+    // currentMatch = tournamentMatches.get(index + 1);
+    // }
+    // remainingMatchesInRound--;
+    // if (remainingMatchesInRound > 0) {
+    // currentMatch = tournamentMatches.get(index + 2);
+    // }
+    // generateMatches();
+    // currentMatch = tournamentMatches.get(0);
+    // remainingMatchesInRound--;
+    // } else {
+    // generateMatches();
+    // currentMatch = tournamentMatches.get(0);
+    // remainingMatchesInRound--;
+    // }
+    // }
 
     public Participant winner() {
         if (finished) {
@@ -219,5 +216,23 @@ public class EliminationTournament extends Tournament {
     public int hashCode() {
         System.out.println("ET hc");
         return 31 * super.hashCode() + Objects.hashCode(remainingMatchesInRound);
+    }
+
+    @Override
+    void start() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'start'");
+    }
+
+    @Override
+    void generateMatches() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'generateMatches'");
+    }
+
+    @Override
+    void enterResults(int firstScore, int secondScore) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'enterResults'");
     }
 }
