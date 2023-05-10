@@ -14,7 +14,19 @@ class SearchPageStudent extends StatefulWidget {
 
 class _SearchPageStudentState extends State<SearchPageStudent> {
   String searchTerm = "";
+  getSearchResult() async {
+    setState(() {
+      isLoading = true;
+    });
+    List<TournamentCardStudent> result =
+        await widget.tournamentsManager.searchResult(searchTerm);
+    setState(() {
+      isLoading = false;
+    });
+    return result;
+  }
 
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,12 +49,14 @@ class _SearchPageStudentState extends State<SearchPageStudent> {
                 ),
               ),
               TextButton(
-                onPressed: () {
+                onPressed: () async {
                   setState(() {});
                 },
                 child: const Text("Search"),
               ),
-              ...widget.tournamentsManager.searchResult(searchTerm),
+              ...isLoading
+                  ? getSearchResult()
+                  : const CircularProgressIndicator()
             ],
           ),
         ),

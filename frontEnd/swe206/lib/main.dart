@@ -85,7 +85,7 @@ class _MyAppState extends State<MyApp> {
         isFinished: false,
       )
     ];
-    ControllerStudent tournamentsManager = ControllerStudent(myTournaments);
+    ControllerStudent tournamentsManager = ControllerStudent();
     ControllerAdmin tournamentManagerAdmin =
         ControllerAdmin(myTournamentsAdmin);
     return MaterialApp(
@@ -97,7 +97,7 @@ class _MyAppState extends State<MyApp> {
         AuthPageStudent.id: (context) => AuthPageStudent(),
         AuthPageAdmin.id: (context) => const AuthPageAdmin(),
         MainPageStudent.id: (context) => MainPageStudent(tournamentsManager),
-        HomePageStudent.id: (context) => HomePageStudent(tournamentsManager),
+        HomePageStudent.id: (context) => const HomePageStudent(),
         SearchPageStudent.id: (context) =>
             SearchPageStudent(tournamentsManager),
         MainPageAdmin.id: (context) => MainPageAdmin(tournamentManagerAdmin)

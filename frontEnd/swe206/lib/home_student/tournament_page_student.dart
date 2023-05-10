@@ -36,8 +36,7 @@ class _TournamentPageState extends State<TournamentPage> {
   bool isOpen = true;
   @override
   void initState() {
-    isOpen =
-        widget.tournamentWidget.status == "Open for register" ? true : false;
+    isOpen = widget.tournamentWidget.status == "true" ? true : false;
     final node1 = Node.Id(1);
     final node2 = Node.Id(2);
     final node3 = Node.Id(3);

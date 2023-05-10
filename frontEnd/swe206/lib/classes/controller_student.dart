@@ -4,7 +4,7 @@ import '../UI_componenets/tournament_card_student.dart';
 import '../requests.dart';
 
 class ControllerStudent {
-  ControllerStudent(this.tournamentsList);
+  ControllerStudent();
   List<TournamentCardStudent> tournamentsList = [];
 
   List<TournamentCardStudent> getTournaments() => tournamentsList;
@@ -13,8 +13,8 @@ class ControllerStudent {
     await Requests.getTournaments();
   }
 
-  searchResult(String inputSearch) {
-    List<TournamentCardStudent> results = [];
+  searchResult(String inputSearch) async {
+    List<TournamentCardStudent> results = await Requests.getTournaments();
     for (TournamentCardStudent name in tournamentsList) {
       if (name.title.toLowerCase().contains(inputSearch.toLowerCase())) {
         results.add(name);

@@ -5,9 +5,9 @@ import 'package:swe206/classes/controller_student.dart';
 import '../requests.dart';
 
 class HomePageStudent extends StatefulWidget {
-  const HomePageStudent(this.tournamentsManager, {super.key});
+  const HomePageStudent({super.key});
   static String id = "HomePageStudent";
-  final ControllerStudent tournamentsManager;
+
   @override
   State<HomePageStudent> createState() => _HomePageStudentState();
 }
