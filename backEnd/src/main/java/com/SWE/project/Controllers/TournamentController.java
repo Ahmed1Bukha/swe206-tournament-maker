@@ -109,18 +109,18 @@ public class TournamentController {
     @PostMapping("/Tournaments/addParticipant")
     Tournament addParticipant(@RequestBody Map<String, Long> ids) {
         long tournamentId = ids.get("tournamentId");
-        long participantId = ids.get("participantId");
+        long studentId = ids.get("participantId");
         Optional<Tournament> temp = tournamentRepo.findById(tournamentId);
         temp.ifPresentOrElse(t -> {
-            participantRepo.findById(participantId).ifPresentOrElse(p -> {
+            studentRepo.findByStudentId(studentId).ifPresentOrElse(p -> {
                 if (!(t.getOpen()))
                     throw new TournamentRegistrationClosedException(tournamentId);
                 // Check if full
                 t.addParticipant(p);
                 tournamentRepo.save(t);
-                participantRepo.save(p);
+                studentRepo.save(p);
             }, () -> {
-                throw new ParticipantNotFoundException(participantId);
+                throw new ParticipantNotFoundException(studentId);
             });
         }, () -> {
             throw new TournamentNotFoundException(tournamentId);

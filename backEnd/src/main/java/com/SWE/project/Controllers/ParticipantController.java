@@ -63,7 +63,6 @@ public class ParticipantController {
 
     @PostMapping("/students")
     Student newStudent(@RequestBody Student newStudent) {
-        newStudent.setId(newStudent.getStudentId());
         return studentRepo.save(newStudent);
     }
 
@@ -135,9 +134,9 @@ public class ParticipantController {
         return p;
     }
 
-    @GetMapping("/participants/{id}")
-    Participant oneParticipant(@PathVariable Long id) {
-        return participantRepo.findById(id).orElseThrow(() -> new ParticipantNotFoundException(id));
+    @GetMapping("/students/{id}")
+    Participant oneStudent(@PathVariable Long id) {
+        return studentRepo.findByStudentId(id).orElseThrow(() -> new ParticipantNotFoundException(id));
     }
 
     // @PutMapping("/students/{id}")
