@@ -23,8 +23,8 @@ public class test {
             robinTournament.enterResults(1, 0);
         }
         System.out.println(robinTournament.allRounds);
-        System.out.println(robinTournament.getCurrentPlayers());
-        System.out.println(robinTournament.winner());
-        System.out.println(robinTournament.winner().getTournaments());
+        // System.out.println(robinTournament.getCurrentPlayers());
+        System.out.println(robinTournament.winner().getName());
+        // System.out.println(robinTournament.winner().getTournaments());
     }
 }
