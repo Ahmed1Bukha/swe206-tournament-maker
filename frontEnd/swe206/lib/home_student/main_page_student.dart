@@ -5,6 +5,7 @@ import 'package:swe206/home_student/home_page_student.dart';
 import 'package:swe206/home_student/search_page_student.dart';
 
 import '../authintication/welcome_page.dart';
+import '../requests.dart';
 
 class MainPageStudent extends StatefulWidget {
   MainPageStudent(this.tournamentsManager, {super.key});
@@ -17,6 +18,16 @@ class MainPageStudent extends StatefulWidget {
 
 class _MainPageStudentState extends State<MainPageStudent> {
   @override
+  void initState() {
+    getTournaments();
+    super.initState();
+  }
+
+  getTournaments() async {
+    await Requests.getTournaments();
+    setState(() {});
+  }
+
   Widget build(BuildContext context) {
     final List<Widget> _widgetOptions = <Widget>[
       HomePageStudent(widget.tournamentsManager),

@@ -79,72 +79,73 @@ class _TournamentPageState extends State<TournamentPage> {
         title: const Text("Tournament Page"),
       ),
       body: SafeArea(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Center(
-            child: Text(
-              widget.tournamentWidget.title,
-              style: const TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Center(
+              child: Text(
+                widget.tournamentWidget.title,
+                style: const TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          Text(
-            "Game: ${widget.tournamentWidget.game}",
-            style: const TextStyle(fontSize: 20),
-          ),
-          Text(
-            "Type: ${widget.tournamentWidget.type}",
-            style: const TextStyle(fontSize: 20),
-          ),
-          Text(
-            "TournamentBased: ${widget.tournamentWidget.based}",
-            style: const TextStyle(fontSize: 20),
-          ),
-          Text(
-            "Status: ${widget.tournamentWidget.status}",
-            style: const TextStyle(fontSize: 20),
-          ),
-          Visibility(
-            visible: isOpen,
-            child: TextButton(
-              onPressed: () {
-                if (widget.tournamentWidget.based == "TEAM_BASED") {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            RegisterTeamStudent(widget.tournamentWidget),
-                      ));
-                } else {
-                  Navigator.pop(context);
-                }
-              },
-              child: Text("Register Now!"),
+            Text(
+              "Game: ${widget.tournamentWidget.game}",
+              style: const TextStyle(fontSize: 20),
             ),
-          ),
-          Expanded(
-            child: InteractiveViewer(
-              constrained: false,
-              boundaryMargin: EdgeInsets.all(100),
-              minScale: 0.01,
-              maxScale: 5.6,
-              child: GraphView(
-                  graph: graph,
-                  algorithm: BuchheimWalkerAlgorithm(
-                      builder, TreeEdgeRenderer(builder)),
-                  builder: (Node node) {
-                    // I can decide what widget should be shown here based on the id
-                    var a = node.key?.value as int;
-                    return rectangleWidget(a);
-                  }),
+            Text(
+              "Type: ${widget.tournamentWidget.type}",
+              style: const TextStyle(fontSize: 20),
             ),
-          )
-        ],
-      )),
+            Text(
+              "TournamentBased: ${widget.tournamentWidget.based}",
+              style: const TextStyle(fontSize: 20),
+            ),
+            Text(
+              "Status: ${widget.tournamentWidget.status}",
+              style: const TextStyle(fontSize: 20),
+            ),
+            Visibility(
+              visible: isOpen,
+              child: TextButton(
+                onPressed: () {
+                  if (widget.tournamentWidget.based == "TEAM_BASED") {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              RegisterTeamStudent(widget.tournamentWidget),
+                        ));
+                  } else {
+                    Navigator.pop(context);
+                  }
+                },
+                child: Text("Register Now!"),
+              ),
+            ),
+            Expanded(
+              child: InteractiveViewer(
+                constrained: false,
+                boundaryMargin: EdgeInsets.all(100),
+                minScale: 0.01,
+                maxScale: 5.6,
+                child: GraphView(
+                    graph: graph,
+                    algorithm: BuchheimWalkerAlgorithm(
+                        builder, TreeEdgeRenderer(builder)),
+                    builder: (Node node) {
+                      // I can decide what widget should be shown here based on the id
+                      var a = node.key?.value as int;
+                      return rectangleWidget(a);
+                    }),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

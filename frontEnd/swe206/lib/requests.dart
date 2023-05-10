@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:swe206/UI_componenets/tournament_card_student.dart';
 
 class Requests {
   static var client = http.Client();
@@ -17,7 +18,7 @@ class Requests {
         Uri.http(url, "/$endpoint"),
         headers: header,
       );
-      print(response.statusCode);
+
       var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
       return decodedResponse;
     } catch (e) {
@@ -68,6 +69,20 @@ class Requests {
       print(e);
       throw HttpException("failed");
     }
+  }
+
+  static dynamic getTournaments() async {
+    var tournamentsJson = await getRequest("Tournaments");
+    List<dynamic> tournaments = [];
+    for (int i = 0; i < tournamentsJson.length; i++) {
+      tournaments.add(TournamentCardStudent(
+          tournamentsJson[i]["name"],
+          tournamentsJson[i]["name"],
+          tournamentsJson[i]["type"],
+          tournamentsJson[i]["open"].toString(),
+          tournamentsJson[i]["tournamentType"]));
+    }
+    return tournaments;
   }
 
   // static Future<Map> getTournaments() async {
