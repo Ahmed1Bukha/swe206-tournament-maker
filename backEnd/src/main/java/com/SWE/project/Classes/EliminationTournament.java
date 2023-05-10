@@ -65,7 +65,7 @@ public class EliminationTournament extends Tournament {
         if (set.size() % 2 == 1)
             set.add(null);
         ArrayList<Participant> temp = new ArrayList<>(set);
-        if(open){
+        if(allRounds.size()==0){
             Collections.shuffle(temp);
         }
         for(int i=0;i<temp.size();i+=2){
