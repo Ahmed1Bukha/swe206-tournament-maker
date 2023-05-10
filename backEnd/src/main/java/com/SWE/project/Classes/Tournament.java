@@ -111,7 +111,6 @@ public abstract class Tournament {
             case INDIVIDUAL -> {
                 if (x instanceof Team)
                     throw new IllegalArgumentException("This is an individual's tournament");
-                // participants.add(x);
             }
             case TEAM_BASED -> {
                 if (x instanceof Student)
@@ -216,6 +215,14 @@ public abstract class Tournament {
 
     public void setTournamentMatches(List<Match> tournamentMatches) {
         this.tournamentMatches = tournamentMatches;
+    }
+
+    public int getParticipantCount() {
+        return this.ParticipantCount;
+    }
+
+    public void setParticipantCount(int num) {
+        this.ParticipantCount = num;
     }
 
     protected void stopRegistration() {

@@ -1,16 +1,17 @@
 package com.SWE.project.Controllers;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,11 +22,6 @@ import com.SWE.project.Repositories.ParticipantRepo;
 import com.SWE.project.Repositories.StudentRepo;
 import com.SWE.project.Repositories.TeamRepo;
 import com.SWE.project.Repositories.TournamentRepo;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
 public class ParticipantController {
@@ -51,54 +47,92 @@ public class ParticipantController {
     }
 
     @GetMapping("/students")
-    List<Student> allStudents() throws JsonMappingException, JsonProcessingException {
-
+    List<Student> allStudents() {
         return studentRepo.findAll();
     }
 
     @GetMapping("/teams")
-    List<Team> allTeams() throws JsonMappingException, JsonProcessingException {
+    List<Team> allTeams() {
         return teamRepo.findAll();
     }
 
     @GetMapping("/participants")
-    List<Participant> allParticipants() throws JsonMappingException, JsonProcessingException {
+    List<Participant> allParticipants() {
         return participantRepo.findAll();
     }
 
     @PostMapping("/students")
-    Student newStudent(@RequestBody Student newStudent) throws JsonMappingException, JsonProcessingException {
+    Student newStudent(@RequestBody Student newStudent) {
+        newStudent.setId(newStudent.getStudentId());
         return studentRepo.save(newStudent);
     }
 
-    @PostMapping("/Teams")
-    Team newTeam(@RequestBody Map<String, Object> body) throws JsonMappingException, JsonProcessingException {
-        Tournament t = tournamentRepo.findById(((Tournament) body.get("tournament")).getId())
-                .orElseThrow(() -> new TournamentAlreadyExistsException(((Tournament) body.get("tournament")).getId()));
+    @PostMapping("/teams")
+    Team newTeam(@RequestBody Map<String, Object> body) {
+        Long tournament_id = Long.parseLong((body.get("tournament_id")).toString());
+        String name = (String) body.get("name");
+        List<Long> students_ids = new ArrayList<Long>();
+        ((List<Integer>) body.get("team_members")).forEach(e -> {
+            students_ids.add(Long.parseLong(Integer.toString(e)));
+        });
 
-        Team[] ps = (Team[]) t.getParticipants().toArray();
-
+        GAME_TYPE gameType = ((String) body.get("gameType")).equals("RoundRobin") ? GAME_TYPE.RoundRobin
+                : GAME_TYPE.Elimination;
+        Tournament t = tournamentRepo.findById(tournament_id)
+                .orElseThrow(() -> new TournamentNotFoundException(tournament_id));
+        System.out.println("Debug 1");
+        List<Team> ps = t.getParticipants().stream().filter(p -> p instanceof Team).map(p -> (Team) p)
+                .collect(Collectors.toList());
+        System.out.println("Debug 2");
         for (Team team : ps) {
+            System.out.println("Debug 2.1");
             for (Student alreadyRegisteredStudent : team.getTeam_members()) {
-                for (Long toBeRegisteredStudentId : (List<Long>) body.get("team_members")) {
+                System.out.println("Debug 2.2");
+                for (Long toBeRegisteredStudentId : students_ids) {
+                    System.out.println("Debug 2.3");
                     if (toBeRegisteredStudentId.equals(alreadyRegisteredStudent.getStudentId()))
                         throw new StudentRegisteredInAnotherTeamInThisTournamentException(toBeRegisteredStudentId,
-                                team.getId(), ((Tournament) body.get("tournament")).getId());
+                                team.getId(), t.getId());
+                    System.out.println("Debug 2.4");
                 }
             }
         } // Checks if any members of the team are already registered in a different team.
+        System.out.println("Debug 3");
 
         Set<Student> team_members = new HashSet<>();
 
-        for (Long id : (List<Long>) body.get("team_members")) {
+        System.out.println("Debug 4");
+
+        for (Long id : students_ids) {
             team_members.add(studentRepo.findById(id).orElseThrow(() -> new StudentNotFoundException(id)));
         } // Once this is done, all student ids are valid and we can create the team
 
-        return participantRepo.save(new Team(
-                (String) body.get("name"),
-                team_members,
-                (String) body.get("gameType") == "RoundRobin" ? GAME_TYPE.RoundRobin : GAME_TYPE.Elimination,
-                ((Tournament) body.get("tournament"))));
+        System.out.println("Debug 5");
+
+        Team team = new Team(name, team_members, gameType, t);
+
+        System.out.println("Debug 6");
+
+        t.addParticipant(team);
+
+        System.out.println("Debug 7");
+
+        for (Student s : team_members) {
+            s.getTeams().add(team);
+        }
+
+        System.out.println("Debug 7.5");
+        Team p = participantRepo.save(team);
+        System.out.println("Debug 8");
+
+        participantRepo.saveAll(team_members);
+        System.out.println("Debug 9");
+
+        tournamentRepo.save(t);
+
+        System.out.println("Debug 10");
+
+        return p;
     }
 
     @GetMapping("/participants/{id}")

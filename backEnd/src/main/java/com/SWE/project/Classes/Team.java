@@ -3,6 +3,7 @@ package com.SWE.project.Classes;
 import java.util.*;
 
 import com.SWE.project.Enums.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -20,6 +21,7 @@ public class Team extends Participant {
 
     @ManyToMany
     @JsonView(Views.Public.class)
+    @JsonIgnoreProperties({ "type", "goalsMade", "goalsRecieved", "wins", "points", "tournaments", "matches", "teams" })
     @JoinTable(name = "team_members", joinColumns = @JoinColumn(name = "team_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
     private Set<Student> team_members;
 
