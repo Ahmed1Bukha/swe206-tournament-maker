@@ -30,7 +30,7 @@ class _MainPageStudentState extends State<MainPageStudent> {
 
   Widget build(BuildContext context) {
     final List<Widget> _widgetOptions = <Widget>[
-      HomePageStudent(widget.tournamentsManager),
+      const HomePageStudent(),
       SearchPageStudent(widget.tournamentsManager),
       const Text("LogOut")
     ];

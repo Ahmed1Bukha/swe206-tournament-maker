@@ -13,9 +13,28 @@ class SearchPageStudent extends StatefulWidget {
 }
 
 class _SearchPageStudentState extends State<SearchPageStudent> {
-  String searchTerm = "";
+  TextEditingController mySearchController = TextEditingController();
+  List<dynamic> tournamentsCard = [];
 
+  getSearchResult() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    tournamentsCard =
+        await widget.tournamentsManager.searchResult(mySearchController.text);
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  bool isLoading = false;
   @override
+  void initState() {
+    getSearchResult();
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -23,28 +42,32 @@ class _SearchPageStudentState extends State<SearchPageStudent> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              TextField(
-                onChanged: (value) {
-                  searchTerm = value;
-                },
-                decoration: const InputDecoration(
-                  label: Text("Search"),
-                  hintText: "Enter Tournament name",
-                  border: OutlineInputBorder(),
-                ),
+        child: Column(
+          children: [
+            TextField(
+              controller: mySearchController,
+              decoration: const InputDecoration(
+                label: Text("Search"),
+                hintText: "Enter Tournament name",
+                border: OutlineInputBorder(),
               ),
-              TextButton(
-                onPressed: () {
-                  setState(() {});
-                },
-                child: const Text("Search"),
-              ),
-              ...widget.tournamentsManager.searchResult(searchTerm),
-            ],
-          ),
+            ),
+            TextButton(
+              onPressed: () async {
+                setState(() {
+                  getSearchResult();
+                });
+              },
+              child: const Text("Search"),
+            ),
+            !isLoading
+                ? SingleChildScrollView(
+                    child: Column(
+                      children: [...tournamentsCard],
+                    ),
+                  )
+                : const CircularProgressIndicator()
+          ],
         ),
       ),
     );

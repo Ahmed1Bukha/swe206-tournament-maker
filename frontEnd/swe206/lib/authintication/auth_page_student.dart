@@ -138,6 +138,8 @@ class _AuthPageStudentState extends State<AuthPageStudent> {
                           _isLoading = false;
                         });
                         if (response == "IsStudent") {
+                          Navigator.of(context)
+                              .popUntil((route) => route.isFirst);
                           Navigator.pushReplacementNamed(
                               context, MainPageStudent.id);
                         } else {
