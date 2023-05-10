@@ -61,7 +61,7 @@ public class ParticipantController {
         return teamRepo.findAll();
     }
 
-    @GetMapping("/students")
+    @GetMapping("/participants")
     List<Participant> allParticipants() throws JsonMappingException, JsonProcessingException {
         return participantRepo.findAll();
     }
