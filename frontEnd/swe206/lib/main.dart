@@ -30,30 +30,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    List<TournamentCardStudent> myTournaments = const [
-      TournamentCardStudent(
-        "3rd Football lmfao",
-        "Football",
-        "Elemniation",
-        "Open for register",
-        "TEAM_BASED",
-        numberOfParticipant: 4,
-      ),
-      TournamentCardStudent(
-        "Golf gg",
-        "Football",
-        "Robin table",
-        "On going",
-        "Individual",
-      ),
-      TournamentCardStudent(
-        "Volley-ball 7asa",
-        "Volley-ball",
-        "Elemniation",
-        "Finished",
-        "Individual",
-      ),
-    ];
     List<TournamentCardAdmin> myTournamentsAdmin = [
       const TournamentCardAdmin(
         id: 2,

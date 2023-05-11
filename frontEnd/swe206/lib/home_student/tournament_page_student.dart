@@ -5,6 +5,8 @@ import 'package:graphview/GraphView.dart';
 import 'package:swe206/UI_componenets/tournament_card_student.dart';
 import 'package:swe206/home_student/register_team_page_student.dart';
 
+import '../requests.dart';
+
 class TournamentPage extends StatefulWidget {
   const TournamentPage(this.tournamentWidget, {super.key});
   static String id = "TournamentPage";
@@ -110,7 +112,7 @@ class _TournamentPageState extends State<TournamentPage> {
             Visibility(
               visible: isOpen,
               child: TextButton(
-                onPressed: () {
+                onPressed: () async {
                   if (widget.tournamentWidget.based == "TEAM_BASED") {
                     Navigator.push(
                         context,
@@ -119,6 +121,7 @@ class _TournamentPageState extends State<TournamentPage> {
                               RegisterTeamStudent(widget.tournamentWidget),
                         ));
                   } else {
+                    await Requests.addParticipant(widget.tournamentWidget.id);
                     Navigator.pop(context);
                   }
                 },
