@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:swe206/UI_componenets/const.dart';
 import 'package:swe206/UI_componenets/tournament_card_student.dart';
 import 'package:swe206/classes/controller_student.dart';
 
@@ -33,7 +34,14 @@ class _HomePageStudentState extends State<HomePageStudent> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Student Home Page")),
+      appBar: AppBar(
+        title: Text(
+          "Home",
+          style: h2,
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: isLoading
@@ -43,9 +51,9 @@ class _HomePageStudentState extends State<HomePageStudent> {
                 onRefresh: getTournaments,
                 child: ListView(
                   children: [
-                    const Text(
+                    Text(
                       "Current Tournaments: ",
-                      style: TextStyle(fontSize: 20),
+                      style: h3,
                     ),
                     ...tournamentsCard,
                   ],

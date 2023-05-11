@@ -64,6 +64,17 @@ class Requests {
           final SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString('StudentID', userName);
 
+          Map<String, dynamic> body = {
+            "name": decoderes["name"],
+            "studentId": int.parse(userName)
+          };
+          Response res = await postRequest("students", body);
+
+          if (res.bodyBytes.isNotEmpty) {
+            var lm = jsonDecode(utf8.decode(res.bodyBytes));
+            print(lm);
+          }
+
           return "IsStudent";
         } else if (decoderes["type"] == "admin") {
           return "IsAdmin";
@@ -82,13 +93,17 @@ class Requests {
     var tournamentsJson = await getRequest("Tournaments");
     List<dynamic> tournaments = [];
     for (int i = 0; i < tournamentsJson.length; i++) {
-      tournaments.add(TournamentCardStudent(
-          tournamentsJson[i]["name"],
-          tournamentsJson[i]["name"],
-          tournamentsJson[i]["type"],
-          tournamentsJson[i]["open"].toString(),
-          tournamentsJson[i]["tournamentType"],
-          tournamentsJson[i]['id']));
+      tournaments.add(
+        TournamentCardStudent(
+            tournamentsJson[i]["name"],
+            tournamentsJson[i]["name"],
+            tournamentsJson[i]["type"],
+            tournamentsJson[i]["open"].toString(),
+            tournamentsJson[i]["tournamentType"],
+            tournamentsJson[i]['id'],
+            tournamentsJson[i]['startDate'],
+            tournamentsJson[i]['endDate']),
+      );
     }
     return tournaments;
   }
@@ -97,11 +112,18 @@ class Requests {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? studentID = prefs.getString('StudentID');
 
-    Map<String, int> body = {"tournamentId": tournamentID, "participantId": 1};
+    Map<String, int> body = {
+      "tournamentId": tournamentID,
+      "participantId": int.parse(studentID.toString())
+    };
     Response response = await postRequest("Tournaments/addParticipant", body);
-    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+
     if (response.statusCode == 200) {
       //Add a snack bar that he registered
+      var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+      return "done";
+    } else if (response.statusCode == 404) {
+      return "registered";
     }
 
     // Do the other handeling stuff:

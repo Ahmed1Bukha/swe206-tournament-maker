@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:swe206/UI_componenets/const.dart';
 import 'package:swe206/UI_componenets/tournament_card_student.dart';
 
 //TODO Ask the boiz how they implemented register stuff.
@@ -8,26 +9,39 @@ class RegisterTeamStudent extends StatelessWidget {
   RegisterTeamStudent(this.tournament, {super.key});
   final TournamentCardStudent tournament;
 
-  List<TextFormField> texts = [];
+  List<Widget> texts = [];
   List<TextEditingController> controllers = [];
-  List<TextFormField> getTextFields() {
+  getTextFields() {
     for (int i = 0; i < tournament.numberOfParticipant; i++) {
       controllers.add(TextEditingController());
-      texts.add(TextFormField(
-        controller: controllers[i],
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Please enter some number';
-          }
-          return null;
-        },
-        keyboardType: TextInputType.number,
-        decoration: InputDecoration(
-          label: Text("Team member ${i + 1} ID"),
-          icon: const Icon(Icons.person),
-          hintText: "Enter ID",
+      texts.add(
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextFormField(
+            controller: controllers[i],
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter some number';
+              }
+              return null;
+            },
+            cursorColor: Colors.black,
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+            ),
+            decoration: InputDecoration(
+              prefixIcon: Icon(Icons.person),
+              hintText: "Enter ID member ${i + 1}",
+              filled: true,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+                borderSide: BorderSide.none,
+              ),
+            ),
+          ),
         ),
-      ));
+      );
     }
 
     return texts;
@@ -39,7 +53,13 @@ class RegisterTeamStudent extends StatelessWidget {
     TextEditingController myTeamNameController = TextEditingController();
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Register team page"),
+        iconTheme: const IconThemeData(color: Colors.black),
+        elevation: 0,
+        backgroundColor: Colors.white,
+        title: Text(
+          "Register team",
+          style: h2,
+        ),
       ),
       body: Form(
           key: _formKey,
@@ -47,20 +67,31 @@ class RegisterTeamStudent extends StatelessWidget {
             padding: const EdgeInsets.all(24.0),
             child: Column(
               children: [
-                TextFormField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    label: Text("Team Name"),
-                    icon: Icon(Icons.near_me),
-                    hintText: "Enter Team Name",
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
+                    cursorColor: Colors.black,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                    ),
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.assistant_photo_rounded),
+                      hintText: "Entet Team Name",
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    controller: myTeamNameController,
                   ),
-                  controller: myTeamNameController,
                 ),
                 ...getTextFields(),
                 ElevatedButton(

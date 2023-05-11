@@ -5,6 +5,7 @@ import 'package:graphview/GraphView.dart';
 import 'package:swe206/UI_componenets/tournament_card_student.dart';
 import 'package:swe206/home_student/register_team_page_student.dart';
 
+import '../UI_componenets/const.dart';
 import '../requests.dart';
 
 class TournamentPage extends StatefulWidget {
@@ -36,6 +37,34 @@ class _TournamentPageState extends State<TournamentPage> {
   final Graph graph = Graph()..isTree = true;
   BuchheimWalkerConfiguration builder = BuchheimWalkerConfiguration();
   bool isOpen = true;
+  final snackBarRegistering = SnackBar(
+    content: const Text('Processing'),
+    action: SnackBarAction(
+      label: 'Done',
+      onPressed: () {
+        // Some code to undo the change.
+      },
+    ),
+  );
+  final doneRegisterSnack = SnackBar(
+    content: const Text('Done Registering.'),
+    action: SnackBarAction(
+      label: 'Done',
+      onPressed: () {
+        // Some code to undo the change.
+      },
+    ),
+  );
+  final alreadyRegistered = SnackBar(
+    content: const Text('This ID is already registered to this tournament.'),
+    action: SnackBarAction(
+      label: 'Done',
+      onPressed: () {
+        // Some code to undo the change.
+      },
+    ),
+  );
+
   @override
   void initState() {
     isOpen = widget.tournamentWidget.status == "true" ? true : false;
@@ -77,75 +106,123 @@ class _TournamentPageState extends State<TournamentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Tournament Page"),
+        iconTheme: IconThemeData(color: Colors.black),
+        backgroundColor: Colors.white,
+        title: Text(
+          "Tournament Info",
+          style: h2,
+        ),
       ),
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Center(
-              child: Text(
-                widget.tournamentWidget.title,
-                style: const TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(
+                child: Text(widget.tournamentWidget.title, style: h1),
+              ),
+              Card(
+                elevation: 20,
+                child: Image(
+                  image: AssetImage("lib/assets/img/football.jpg"),
                 ),
               ),
-            ),
-            Text(
-              "Game: ${widget.tournamentWidget.game}",
-              style: const TextStyle(fontSize: 20),
-            ),
-            Text(
-              "Type: ${widget.tournamentWidget.type}",
-              style: const TextStyle(fontSize: 20),
-            ),
-            Text(
-              "TournamentBased: ${widget.tournamentWidget.based}",
-              style: const TextStyle(fontSize: 20),
-            ),
-            Text(
-              "Status: ${widget.tournamentWidget.status}",
-              style: const TextStyle(fontSize: 20),
-            ),
-            Visibility(
-              visible: isOpen,
-              child: TextButton(
-                onPressed: () async {
-                  if (widget.tournamentWidget.based == "TEAM_BASED") {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              RegisterTeamStudent(widget.tournamentWidget),
-                        ));
-                  } else {
-                    await Requests.addParticipant(widget.tournamentWidget.id);
-                    Navigator.pop(context);
-                  }
-                },
-                child: Text("Register Now!"),
+              Column(
+                children: [
+                  Text(
+                    "Game: ${widget.tournamentWidget.game}",
+                    style: infoTournament,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Type: ${widget.tournamentWidget.type}",
+                    style: infoTournament,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "TournamentBased: ${widget.tournamentWidget.based}",
+                    style: infoTournament,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Status: ${widget.tournamentWidget.status}",
+                    style: infoTournament,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "StartDate: ${widget.tournamentWidget.startDate.split(":")[0]}",
+                    style: infoTournament,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "StartDate: ${widget.tournamentWidget.endDate.split(":")[0]}",
+                    style: infoTournament,
+                  ),
+                ],
               ),
-            ),
-            Expanded(
-              child: InteractiveViewer(
-                constrained: false,
-                boundaryMargin: EdgeInsets.all(100),
-                minScale: 0.01,
-                maxScale: 5.6,
-                child: GraphView(
-                    graph: graph,
-                    algorithm: BuchheimWalkerAlgorithm(
-                        builder, TreeEdgeRenderer(builder)),
-                    builder: (Node node) {
-                      // I can decide what widget should be shown here based on the id
-                      var a = node.key?.value as int;
-                      return rectangleWidget(a);
-                    }),
+
+              Visibility(
+                visible: isOpen,
+                child: ElevatedButton.icon(
+                  icon: Icon(Icons.plus_one),
+                  onPressed: () async {
+                    if (widget.tournamentWidget.based == "TEAM_BASED") {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                RegisterTeamStudent(widget.tournamentWidget),
+                          ));
+                    } else {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(snackBarRegistering);
+                      var response = await Requests.addParticipant(
+                          widget.tournamentWidget.id);
+                      ScaffoldMessenger.of(context).clearSnackBars();
+                      if (response == "done") {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(doneRegisterSnack);
+                      } else if (response == "registered") {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(alreadyRegistered);
+                      }
+                      Navigator.pop(context);
+                    }
+                  },
+                  label: Text("Register Now!"),
+                ),
               ),
-            )
-          ],
+              // Expanded(
+              //   child: InteractiveViewer(
+              //     constrained: false,
+              //     boundaryMargin: EdgeInsets.all(100),
+              //     minScale: 0.01,
+              //     maxScale: 5.6,
+              //     child: GraphView(
+              //         graph: graph,
+              //         algorithm: BuchheimWalkerAlgorithm(
+              //             builder, TreeEdgeRenderer(builder)),
+              //         builder: (Node node) {
+              //           // I can decide what widget should be shown here based on the id
+              //           var a = node.key?.value as int;
+              //           return rectangleWidget(a);
+              //         }),
+              //   ),
+              // )
+            ],
+          ),
         ),
       ),
     );
