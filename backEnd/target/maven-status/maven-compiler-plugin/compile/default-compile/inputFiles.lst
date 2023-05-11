@@ -16,13 +16,13 @@ C:\Users\samis\spring_boot\with_database\swe206-tournament-maker\backEnd\src\mai
 C:\Users\samis\spring_boot\with_database\swe206-tournament-maker\backEnd\src\main\java\com\SWE\project\Classes\Game.java
 C:\Users\samis\spring_boot\with_database\swe206-tournament-maker\backEnd\src\main\java\com\SWE\project\Repositories\EliminationTournamentRepo.java
 C:\Users\samis\spring_boot\with_database\swe206-tournament-maker\backEnd\src\main\java\com\SWE\project\Repositories\StudentRepo.java
+C:\Users\samis\spring_boot\with_database\swe206-tournament-maker\backEnd\src\main\java\com\SWE\project\Exceptions\StudentAlreadyRegisteredInThisTournamentException.java
 C:\Users\samis\spring_boot\with_database\swe206-tournament-maker\backEnd\src\main\java\com\SWE\project\Exceptions\TournamentAlreadyExistsException.java
 C:\Users\samis\spring_boot\with_database\swe206-tournament-maker\backEnd\src\main\java\com\SWE\project\Controllers\TeamController.java
 C:\Users\samis\spring_boot\with_database\swe206-tournament-maker\backEnd\src\main\java\com\SWE\project\Controllers\TournamentController.java
 C:\Users\samis\spring_boot\with_database\swe206-tournament-maker\backEnd\src\main\java\com\SWE\project\Classes\RoundRobinTournament.java
 C:\Users\samis\spring_boot\with_database\swe206-tournament-maker\backEnd\src\main\java\com\SWE\project\Repositories\RoundRobinTournamentRepo.java
 C:\Users\samis\spring_boot\with_database\swe206-tournament-maker\backEnd\src\main\java\com\SWE\project\Classes\test.java
-C:\Users\samis\spring_boot\with_database\swe206-tournament-maker\backEnd\src\main\java\com\SWE\project\Classes\Views.java
 C:\Users\samis\spring_boot\with_database\swe206-tournament-maker\backEnd\src\main\java\com\SWE\project\Exceptions\TeamNotFoundException.java
 C:\Users\samis\spring_boot\with_database\swe206-tournament-maker\backEnd\src\main\java\com\SWE\project\Exceptions\StudentRegisteredInAnotherTeamInThisTournamentException.java
 C:\Users\samis\spring_boot\with_database\swe206-tournament-maker\backEnd\src\main\java\com\SWE\project\Classes\Student.java

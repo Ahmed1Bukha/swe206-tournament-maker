@@ -64,7 +64,7 @@ public class ParticipantController {
     @PostMapping("/students")
     Student newStudent(@RequestBody Student newStudent) {
         if (studentRepo.findByStudentId(newStudent.getStudentId()).isPresent())
-            return newStudent;
+            return null;
 
         return studentRepo.save(newStudent);
     }
