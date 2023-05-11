@@ -37,18 +37,17 @@ public class RoundRobinTournament extends Tournament {
     public RoundRobinTournament() {
     }
 
-    public RoundRobinTournament(String name, int participantCount, long startDate, long endDate,
+    public RoundRobinTournament(String name, int participantCount, int studentsPerTeam, int startDate, long endDate,
             double timeBetweenStages,
-            String tournamentType) {
-        super(name, participantCount, new Date(startDate), new Date(endDate), timeBetweenStages,
-                tournamentType == "INDIVIDUAL" ? TOURNAMENT_TYPES.INDIVIDUAL : TOURNAMENT_TYPES.TEAM_BASED);
-        System.out.println("RRT C");
+            String tournamentType, String sport) {
+        super(name, participantCount, studentsPerTeam, new Date(startDate), new Date(endDate), timeBetweenStages,
+                tournamentType == "INDIVIDUAL" ? TOURNAMENT_TYPES.INDIVIDUAL : TOURNAMENT_TYPES.TEAM_BASED, sport);
     }
 
-    public RoundRobinTournament(String name, int participantCount, Date startDate, Date endDate,
+    public RoundRobinTournament(String name, int participantCount, int studentsPerTeam, Date startDate, Date endDate,
             double timeBetweenStages,
-            TOURNAMENT_TYPES tournamentType) {
-        super(name, participantCount, startDate, endDate, timeBetweenStages, tournamentType);
+            TOURNAMENT_TYPES tournamentType, String sport) {
+        super(name, participantCount, studentsPerTeam, startDate, endDate, timeBetweenStages, tournamentType, sport);
     }
 
     void start() {

@@ -65,18 +65,24 @@ public abstract class Tournament {
     @OneToMany(mappedBy = "tournament")
     protected List<Match> tournamentMatches = new ArrayList<>();
 
-    // Game object
+    @Column
+    String sport;
 
-    protected Tournament(String name, int participantCount, Date startDate,
+    @Column
+    int studentsPerTeam = 1;
+
+    protected Tournament(String name, int participantCount, int studentsPerTeam, Date startDate,
             Date endDate, double timeBetweenStages,
-            TOURNAMENT_TYPES tournamentType) {
-        System.out.println("T C");
+            TOURNAMENT_TYPES tournamentType, String sport) {
         this.name = name;
         this.ParticipantCount = participantCount;
+        this.studentsPerTeam = tournamentType == TOURNAMENT_TYPES.INDIVIDUAL ? this.studentsPerTeam
+                : studentsPerTeam;
         this.startDate = startDate;
         this.endDate = endDate;
         this.timeBetweenStages = timeBetweenStages;
         this.tournamentType = tournamentType;
+        this.sport = sport;
         participants = new HashSet<>();
     }
 

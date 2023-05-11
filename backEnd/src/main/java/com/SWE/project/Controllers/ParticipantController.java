@@ -82,57 +82,36 @@ public class ParticipantController {
                 : GAME_TYPE.Elimination;
         Tournament t = tournamentRepo.findById(tournament_id)
                 .orElseThrow(() -> new TournamentNotFoundException(tournament_id));
-        System.out.println("Debug 1");
         List<Team> ps = t.getParticipants().stream().filter(p -> p instanceof Team).map(p -> (Team) p)
                 .collect(Collectors.toList());
-        System.out.println("Debug 2");
         for (Team team : ps) {
-            System.out.println("Debug 2.1");
             for (Student alreadyRegisteredStudent : team.getTeam_members()) {
-                System.out.println("Debug 2.2");
                 for (Long toBeRegisteredStudentId : students_ids) {
-                    System.out.println("Debug 2.3");
                     if (toBeRegisteredStudentId.equals(alreadyRegisteredStudent.getStudentId()))
                         throw new StudentRegisteredInAnotherTeamInThisTournamentException(toBeRegisteredStudentId,
                                 team.getId(), t.getId());
-                    System.out.println("Debug 2.4");
                 }
             }
         } // Checks if any members of the team are already registered in a different team.
-        System.out.println("Debug 3");
-
         Set<Student> team_members = new HashSet<>();
-
-        System.out.println("Debug 4");
 
         for (Long id : students_ids) {
             team_members.add(studentRepo.findById(id).orElseThrow(() -> new StudentNotFoundException(id)));
         } // Once this is done, all student ids are valid and we can create the team
 
-        System.out.println("Debug 5");
-
         Team team = new Team(name, team_members, gameType, t);
 
-        System.out.println("Debug 6");
-
         t.addParticipant(team);
-
-        System.out.println("Debug 7");
 
         for (Student s : team_members) {
             s.getTeams().add(team);
         }
 
-        System.out.println("Debug 7.5");
         Team p = participantRepo.save(team);
-        System.out.println("Debug 8");
 
         participantRepo.saveAll(team_members);
-        System.out.println("Debug 9");
 
         tournamentRepo.save(t);
-
-        System.out.println("Debug 10");
 
         return p;
     }
