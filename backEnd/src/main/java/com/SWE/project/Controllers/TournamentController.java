@@ -1,5 +1,7 @@
 package com.SWE.project.Controllers;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,13 +25,17 @@ public class TournamentController {
     @Autowired
     private final ParticipantRepo participantRepo;
 
+    @Autowired
+    private final SportRepo sportRepo;
+
     public TournamentController(TournamentRepo tournamentRepo, RoundRobinTournamentRepo roundRobinRepo,
             EliminationTournamentRepo eliminationRepo, StudentRepo studentRepo, TeamRepo teamRepo,
-            ParticipantRepo participantRepo) {
+            ParticipantRepo participantRepo, SportRepo sportRepo) {
         this.tournamentRepo = tournamentRepo;
         this.studentRepo = studentRepo;
         this.teamRepo = teamRepo;
         this.participantRepo = participantRepo;
+        this.sportRepo = sportRepo;
     }
 
     @GetMapping("/Tournaments")
@@ -104,6 +110,25 @@ public class TournamentController {
     Tournament oneTournament(@PathVariable("tournamentId") long id)
             throws TournamentNotFoundException {
         return tournamentRepo.findById(id).orElseThrow(() -> new TournamentNotFoundException(id));
+    }
+
+    @GetMapping("/getSports")
+    List<String> getSports() throws FileNotFoundException {
+        List<String> res = new ArrayList<String>();
+        sportRepo.findAll().forEach((sport -> {
+            res.add(sport.getName());
+        }));
+        return res;
+    }
+
+    @PostMapping("/addSport")
+    List<String> addNewSport(@RequestBody Map<String, String> body) throws IOException {
+        sportRepo.save(new Sport((String) body.get("name")));
+        List<String> res = new ArrayList<String>();
+        sportRepo.findAll().forEach((s -> {
+            res.add(s.getName());
+        }));
+        return res;
     }
 
     @PutMapping("/Tournaments/{tournamentId}")

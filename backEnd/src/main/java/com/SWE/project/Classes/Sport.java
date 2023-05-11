@@ -1,53 +1,40 @@
 package com.SWE.project.Classes;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
-public abstract class Sport {
-    public static Set<String> availableSports = new HashSet<String>();
-    public final static File file = new File("backEnd\\src\\main\\resources\\sports.txt");
+import java.util.Objects;
 
-    public static void main(String[] args) {
-        try {
-            readFile();
-            saveNewSport("Volleyball");
-            System.out.println(availableSports);
-        } catch (FileNotFoundException e) {
-            System.out.println("sports.txt not found");
-        } catch (IOException e) {
-            System.out.println("Error while writing to sports.txt");
-        }
+@Entity
+public class Sport {
+    @Id
+    private String name;
+
+    public Sport(String name) {
+        this.name = name;
     }
 
-    public static void readFile() throws FileNotFoundException {
-        Scanner scanner = new Scanner(file);
-
-        while (scanner.hasNext()) {
-            availableSports.add(scanner.next());
-        }
-
-        scanner.close();
+    public Sport() {
     }
 
-    public static void saveNewSport(String newSport) throws IOException {
-        availableSports.add(newSport);
+    public String getName() {
+        return this.name;
+    }
 
-        FileWriter fw = new FileWriter(file);
-        availableSports.forEach((value) -> {
-            try {
-                fw.write(value + "\n");
-            } catch (IOException e) {
-                System.out.println("Error writing to sports.txt");
-            }
-        });
+    public void setName(String name) {
+        this.name = name;
+    }
 
-        fw.close();
+    // public Long getId() {
+    // return this.id;
+    // }
+
+    // public void setId(Long id) {
+    // this.id = id;
+    // }
+
+    @Override
+    public String toString() {
+        return getName();
     }
 }
