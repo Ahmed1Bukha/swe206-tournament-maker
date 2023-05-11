@@ -1,10 +1,13 @@
 // ignore_for_file: avoid_print
 
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swe206/UI_componenets/tournament_card_student.dart';
 
 class Requests {
@@ -26,15 +29,15 @@ class Requests {
     }
   }
 
-  static Future<Map> postRequest(String endpoint, Map body) async {
+  static postRequest(String endpoint, Map body) async {
     try {
       var response = await client.post(
         Uri.http(url, "/$endpoint"),
         body: jsonEncode(body),
         headers: header,
       );
-      var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
-      return decodedResponse;
+
+      return response;
     } catch (e) {
       throw HttpException("Post request to /$endpoint with body $body failed");
     }
@@ -57,6 +60,10 @@ class Requests {
         print("Pog user");
         var decoderes = jsonDecode(utf8.decode(response.bodyBytes));
         if (decoderes["type"] == "student") {
+          //Save ID:
+          final SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('StudentID', userName);
+
           return "IsStudent";
         } else if (decoderes["type"] == "admin") {
           return "IsAdmin";
@@ -80,9 +87,26 @@ class Requests {
           tournamentsJson[i]["name"],
           tournamentsJson[i]["type"],
           tournamentsJson[i]["open"].toString(),
-          tournamentsJson[i]["tournamentType"]));
+          tournamentsJson[i]["tournamentType"],
+          tournamentsJson[i]['id']));
     }
     return tournaments;
+  }
+
+  static addParticipant(int tournamentID) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? studentID = prefs.getString('StudentID');
+
+    Map<String, int> body = {"tournamentId": tournamentID, "participantId": 1};
+    Response response = await postRequest("Tournaments/addParticipant", body);
+    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+    if (response.statusCode == 200) {
+      //Add a snack bar that he registered
+    }
+
+    // Do the other handeling stuff:
+    //If he's already registered, show snackbar indicating that.
+    //
   }
 
   // static Future<Map> getTournaments() async {

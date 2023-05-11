@@ -5,7 +5,7 @@ import 'package:swe206/home_student/tournament_page_student.dart';
 
 class TournamentCardStudent extends StatelessWidget {
   const TournamentCardStudent(
-      this.title, this.game, this.type, this.status, this.based,
+      this.title, this.game, this.type, this.status, this.based, this.id,
       {this.numberOfParticipant = 1, super.key});
   final String title;
   final String game;
@@ -13,6 +13,7 @@ class TournamentCardStudent extends StatelessWidget {
   final String status;
   final String based;
   final int numberOfParticipant;
+  final int id;
 
   @override
   Widget build(BuildContext context) {
