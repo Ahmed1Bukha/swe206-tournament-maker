@@ -170,8 +170,8 @@ public class Match {
     @Override
     public String toString() {
         if (dummyMatch)
-            return match_participants[0].getName() + " Dummy";
-        return match_participants[0].getName() + " " +
+            return match_participants[0].getName();
+        return match_participants[0].getName() + " vs " +
                 match_participants[1].getName();
     }
 

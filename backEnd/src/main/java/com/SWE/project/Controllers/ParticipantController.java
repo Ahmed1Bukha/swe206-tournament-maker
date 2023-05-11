@@ -78,8 +78,6 @@ public class ParticipantController {
             students_ids.add(Long.parseLong(Integer.toString(e)));
         });
 
-        GAME_TYPE gameType = ((String) body.get("gameType")).equals("RoundRobin") ? GAME_TYPE.RoundRobin
-                : GAME_TYPE.Elimination;
         Tournament t = tournamentRepo.findById(tournament_id)
                 .orElseThrow(() -> new TournamentNotFoundException(tournament_id));
         List<Team> ps = t.getParticipants().stream().filter(p -> p instanceof Team).map(p -> (Team) p)
@@ -99,7 +97,7 @@ public class ParticipantController {
             team_members.add(studentRepo.findById(id).orElseThrow(() -> new StudentNotFoundException(id)));
         } // Once this is done, all student ids are valid and we can create the team
 
-        Team team = new Team(name, team_members, gameType, t);
+        Team team = new Team(name, team_members, t);
 
         t.addParticipant(team);
 

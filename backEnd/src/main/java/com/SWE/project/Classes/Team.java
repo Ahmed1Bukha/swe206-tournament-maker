@@ -22,16 +22,12 @@ public class Team extends Participant {
     @JoinTable(name = "team_members", joinColumns = @JoinColumn(name = "team_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
     private Set<Student> team_members;
 
-    @Column
-    private GAME_TYPE gameType;
-
     public Team() {
     }
 
-    public Team(String name, Set<Student> team_members, GAME_TYPE gameType, Tournament tournament) {
+    public Team(String name, Set<Student> team_members, Tournament tournament) {
         this.name = name;
         this.team_members = team_members;
-        this.gameType = gameType;
         this.tournaments = new HashSet<Tournament>(Arrays.asList(tournament));
     }
 
@@ -73,14 +69,6 @@ public class Team extends Participant {
         this.id = id;
     }
 
-    public GAME_TYPE getGameType() {
-        return this.gameType;
-    }
-
-    public void setGameType(GAME_TYPE gameType) {
-        this.gameType = gameType;
-    }
-
     public String getName() {
         return this.name;
     }
@@ -110,7 +98,6 @@ public class Team extends Participant {
         return "{" + super.toString().substring(1, super.toString().length() - 1) +
                 ", name='" + getName() + "'" +
                 ", team_members='" + getTeam_members() + "'" +
-                ", gameType='" + getGameType() + "'" +
                 ", tournament='" + getTournaments() + "'" +
                 "}";
     }
@@ -123,12 +110,11 @@ public class Team extends Participant {
             return false;
         }
         Team team = (Team) o;
-        return Objects.equals(name, team.name)
-                && Objects.equals(gameType, team.gameType);
+        return Objects.equals(name, team.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, gameType);
+        return Objects.hash(name);
     }
 }

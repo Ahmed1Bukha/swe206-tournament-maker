@@ -100,7 +100,7 @@ public class TournamentController {
         for (int j = numOfMatches; j > 1; j--) {
             Map map = new HashMap<>();
             map.put("id", j);
-            map.put("label", matches.get(j));
+            map.put("label", matches.get(j).toString());
             result.get("nodes").add(map);
         }
 
@@ -119,7 +119,6 @@ public class TournamentController {
             }
         }
 
-        System.out.println(result);
         return result;
     }
 
