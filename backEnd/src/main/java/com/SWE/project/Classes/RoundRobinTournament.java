@@ -186,7 +186,6 @@ public class RoundRobinTournament extends Tournament {
 
     @Override
     public String toString() {
-        System.out.println("RT ts");
         return "{" +
                 super.toString().substring(1, super.toString().length() - 1) +
                 // ", teamPoints='" + getTeamPoints() + "'" +
@@ -195,7 +194,6 @@ public class RoundRobinTournament extends Tournament {
 
     @Override
     public boolean equals(Object o) {
-        System.out.println("RT e");
         if (o == this)
             return true;
         if (!(o instanceof RoundRobinTournament)) {
@@ -207,7 +205,6 @@ public class RoundRobinTournament extends Tournament {
 
     @Override
     public int hashCode() {
-        System.out.println("RT hc");
         return super.hashCode();
     }
 }

@@ -131,6 +131,22 @@ public abstract class Tournament {
         this.name = name;
     }
 
+    public String getSport() {
+        return this.sport;
+    }
+
+    public void setSport(String sport) {
+        this.sport = sport;
+    }
+
+    public int getStudentsPerTeam() {
+        return this.studentsPerTeam;
+    }
+
+    public void setStudentsPerTeam(int studentsPerTeam) {
+        this.studentsPerTeam = studentsPerTeam;
+    }
+
     public Date getStartDate() {
         return this.startDate;
     }
@@ -225,7 +241,6 @@ public abstract class Tournament {
 
     @Override
     public boolean equals(Object o) {
-        System.out.println("To e");
         if (o == this)
             return true;
         if (!(o instanceof Tournament)) {
@@ -242,7 +257,6 @@ public abstract class Tournament {
 
     @Override
     public int hashCode() {
-        System.out.println("To hc");
         return Objects.hash(name, startDate, endDate, timeBetweenStages,
                 tournamentType,
                 open, finished);
@@ -250,7 +264,6 @@ public abstract class Tournament {
 
     @Override
     public String toString() {
-        System.out.println("To ts");
         return "{" +
                 "name='" + getName() + "'" +
                 ", startDate='" + getStartDate() + "'" +

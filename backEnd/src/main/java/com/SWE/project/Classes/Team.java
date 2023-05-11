@@ -107,7 +107,6 @@ public class Team extends Participant {
 
     @Override
     public String toString() {
-        System.out.println("T ts");
         return "{" + super.toString().substring(1, super.toString().length() - 1) +
                 ", name='" + getName() + "'" +
                 ", team_members='" + getTeam_members() + "'" +
@@ -118,7 +117,6 @@ public class Team extends Participant {
 
     @Override
     public boolean equals(Object o) {
-        System.out.println("T e");
         if (o == this)
             return true;
         if (!(o instanceof Team)) {
@@ -131,7 +129,6 @@ public class Team extends Participant {
 
     @Override
     public int hashCode() {
-        System.out.println("T hc");
         return Objects.hash(name, gameType);
     }
 }

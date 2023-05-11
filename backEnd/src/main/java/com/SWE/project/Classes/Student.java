@@ -72,7 +72,6 @@ public class Student extends Participant {
 
     @Override
     public boolean equals(Object o) {
-        System.out.println("S e");
         if (o == this)
             return true;
         if (!(o instanceof Student)) {
@@ -86,13 +85,11 @@ public class Student extends Participant {
 
     @Override
     public int hashCode() {
-        System.out.println("S hc");
         return 31 * super.hashCode() + Objects.hash(goalsMade, goalsRecieved, wins, points, id, name);
     }
 
     @Override
     public String toString() {
-        System.out.println("S ts");
         return "{" + super.toString().substring(1, super.toString().length() - 1) +
         // ", studentId='" + getStudentId() + "'" +
         // "Tournaments" +

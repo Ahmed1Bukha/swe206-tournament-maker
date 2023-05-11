@@ -65,46 +65,63 @@ public class TournamentController {
         return tournamentRepo.save(newTournament);
     }
 
-    // @GetMapping("/EliminationTournaments/getMatches/{tournamentId}")
-    // Map<String, List<Map>> matchesJsonFormat(@PathVariable("tournamentId") Long
-    // id) {
-    // EliminationTournament t = (EliminationTournament)
-    // tournamentRepo.findById(id).orElseThrow(() -> {
-    // throw new TournamentNotFoundException(id);
-    // });
+    @GetMapping("/EliminationTournaments/getMatches/{tournamentId}")
+    Map<String, List<Map>> matchesJsonFormat(@PathVariable("tournamentId") Long id) {
+        EliminationTournament t = (EliminationTournament) tournamentRepo.findById(id).orElseThrow(() -> {
+            throw new TournamentNotFoundException(id);
+        });
 
-    // int participantCount = t.getParticipantCount();
-    // int numOfMatches = 0, i = 0;
+        int participantCount = t.getParticipantCount();
+        int numOfMatches = 0;
+        int i = 0;
 
-    // while (participantCount != 1) {
-    // participantCount = (int) Math.ceil(participantCount / 2.0);
-    // numOfMatches += participantCount;
-    // }
+        while (participantCount != 1) {
+            participantCount = (int) Math.ceil(participantCount / 2.0);
+            numOfMatches += participantCount;
+        }
 
-    // Map<Integer, Match> matches = new HashMap<Integer, Match>();
+        Map<Integer, Match> matches = new HashMap<Integer, Match>();
 
-    // t.getAllRounds().forEach((set) -> {
-    // set.forEach((match) -> {
-    // matches.put(numOfMatches - i, match);
-    // i++;
-    // });
-    // });
+        t.stopRegistration();
+        t.generateMatches();
+        t.start();
 
-    // Map<String, List<Map>> result = new HashMap<>();
-    // result.put("nodes", new ArrayList<>());
-    // result.put("edges", new ArrayList<>());
+        for (Set<Match> set : t.getAllRounds()) {
+            for (Match m : set) {
+                matches.put(numOfMatches - i, m);
+                i++;
+            }
+        }
 
-    // for (int j = numOfMatches; j > 1; j--) {
-    // HashMap map = new HashMap<>();
-    // map.put("id", j);
-    // map.put("label", matches.get(j));
-    // result.get("nodes").add(map);
-    // }
+        Map<String, List<Map>> result = new HashMap<>();
+        result.put("nodes", new ArrayList<>());
+        result.put("edges", new ArrayList<>());
 
-    // System.out.println();
+        for (int j = numOfMatches; j > 1; j--) {
+            Map map = new HashMap<>();
+            map.put("id", j);
+            map.put("label", matches.get(j));
+            result.get("nodes").add(map);
+        }
 
-    // return result;
-    // }
+        for (int j = 1; j < numOfMatches; j++) {
+            if (j * 2 <= numOfMatches) {
+                Map map = new HashMap<>();
+                map.put("from", j);
+                map.put("to", j * 2);
+                result.get("edges").add(map);
+                if (j * 2 + 1 <= numOfMatches) {
+                    map = new HashMap<>();
+                    map.put("from", j);
+                    map.put("to", j * 2 + 1);
+                    result.get("edges").add(map);
+                }
+            }
+        }
+
+        System.out.println(result);
+        return result;
+    }
 
     @GetMapping("/Tournaments/{tournamentId}")
     Tournament oneTournament(@PathVariable("tournamentId") long id)

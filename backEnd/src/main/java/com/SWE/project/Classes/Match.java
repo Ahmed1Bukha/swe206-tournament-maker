@@ -155,7 +155,6 @@ public class Match {
 
     @Override
     public boolean equals(Object obj) {
-        System.out.println("M e");
         if (obj instanceof Match) {
             Match other = (Match) obj;
             if ((match_participants[0] == other.match_participants[0]
@@ -170,7 +169,6 @@ public class Match {
 
     @Override
     public String toString() {
-        System.out.println("M ts");
         if (dummyMatch)
             return match_participants[0].getName() + " Dummy";
         return match_participants[0].getName() + " " +
@@ -178,7 +176,6 @@ public class Match {
     }
 
     public boolean contains(Match other) {
-        System.out.println("M c");
         if (other.match_participants[0] == match_participants[0] ||
                 other.match_participants[1] == match_participants[1]
                 || other.match_participants[1] == match_participants[0]
@@ -189,7 +186,6 @@ public class Match {
 
     @Override
     public int hashCode() {
-        System.out.println("M hc");
         return Objects.hash(id, scoreA, scoreB, finished, dummyMatch, endDate);
     }
 }

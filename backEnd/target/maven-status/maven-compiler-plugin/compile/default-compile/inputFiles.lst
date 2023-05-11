@@ -13,7 +13,6 @@ C:\Users\samis\spring_boot\with_database\swe206-tournament-maker\backEnd\src\mai
 C:\Users\samis\spring_boot\with_database\swe206-tournament-maker\backEnd\src\main\java\com\SWE\project\Repositories\ParticipantRepo.java
 C:\Users\samis\spring_boot\with_database\swe206-tournament-maker\backEnd\src\main\java\com\SWE\project\Enums\GAME_TYPE.java
 C:\Users\samis\spring_boot\with_database\swe206-tournament-maker\backEnd\src\main\java\com\SWE\project\Classes\Team.java
-C:\Users\samis\spring_boot\with_database\swe206-tournament-maker\backEnd\src\main\java\com\SWE\project\Classes\Game.java
 C:\Users\samis\spring_boot\with_database\swe206-tournament-maker\backEnd\src\main\java\com\SWE\project\Repositories\EliminationTournamentRepo.java
 C:\Users\samis\spring_boot\with_database\swe206-tournament-maker\backEnd\src\main\java\com\SWE\project\Repositories\StudentRepo.java
 C:\Users\samis\spring_boot\with_database\swe206-tournament-maker\backEnd\src\main\java\com\SWE\project\Exceptions\StudentAlreadyRegisteredInThisTournamentException.java
@@ -29,5 +28,7 @@ C:\Users\samis\spring_boot\with_database\swe206-tournament-maker\backEnd\src\mai
 C:\Users\samis\spring_boot\with_database\swe206-tournament-maker\backEnd\src\main\java\com\SWE\project\Exceptions\TournamentNotFoundException.java
 C:\Users\samis\spring_boot\with_database\swe206-tournament-maker\backEnd\src\main\java\com\SWE\project\Classes\Login.java
 C:\Users\samis\spring_boot\with_database\swe206-tournament-maker\backEnd\src\main\java\com\SWE\project\Classes\Tournament.java
+C:\Users\samis\spring_boot\with_database\swe206-tournament-maker\backEnd\src\main\java\com\SWE\project\Classes\Sport.java
 C:\Users\samis\spring_boot\with_database\swe206-tournament-maker\backEnd\src\main\java\com\SWE\project\Exceptions\TournamentRegistrationClosedException.java
 C:\Users\samis\spring_boot\with_database\swe206-tournament-maker\backEnd\src\main\java\com\SWE\project\Classes\EliminationTournament.java
+C:\Users\samis\spring_boot\with_database\swe206-tournament-maker\backEnd\src\main\java\com\SWE\project\Repositories\SportRepo.java

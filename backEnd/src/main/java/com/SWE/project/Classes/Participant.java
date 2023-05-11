@@ -143,13 +143,11 @@ public abstract class Participant {
 
     @Override
     public int hashCode() {
-        System.out.println("P hc");
         return Objects.hash(id, goalsMade, goalsRecieved, wins, points, name);
     }
 
     @Override
     public String toString() {
-        System.out.println("P ts");
         return "{" +
                 "id='" + getId() + "'" +
                 ", goalsMade='" + getGoalsMade() + "'" +

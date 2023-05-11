@@ -46,7 +46,7 @@ public class EliminationTournament extends Tournament {
                 tournamentType == "INDIVIDUAL" ? TOURNAMENT_TYPES.INDIVIDUAL : TOURNAMENT_TYPES.TEAM_BASED, sport);
     }
 
-    EliminationTournament(String name, int participantCount, int studentsPerTeam, Date startDate, Date endDate,
+    public EliminationTournament(String name, int participantCount, int studentsPerTeam, Date startDate, Date endDate,
             double timeBetweenStages,
             TOURNAMENT_TYPES tournamentType, String sport) {
         super(name, participantCount, studentsPerTeam, startDate, endDate, timeBetweenStages, tournamentType, sport);
@@ -84,7 +84,7 @@ public class EliminationTournament extends Tournament {
     }
 
     @Override
-    void start() {
+    public void start() {
         if (open)
             stopRegistration();
 
@@ -93,13 +93,13 @@ public class EliminationTournament extends Tournament {
     }
 
     @Override
-    protected void stopRegistration() {
+    public void stopRegistration() {
         open = false;
         currentPlayers.addAll(participants);
     }
 
     @Override
-    void enterResults(int firstScore, int secondScore) {
+    public void enterResults(int firstScore, int secondScore) {
 
         currentMatch.enterResults(firstScore, secondScore);
         int index = tournamentMatches.indexOf(currentMatch);
@@ -169,7 +169,6 @@ public class EliminationTournament extends Tournament {
 
     @Override
     public String toString() {
-        System.out.println("ET ts");
         return "{" +
                 super.toString().substring(1, super.toString().length() - 1) +
                 ", allRounds='" + getAllRounds() + "'" +
@@ -180,7 +179,6 @@ public class EliminationTournament extends Tournament {
 
     @Override
     public boolean equals(Object o) {
-        System.out.println("ET e");
         if (o == this)
             return true;
         if (!(o instanceof EliminationTournament)) {
@@ -192,7 +190,6 @@ public class EliminationTournament extends Tournament {
 
     @Override
     public int hashCode() {
-        System.out.println("ET hc");
         return 31 * super.hashCode() + Objects.hashCode(remainingMatchesInRound);
     }
 }
