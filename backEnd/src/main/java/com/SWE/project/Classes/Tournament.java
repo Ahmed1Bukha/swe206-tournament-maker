@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.*;
@@ -27,34 +26,27 @@ public abstract class Tournament {
     @Column
     @Id
     @GeneratedValue
-    @JsonView(Views.Public.class)
     protected Long id;
 
     @Column(name = "tournament_name")
-    @JsonView(Views.Public.class)
     protected String name;
 
     @Column
     protected int ParticipantCount;
 
     @Column
-    @JsonView(Views.Public.class)
     protected Date startDate;
 
     @Column
-    @JsonView(Views.Public.class)
     protected Date endDate;
 
     @Column
-    @JsonView(Views.Public.class)
     protected double timeBetweenStages;
 
     @Column
-    @JsonView(Views.Public.class)
     protected TOURNAMENT_TYPES tournamentType;
 
     // @JsonIgnore
-    @JsonView(Views.Public.class)
     @ManyToMany(targetEntity = com.SWE.project.Classes.Participant.class)
     @JoinTable(name = "tournament_participants", joinColumns = @JoinColumn(name = "tournament_id", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "participant_id", referencedColumnName = "ID"))
     @JsonIgnoreProperties({ "tournaments", "goalsMade", "goalsRecieved", "wins", "points", "matches", "teams" })
@@ -62,19 +54,15 @@ public abstract class Tournament {
 
     @OneToOne(mappedBy = "tournament") // Possible issue
     @PrimaryKeyJoinColumn
-    @JsonView(Views.Public.class)
     protected Match currentMatch;
 
     @Column
-    @JsonView(Views.Public.class)
     protected boolean open = true;
 
     @Column
-    @JsonView(Views.Public.class)
     protected boolean finished = false;
 
     @OneToMany(mappedBy = "tournament")
-    @JsonView(Views.Public.class)
     protected List<Match> tournamentMatches = new ArrayList<>();
 
     // Game object

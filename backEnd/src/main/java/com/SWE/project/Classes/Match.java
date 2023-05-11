@@ -5,44 +5,34 @@ import java.sql.Date;
 import jakarta.persistence.*;
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonView;
-
 @Entity
 public class Match {
     @Id
     @GeneratedValue
     @Column(name = "match_id")
-    @JsonView(Views.Public.class)
     private Long id;
 
     @ManyToOne
-    @JsonView(Views.Public.class)
     private Participant[] match_participants;
 
     @ManyToOne
     @OneToOne
     @MapsId
     @JoinColumn(name = "match_id")
-    @JsonView(Views.Internal.class)
     private Tournament tournament;
 
-    @JsonView(Views.Public.class)
     @Column
     Integer scoreA;
 
-    @JsonView(Views.Public.class)
     @Column
     Integer scoreB;
 
-    @JsonView(Views.Public.class)
     @Column
     boolean finished;
 
-    @JsonView(Views.Public.class)
     @Column
     boolean dummyMatch; // dummy matches are used when team number are odd
 
-    @JsonView(Views.Public.class)
     @Column
     private Date endDate;
 
@@ -84,7 +74,8 @@ public class Match {
     }
 
     public Participant decideLoser() {
-        if(dummyMatch) return match_participants[1];
+        if (dummyMatch)
+            return match_participants[1];
         if (scoreA < scoreB)
             return match_participants[0];
         return match_participants[1];

@@ -10,7 +10,6 @@ import com.SWE.project.Enums.TOURNAMENT_TYPES;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.fasterxml.jackson.annotation.JsonView;
 
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -28,7 +27,6 @@ import java.util.Objects;
 @JsonTypeName("RRT")
 public class RoundRobinTournament extends Tournament {
     @OneToMany(targetEntity = com.SWE.project.Classes.Participant.class)
-    @JsonView(Views.Internal.class)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @ElementCollection
     @CollectionTable(name = "team_points", joinColumns = @JoinColumn(name = "tournament_id"))

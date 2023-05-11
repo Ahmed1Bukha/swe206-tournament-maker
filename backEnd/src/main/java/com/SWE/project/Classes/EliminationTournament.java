@@ -10,7 +10,6 @@ import java.util.Set;
 import com.SWE.project.Enums.TOURNAMENT_TYPES;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.fasterxml.jackson.annotation.JsonView;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
@@ -27,17 +26,14 @@ import java.util.Objects;
 @JsonTypeName("ET")
 public class EliminationTournament extends Tournament {
     @OneToMany(targetEntity = com.SWE.project.Classes.Match.class)
-    @JsonView(Views.Public.class)
     List<Set<Match>> allRounds = new ArrayList<Set<Match>>();
 
-    @JsonView(Views.Public.class)
     @ManyToMany // WTF? i have never been more confused in my whole life
     @JoinTable(name = "elimination_tournament_current_participants", joinColumns = @JoinColumn(name = "tournament_id"), inverseJoinColumns = @JoinColumn(name = "participant_id"))
     // @JsonIgnoreProperties({""})
     List<Participant> currentPlayers = new ArrayList<>();
 
     @Column
-    @JsonView(Views.Public.class)
     Integer remainingMatchesInRound;
 
     public EliminationTournament() {
@@ -65,12 +61,12 @@ public class EliminationTournament extends Tournament {
         if (set.size() % 2 == 1)
             set.add(null);
         ArrayList<Participant> temp = new ArrayList<>(set);
-        if(open){
+        if (open) {
             Collections.shuffle(temp);
         }
-        for(int i=0;i<temp.size();i+=2){
+        for (int i = 0; i < temp.size(); i += 2) {
             int num1 = i;
-            int num2 = i+1;
+            int num2 = i + 1;
             if (temp.get(num1) != null && temp.get(num2) != null) {
                 matchUps.add(new Match(new Participant[] { temp.get(num1), temp.get(num2) },
                         false));
@@ -79,8 +75,8 @@ public class EliminationTournament extends Tournament {
 
             } else {
                 matchUps.add(new Match(new Participant[] { temp.get(num2), null }, true));
+            }
         }
-    }
         tournamentMatches = new ArrayList<>(matchUps);
         allRounds.add(matchUps);
         remainingMatchesInRound = tournamentMatches.size();
@@ -112,20 +108,18 @@ public class EliminationTournament extends Tournament {
             remainingMatchesInRound--;
             if (!tournamentMatches.get(index + 1).dummyMatch) {
                 currentMatch = tournamentMatches.get(index + 1);
-            }
-            else{
-            currentPlayers.remove(tournamentMatches.get(index+1).decideLoser());
-            remainingMatchesInRound--;
-
-            if (remainingMatchesInRound > 0) {
-                currentMatch = tournamentMatches.get(index + 2);
-            }
-            else{
-                generateMatches();
-                currentMatch = tournamentMatches.get(0);
+            } else {
+                currentPlayers.remove(tournamentMatches.get(index + 1).decideLoser());
                 remainingMatchesInRound--;
+
+                if (remainingMatchesInRound > 0) {
+                    currentMatch = tournamentMatches.get(index + 2);
+                } else {
+                    generateMatches();
+                    currentMatch = tournamentMatches.get(0);
+                    remainingMatchesInRound--;
+                }
             }
-        }
         } else {
             generateMatches();
             currentMatch = tournamentMatches.get(0);

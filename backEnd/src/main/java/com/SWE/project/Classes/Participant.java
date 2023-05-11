@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.*;
@@ -27,31 +26,24 @@ import java.util.Objects;
 public abstract class Participant {
     @Id
     @GeneratedValue
-    @JsonView(Views.Public.class)
     protected Long id;
 
     @Column
-    @JsonView(Views.Public.class)
     protected Integer goalsMade = 0;
 
     @Column
-    @JsonView(Views.Public.class)
     protected Integer goalsRecieved = 0;
 
     @Column
-    @JsonView(Views.Public.class)
     protected Integer wins = 0;
 
     @Column
-    @JsonView(Views.Public.class)
     protected Integer points = 0;
 
     @Column
-    @JsonView(Views.Public.class)
     protected String name;
 
     // @JsonIgnore
-    @JsonView(Views.Public.class)
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "participants", targetEntity = com.SWE.project.Classes.Tournament.class)
     @JsonIgnoreProperties({ "type", "startDate", "endDate", "timeBetweenStages", "tournamentType", "participants",
             "currentMatch", "open", "finished", "tournamentMatches", "allRounds", "currentPlayers",
@@ -59,7 +51,6 @@ public abstract class Participant {
     protected Set<Tournament> tournaments = new HashSet<Tournament>();
 
     @OneToMany(mappedBy = "match_participants")
-    @JsonView(Views.Internal.class)
     protected Set<Match> matches;
 
     public Participant() {

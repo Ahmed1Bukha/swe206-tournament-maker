@@ -5,7 +5,6 @@ import java.util.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.fasterxml.jackson.annotation.JsonView;
 
 import jakarta.persistence.*;
 
@@ -15,12 +14,10 @@ import jakarta.persistence.*;
 @JsonTypeName("Student")
 public class Student extends Participant {
     @ManyToMany(mappedBy = "team_members")
-    @JsonView(Views.Internal.class)
     @JsonIgnoreProperties({ "team_members" })
     private Set<Team> teams; // Done
 
     @Column
-    @JsonView(Views.Public.class)
     private Long studentId;
 
     public Student() {
