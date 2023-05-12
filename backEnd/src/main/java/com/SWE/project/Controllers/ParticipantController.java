@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.SWE.project.Classes.*;
-import com.SWE.project.Enums.GAME_TYPE;
 import com.SWE.project.Exceptions.*;
 import com.SWE.project.Repositories.ParticipantRepo;
 import com.SWE.project.Repositories.StudentRepo;
@@ -94,7 +93,7 @@ public class ParticipantController {
         Set<Student> team_members = new HashSet<>();
 
         for (Long id : students_ids) {
-            team_members.add(studentRepo.findById(id).orElseThrow(() -> new StudentNotFoundException(id)));
+            team_members.add(studentRepo.findByStudentId(id).orElseThrow(() -> new StudentNotFoundException(id)));
         } // Once this is done, all student ids are valid and we can create the team
 
         Team team = new Team(name, team_members, t);

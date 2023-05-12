@@ -97,10 +97,10 @@ public class TournamentController {
         result.put("nodes", new ArrayList<>());
         result.put("edges", new ArrayList<>());
 
-        for (int j = numOfMatches; j > 1; j--) {
+        for (int j = numOfMatches; j > 0; j--) {
             Map map = new HashMap<>();
             map.put("id", j);
-            map.put("label", matches.get(j).toString());
+            map.put("label", matches.get(j) != null ? matches.get(j).toString() : "");
             result.get("nodes").add(map);
         }
 
@@ -191,7 +191,14 @@ public class TournamentController {
                 if (!(t.getOpen()))
                     throw new TournamentRegistrationClosedException(tournamentId);
 
-                if (p.getTournaments().contains(t))
+                boolean isAlreadyRegistered = false;
+                for (Tournament tournament : p.getTournaments())
+                    if (tournament.getId() == t.getId()) {
+                        isAlreadyRegistered = true;
+                        return;
+                    }
+
+                if (isAlreadyRegistered)
                     throw new StudentAlreadyRegisteredInThisTournamentException(t.getId(), studentId);
 
                 t.addParticipant(p);

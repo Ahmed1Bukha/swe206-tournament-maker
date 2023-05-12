@@ -252,7 +252,8 @@ public abstract class Tournament {
                 && Objects.equals(endDate, tournament.endDate) && timeBetweenStages == tournament.timeBetweenStages
                 && Objects.equals(tournamentType, tournament.tournamentType)
                 && open == tournament.open
-                && finished == tournament.finished;
+                && finished == tournament.finished
+                && id == tournament.id;
     }
 
     @Override
