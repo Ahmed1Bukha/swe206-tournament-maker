@@ -79,8 +79,10 @@ public class ParticipantController {
 
         Tournament t = tournamentRepo.findById(tournament_id)
                 .orElseThrow(() -> new TournamentNotFoundException(tournament_id));
+                System.out.println(1);
         List<Team> ps = t.getParticipants().stream().filter(p -> p instanceof Team).map(p -> (Team) p)
                 .collect(Collectors.toList());
+                System.out.println(2);
         for (Team team : ps) {
             for (Student alreadyRegisteredStudent : team.getTeam_members()) {
                 for (Long toBeRegisteredStudentId : students_ids) {

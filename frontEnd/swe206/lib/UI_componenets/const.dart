@@ -31,7 +31,7 @@ TextStyle infoTournament = const TextStyle(
   color: Colors.black,
   fontSize: 30,
   fontFamily: "Mplus",
-  fontWeight: FontWeight.w500,
+  fontWeight: FontWeight.w700,
 );
 
 TextStyle appBarTitle = const TextStyle(
