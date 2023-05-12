@@ -28,7 +28,7 @@ public class EliminationTournament extends Tournament {
     @OneToMany(targetEntity = com.SWE.project.Classes.Match.class)
     List<Set<Match>> allRounds = new ArrayList<Set<Match>>();
 
-    @ManyToMany // WTF? i have never been more confused in my whole life
+    @ManyToMany
     @JoinTable(name = "elimination_tournament_current_participants", joinColumns = @JoinColumn(name = "tournament_id"), inverseJoinColumns = @JoinColumn(name = "participant_id"))
     // @JsonIgnoreProperties({""})
     List<Participant> currentPlayers = new ArrayList<>();
@@ -39,10 +39,11 @@ public class EliminationTournament extends Tournament {
     public EliminationTournament() {
     }
 
-    public EliminationTournament(String name, int participantCount, int studentsPerTeam, long startDate, long endDate,
+    public EliminationTournament(String name, int participantCount, int studentsPerTeam, int[] startDate, int[] endDate,
             double timeBetweenStages,
             String tournamentType, String sport) {
-        super(name, participantCount, studentsPerTeam, new Date(startDate), new Date(endDate), timeBetweenStages,
+        super(name, participantCount, studentsPerTeam, new Date(startDate[0], startDate[1], startDate[2]),
+                new Date(endDate[0], endDate[1], endDate[2]), timeBetweenStages,
                 tournamentType == "INDIVIDUAL" ? TOURNAMENT_TYPES.INDIVIDUAL : TOURNAMENT_TYPES.TEAM_BASED, sport);
     }
 
