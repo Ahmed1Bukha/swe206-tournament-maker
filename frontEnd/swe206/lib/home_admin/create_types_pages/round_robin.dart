@@ -5,6 +5,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
+import '../../UI_componenets/const.dart';
 import '../../requests.dart';
 
 enum BasedTeam { INDIVIDUAL, TEAM_BASED }
@@ -48,7 +49,13 @@ class _CreateRoundPageState extends State<CreateRoundPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Create Round robin tournament"),
+        elevation: 0,
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "RoundRobin",
+          style: h2,
+        ),
       ),
       body: isLoading
           ? CircularProgressIndicator()
@@ -61,10 +68,6 @@ class _CreateRoundPageState extends State<CreateRoundPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        "Tournament Name: ",
-                        style: TextStyle(fontSize: 20),
-                      ),
                       TextFormField(
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -73,16 +76,22 @@ class _CreateRoundPageState extends State<CreateRoundPage> {
                           return null;
                         },
                         controller: myTournamentController,
-                        decoration: const InputDecoration(
-                          hintText: "Enter tournament name",
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.gamepad),
+                          hintText: "Tournament name",
+                          filled: true,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide.none,
+                          ),
                         ),
                       ),
                       const SizedBox(
                         height: 40,
                       ),
-                      const Text(
+                      Text(
                         "Pick a game:",
-                        style: TextStyle(fontSize: 20),
+                        style: h4,
                       ),
                       Center(
                         child: getDropDownButton(),
@@ -96,17 +105,13 @@ class _CreateRoundPageState extends State<CreateRoundPage> {
                       const SizedBox(
                         height: 40,
                       ),
-                      const Text(
-                        "Pick type of participants: ",
-                        style: TextStyle(fontSize: 20),
+                      Text(
+                        "Tournament based:",
+                        style: h4,
                       ),
                       listTiles(),
                       const SizedBox(
                         height: 40,
-                      ),
-                      const Text(
-                        "Enter number of participant:",
-                        style: TextStyle(fontSize: 20),
                       ),
                       TextFormField(
                         validator: (value) {
@@ -117,18 +122,23 @@ class _CreateRoundPageState extends State<CreateRoundPage> {
                         },
                         keyboardType: TextInputType.number,
                         controller: myNumberParticipantController,
-                        decoration: const InputDecoration(
-                          hintText: "Enter number",
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.people),
+                          hintText: "Number of participants/teams",
+                          filled: true,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide.none,
+                          ),
                         ),
+                      ),
+                      const SizedBox(
+                        height: 40,
                       ),
                       Visibility(
                         visible: isTeam,
                         child: Column(
                           children: [
-                            const Text(
-                              "Enter number of members in team: ",
-                              style: TextStyle(fontSize: 20),
-                            ),
                             TextFormField(
                               onChanged: (value) {
                                 numberOfMembers = int.parse(value);
@@ -140,8 +150,14 @@ class _CreateRoundPageState extends State<CreateRoundPage> {
                                 return null;
                               },
                               keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(
-                                hintText: "Enter number",
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.handshake),
+                                hintText: "Number of members per team",
+                                filled: true,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide: BorderSide.none,
+                                ),
                               ),
                             ),
                           ],
@@ -149,10 +165,6 @@ class _CreateRoundPageState extends State<CreateRoundPage> {
                       ),
                       const SizedBox(
                         height: 40,
-                      ),
-                      const Text(
-                        "Enter number of days between:",
-                        style: TextStyle(fontSize: 20),
                       ),
                       TextFormField(
                         validator: (value) {
@@ -163,16 +175,22 @@ class _CreateRoundPageState extends State<CreateRoundPage> {
                         },
                         keyboardType: TextInputType.number,
                         controller: myNumberDaysController,
-                        decoration: const InputDecoration(
-                          hintText: "Enter number",
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.calendar_month),
+                          hintText: "Days between",
+                          filled: true,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide.none,
+                          ),
                         ),
                       ),
                       const SizedBox(
                         height: 70,
                       ),
-                      const Text(
+                      Text(
                         "Select date range:",
-                        style: TextStyle(fontSize: 20),
+                        style: h4,
                       ),
                       SfDateRangePicker(
                         selectionMode: DateRangePickerSelectionMode.range,
@@ -235,7 +253,10 @@ class _CreateRoundPageState extends State<CreateRoundPage> {
     return Column(
       children: <Widget>[
         ListTile(
-          title: const Text('single'),
+          title: Text(
+            'INDIVIDUAL',
+            style: h5,
+          ),
           leading: Radio<BasedTeam>(
             value: BasedTeam.INDIVIDUAL,
             groupValue: _character,
@@ -248,7 +269,10 @@ class _CreateRoundPageState extends State<CreateRoundPage> {
           ),
         ),
         ListTile(
-          title: const Text('team'),
+          title: Text(
+            'TEAM_BASED',
+            style: h5,
+          ),
           leading: Radio<BasedTeam>(
             value: BasedTeam.TEAM_BASED,
             groupValue: _character,

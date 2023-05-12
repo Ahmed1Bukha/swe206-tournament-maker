@@ -128,7 +128,7 @@ class _CreateEleminationPageState extends State<CreateEleminationPage> {
                         controller: myNumberParticipantController,
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.people),
-                          hintText: "Number of participant/teams",
+                          hintText: "Number of participants/teams",
                           filled: true,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
