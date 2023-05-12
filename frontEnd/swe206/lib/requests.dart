@@ -8,7 +8,10 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:swe206/UI_componenets/student_card_admin.dart';
+import 'package:swe206/UI_componenets/tournament_card_admin.dart';
 import 'package:swe206/UI_componenets/tournament_card_student.dart';
+import 'package:swe206/home_admin/student_page_admin.dart';
 
 class Requests {
   static var client = http.Client();
@@ -96,7 +99,7 @@ class Requests {
       tournaments.add(
         TournamentCardStudent(
           tournamentsJson[i]["name"],
-          tournamentsJson[i]["name"],
+          tournamentsJson[i]["sport"],
           tournamentsJson[i]["type"],
           tournamentsJson[i]["open"].toString(),
           tournamentsJson[i]["tournamentType"],
@@ -150,6 +153,128 @@ class Requests {
       print(response.body);
       return "registered";
     }
+  }
+
+  static dynamic getTournamentsAdmin() async {
+    var tournamentsJson = await getRequest("Tournaments");
+    List<dynamic> tournaments = [];
+    for (int i = 0; i < tournamentsJson.length; i++) {
+      tournaments.add(
+        TournamentCardAdmin(
+          title: tournamentsJson[i]["name"],
+          game: tournamentsJson[i]["sport"],
+          tournamentBased: tournamentsJson[i]["type"],
+          status: tournamentsJson[i]["open"].toString(),
+          type: tournamentsJson[i]["tournamentType"],
+          id: tournamentsJson[i]['id'],
+          startDate: tournamentsJson[i]['startDate'],
+          endDate: tournamentsJson[i]['endDate'],
+          studentPerTeam: tournamentsJson[i]['studentsPerTeam'],
+          matches: tournamentsJson[i]["tournamentMatches"],
+          timeBetween: tournamentsJson[i]["timeBetweenStages"].round(),
+          isOpen: tournamentsJson[i]["open"],
+          isFinished: tournamentsJson[i]["finished"],
+        ),
+      );
+    }
+    return tournaments;
+  }
+
+  static dynamic getMatchesAdmin() async {
+    var tournamentsJson = await getRequest("Tournaments");
+  }
+
+  static addElemeniation(
+      String name,
+      int participantCount,
+      String startDate,
+      String endDate,
+      int timeBetween,
+      String tournamentType,
+      int numberOfMembers,
+      String game) async {
+    Map<String, dynamic> body = {
+      "name": name,
+      "participantCount": participantCount,
+      "startDate": startDate,
+      "endDate": endDate,
+      "timeBetweenStages": timeBetween,
+      "tournamentType": tournamentType,
+      "sport": game,
+      "studentsPerTeam": numberOfMembers
+    };
+    Response response = await postRequest("EliminationTournaments", body);
+
+    if (response.statusCode == 200) {
+      //Add a snack bar that he registered
+      var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+
+      print(decodedResponse);
+      return "done";
+    } else if (response.statusCode == 404) {
+      return response.body;
+    }
+  }
+
+  static addRoundRobin(
+      String name,
+      int participantCount,
+      String startDate,
+      String endDate,
+      int timeBetween,
+      String tournamentType,
+      int numberOfMembers,
+      String game) async {
+    Map<String, dynamic> body = {
+      "name": name,
+      "participantCount": participantCount,
+      "startDate": startDate,
+      "endDate": endDate,
+      "timeBetweenStages": timeBetween,
+      "tournamentType": tournamentType,
+      "sport": game,
+      "studentsPerTeam": numberOfMembers
+    };
+    Response response = await postRequest("RoundRobinTournaments", body);
+
+    if (response.statusCode == 200) {
+      //Add a snack bar that he registered
+      var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+
+      print(decodedResponse);
+      return "done";
+    } else if (response.statusCode == 404) {
+      return response.body;
+    }
+  }
+
+  static getGames() async {
+    var tournamentsJson = await getRequest("getSports");
+    List<String> games = [];
+    for (int i = 0; i < tournamentsJson.length; i++) {
+      games.add(tournamentsJson[i].toString());
+    }
+    return games;
+  }
+
+  static addGames(String game) async {
+    Map<String, dynamic> body = {"name": game};
+    var res = await postRequest("addSport", body);
+  }
+
+  static dynamic getStudents() async {
+    var studentsJson = await getRequest("students");
+    print(studentsJson);
+    List<dynamic> students = [];
+    for (int i = 0; i < studentsJson.length; i++) {
+      students.add(StudentCardAdmin(
+        studentsJson[i]["studentId"],
+        studentsJson[i]["name"],
+        studentsJson[i]["teams"],
+        studentsJson[i]["tournaments"],
+      ));
+    }
+    return students;
   }
 
   // static Future<Map> getTournaments() async {

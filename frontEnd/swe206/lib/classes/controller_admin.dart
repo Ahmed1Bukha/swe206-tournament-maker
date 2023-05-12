@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:swe206/UI_componenets/match_card_admin.dart';
+import 'package:swe206/UI_componenets/student_card_admin.dart';
 import 'package:swe206/UI_componenets/tournament_card_admin.dart';
 
 import '../UI_componenets/tournament_card_student.dart';
+import '../requests.dart';
 
 // For the most part it will get a joson file and i will have to convert it to
 // List of tournamentWidget.
 class ControllerAdmin {
-  ControllerAdmin(this.tournamentsList);
+  ControllerAdmin();
   List<TournamentCardAdmin> tournamentsList = [];
 
   List<MatchCardAdmin> getMatches() {
@@ -16,30 +18,36 @@ class ControllerAdmin {
     //Loop through every tournament.
     for (TournamentCardAdmin tournament in tournamentsList) {
       //Get the matches for a given tournament.
-      Map<String, List<MatchCardAdmin>> matches = tournament.matches;
+      List<dynamic> matches = tournament.matches;
       //Loop though each match.
-      matches.forEach((key, value) {
-        for (int i = 0; i < value.length; i++) {
-          //add the matches
-          matchesList.add(value[i]);
-        }
-      });
     }
     return matchesList;
   }
 
   List<TournamentCardAdmin> getTournaments() => tournamentsList;
 
-  searchResult(String inputSearch) {
-    List<TournamentCardAdmin> results = [];
+  searchResult(String inputSearch) async {
+    List<dynamic> tournamentsList = await Requests.getTournamentsAdmin();
+    List<dynamic> studentsList = await Requests.getStudents();
+    List<Widget> results = [];
     for (TournamentCardAdmin name in tournamentsList) {
       if (name.title.toLowerCase().contains(inputSearch.toLowerCase())) {
         results.add(name);
       }
     }
-    print(results);
+
+    for (StudentCardAdmin student in studentsList) {
+      if (student.studentName
+          .toLowerCase()
+          .contains(inputSearch.toLowerCase())) {
+        print(student.studentName);
+        results.add(student);
+      }
+    }
+    print("result is ");
+
     if (results.isEmpty) {
-      return [const Text("No search found :(")];
+      return [Text("No search found :(")];
     } else if (inputSearch == "") {
       return [];
     }

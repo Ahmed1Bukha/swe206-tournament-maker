@@ -23,7 +23,7 @@ class _MainPageAdminState extends State<MainPageAdmin> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> _widgetOptions = <Widget>[
-      HomePageAdmin(widget._tournamentManagerAdmin),
+      HomePageAdmin(),
       const CreatePage(),
       SearchPageAdmin(widget._tournamentManagerAdmin),
       const Text("LogOut")

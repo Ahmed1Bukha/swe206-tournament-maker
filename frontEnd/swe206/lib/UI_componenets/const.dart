@@ -23,9 +23,15 @@ TextStyle h3 = const TextStyle(
 
 TextStyle h4 = const TextStyle(
   color: Colors.black,
-  fontSize: 20,
+  fontSize: 25,
   fontFamily: "Mplus",
-  fontWeight: FontWeight.w500,
+  fontWeight: FontWeight.w800,
+);
+TextStyle h5 = const TextStyle(
+  color: Colors.black,
+  fontSize: 18,
+  fontFamily: "Mplus",
+  fontWeight: FontWeight.w800,
 );
 TextStyle infoTournament = const TextStyle(
   color: Colors.black,

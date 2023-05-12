@@ -18,9 +18,19 @@ class TournamentPage extends StatefulWidget {
 }
 
 class _TournamentPageState extends State<TournamentPage> {
-  Random r = Random();
+  var json = {
+    "nodes": [
+      {"id": 1, "label": ""},
+      {"id": 2, "label": "ALGHURAIRI, HASSAN vs ahmed"},
+      {"id": 3, "label": "gg vs mo"}
+    ],
+    "edges": [
+      {"from": 1, "to": 2},
+      {"from": 1, "to": 3}
+    ]
+  };
 
-  Widget rectangleWidget(int a) {
+  Widget rectangleWidget(String title) {
     return InkWell(
       onTap: () {
         print('clicked');
@@ -30,7 +40,7 @@ class _TournamentPageState extends State<TournamentPage> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(4),
           ),
-          child: Text('Node ${a}')),
+          child: Text(title)),
     );
   }
 
@@ -59,45 +69,23 @@ class _TournamentPageState extends State<TournamentPage> {
     content: const Text('This ID is already registered to this tournament.'),
     action: SnackBarAction(
       label: 'Done',
-      onPressed: () {
-        // Some code to undo the change.
-      },
+      onPressed: () {},
     ),
   );
 
   @override
   void initState() {
     isOpen = widget.tournamentWidget.status == "true" ? true : false;
-    final node1 = Node.Id(1);
-    final node2 = Node.Id(2);
-    final node3 = Node.Id(3);
-    final node4 = Node.Id(4);
-    final node5 = Node.Id(5);
-    final node6 = Node.Id(6);
-    final node8 = Node.Id(7);
-    final node7 = Node.Id(8);
-    final node9 = Node.Id(9);
-    final node10 = Node.Id(10);
-    final node11 = Node.Id(11);
-    final node12 = Node.Id(12);
-
-    graph.addEdge(node1, node2);
-    graph.addEdge(node1, node3, paint: Paint()..color = Colors.red);
-    graph.addEdge(node1, node4, paint: Paint()..color = Colors.blue);
-    graph.addEdge(node2, node5);
-    graph.addEdge(node2, node6);
-    graph.addEdge(node6, node7, paint: Paint()..color = Colors.red);
-    graph.addEdge(node6, node8, paint: Paint()..color = Colors.red);
-    graph.addEdge(node4, node9);
-    graph.addEdge(node4, node10, paint: Paint()..color = Colors.black);
-    graph.addEdge(node4, node11, paint: Paint()..color = Colors.red);
-    graph.addEdge(node11, node12);
-
+    json["edges"]?.forEach((element) {
+      var fromNodeId = element['from'];
+      var toNodeId = element['to'];
+      graph.addEdge(Node.Id(fromNodeId), Node.Id(toNodeId));
+    });
     builder
       ..siblingSeparation = (100)
       ..levelSeparation = (150)
       ..subtreeSeparation = (150)
-      ..orientation = (BuchheimWalkerConfiguration.ORIENTATION_TOP_BOTTOM);
+      ..orientation = (BuchheimWalkerConfiguration.ORIENTATION_LEFT_RIGHT);
 
     super.initState();
   }
@@ -116,9 +104,7 @@ class _TournamentPageState extends State<TournamentPage> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
+          child: ListView(
             children: [
               Center(
                 child: Text(widget.tournamentWidget.title, style: h1),
@@ -172,7 +158,6 @@ class _TournamentPageState extends State<TournamentPage> {
                   ),
                 ],
               ),
-
               Visibility(
                 visible: isOpen,
                 child: ElevatedButton.icon(
@@ -204,23 +189,34 @@ class _TournamentPageState extends State<TournamentPage> {
                   label: Text("Register Now!"),
                 ),
               ),
-              // Expanded(
-              //   child: InteractiveViewer(
-              //     constrained: false,
-              //     boundaryMargin: EdgeInsets.all(100),
-              //     minScale: 0.01,
-              //     maxScale: 5.6,
-              //     child: GraphView(
-              //         graph: graph,
-              //         algorithm: BuchheimWalkerAlgorithm(
-              //             builder, TreeEdgeRenderer(builder)),
-              //         builder: (Node node) {
-              //           // I can decide what widget should be shown here based on the id
-              //           var a = node.key?.value as int;
-              //           return rectangleWidget(a);
-              //         }),
-              //   ),
-              // )
+              SizedBox(
+                height: 40,
+              ),
+              SizedBox(
+                height: 200,
+                child: Expanded(
+                  child: InteractiveViewer(
+                    scaleEnabled: false,
+                    constrained: false,
+                    boundaryMargin: EdgeInsets.all(400),
+                    minScale: 0.01,
+                    maxScale: 5.6,
+                    child: GraphView(
+                        graph: graph,
+                        algorithm: BuchheimWalkerAlgorithm(
+                            builder, TreeEdgeRenderer(builder)),
+                        builder: (Node node) {
+                          print(node.key!.value);
+                          var a = node.key!.value as int;
+                          var nodes = json['nodes'];
+                          var nodeValue = nodes!
+                              .firstWhere((element) => element['id'] == a);
+
+                          return rectangleWidget(nodeValue['label'] as String);
+                        }),
+                  ),
+                ),
+              )
             ],
           ),
         ),

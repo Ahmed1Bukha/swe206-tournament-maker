@@ -30,40 +30,8 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    List<TournamentCardAdmin> myTournamentsAdmin = [
-      const TournamentCardAdmin(
-        id: 2,
-        title: "Volleyball al7asa",
-        type: "Elemination",
-        game: "VolleyBall",
-        status: "Open for register",
-        matches: {
-          "32": [
-            MatchCardAdmin(
-              id: 1,
-              participantA: "Ahmed",
-              participantB: "Mohammed",
-              game: "VolleyBall",
-              date: "13/13/2013",
-              scoreA: 0,
-              scoreB: 0,
-              title: "lmfao",
-              endDate: false,
-              finished: false,
-            ),
-          ]
-        },
-        startDate: "13/13/2013",
-        endDate: "14/14/2013",
-        timeBetween: 2,
-        tournamentBased: "Individual",
-        isOpen: false,
-        isFinished: false,
-      )
-    ];
     ControllerStudent tournamentsManager = ControllerStudent();
-    ControllerAdmin tournamentManagerAdmin =
-        ControllerAdmin(myTournamentsAdmin);
+    ControllerAdmin tournamentManagerAdmin = ControllerAdmin();
     return MaterialApp(
       title: 'homeManager',
       theme: ThemeData(),
