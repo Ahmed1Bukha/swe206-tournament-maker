@@ -64,7 +64,7 @@ class _HomePageAdminState extends State<HomePageAdmin> {
                       date: "13/13/2013",
                       scoreA: 0,
                       scoreB: 0,
-                      title: "Ass vs Tiddest",
+                      title: "Top G vs Bottom G",
                       endDate: "13/13/20/13",
                       finished: false),
                   Text("Tournaments:", style: h2),
