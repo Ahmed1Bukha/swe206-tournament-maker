@@ -1,8 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:swe206/UI_componenets/const.dart';
 import 'package:swe206/UI_componenets/tournament_card_student.dart';
+
+import '../requests.dart';
 
 //TODO Ask the boiz how they implemented register stuff.
 class RegisterTeamStudent extends StatelessWidget {
@@ -11,8 +15,35 @@ class RegisterTeamStudent extends StatelessWidget {
 
   List<Widget> texts = [];
   List<TextEditingController> controllers = [];
+  final snackBarRegistering = SnackBar(
+    content: const Text('Processing'),
+    action: SnackBarAction(
+      label: 'Done',
+      onPressed: () {
+        // Some code to undo the change.
+      },
+    ),
+  );
+  final doneRegisterSnack = SnackBar(
+    content: const Text('Done Registering.'),
+    action: SnackBarAction(
+      label: 'Done',
+      onPressed: () {
+        // Some code to undo the change.
+      },
+    ),
+  );
+  final alreadyRegistered = SnackBar(
+    content: const Text('This ID is already registered to this tournament.'),
+    action: SnackBarAction(
+      label: 'Done',
+      onPressed: () {
+        // Some code to undo the change.
+      },
+    ),
+  );
   getTextFields() {
-    for (int i = 0; i < tournament.numberOfParticipant; i++) {
+    for (int i = 0; i < tournament.numberOfParticipant - 1; i++) {
       controllers.add(TextEditingController());
       texts.add(
         Padding(
@@ -67,6 +98,10 @@ class RegisterTeamStudent extends StatelessWidget {
             padding: const EdgeInsets.all(24.0),
             child: Column(
               children: [
+                const Text(
+                  "Only number Team-mates' ID",
+                  style: TextStyle(fontSize: 14),
+                ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
@@ -95,12 +130,28 @@ class RegisterTeamStudent extends StatelessWidget {
                 ),
                 ...getTextFields(),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      for (int i = 0; i < controllers.length; i++) {
-                        print(controllers[i].text);
+                      List<int> ids = [];
+                      for (var id in controllers) {
+                        ids.add(int.parse(id.text));
                       }
-                      print(myTeamNameController.text);
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(snackBarRegistering);
+
+                      var response = await Requests.addTeam(
+                          myTeamNameController.text, tournament.id, ids);
+
+                      ScaffoldMessenger.of(context).clearSnackBars();
+
+                      if (response == "done") {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(doneRegisterSnack);
+                      } else if (response == "registered") {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(alreadyRegistered);
+                      }
+
                       Navigator.of(context).popUntil((route) => route.isFirst);
                     }
                   },

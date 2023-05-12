@@ -80,8 +80,10 @@ public class ParticipantController {
 
         Tournament t = tournamentRepo.findById(tournament_id)
                 .orElseThrow(() -> new TournamentNotFoundException(tournament_id));
+                System.out.println(1);
         List<Team> ps = t.getParticipants().stream().filter(p -> p instanceof Team).map(p -> (Team) p)
                 .collect(Collectors.toList());
+                System.out.println(2);
         for (Team team : ps) {
             for (Student alreadyRegisteredStudent : team.getTeam_members()) {
                 for (Long toBeRegisteredStudentId : students_ids) {
@@ -94,7 +96,7 @@ public class ParticipantController {
         Set<Student> team_members = new HashSet<>();
 
         for (Long id : students_ids) {
-            team_members.add(studentRepo.findById(id).orElseThrow(() -> new StudentNotFoundException(id)));
+            team_members.add(studentRepo.findByStudentId(id).orElseThrow(() -> new StudentNotFoundException(id)));
         } // Once this is done, all student ids are valid and we can create the team
 
         Team team = new Team(name, team_members, t);

@@ -95,14 +95,16 @@ class Requests {
     for (int i = 0; i < tournamentsJson.length; i++) {
       tournaments.add(
         TournamentCardStudent(
-            tournamentsJson[i]["name"],
-            tournamentsJson[i]["name"],
-            tournamentsJson[i]["type"],
-            tournamentsJson[i]["open"].toString(),
-            tournamentsJson[i]["tournamentType"],
-            tournamentsJson[i]['id'],
-            tournamentsJson[i]['startDate'],
-            tournamentsJson[i]['endDate']),
+          tournamentsJson[i]["name"],
+          tournamentsJson[i]["name"],
+          tournamentsJson[i]["type"],
+          tournamentsJson[i]["open"].toString(),
+          tournamentsJson[i]["tournamentType"],
+          tournamentsJson[i]['id'],
+          tournamentsJson[i]['startDate'],
+          tournamentsJson[i]['endDate'],
+          tournamentsJson[i]['studentsPerTeam'],
+        ),
       );
     }
     return tournaments;
@@ -125,10 +127,29 @@ class Requests {
     } else if (response.statusCode == 404) {
       return "registered";
     }
+  }
 
-    // Do the other handeling stuff:
-    //If he's already registered, show snackbar indicating that.
-    //
+  static addTeam(String teamName, int tournamentID, List<int> teamIDS) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? studentID = prefs.getString('StudentID');
+
+    teamIDS.add(int.parse(studentID.toString()));
+    Map<String, dynamic> body = {
+      "name": teamName,
+      "team_members": teamIDS,
+      "tournament_id": tournamentID
+    };
+    Response response = await postRequest("teams", body);
+
+    if (response.statusCode == 200) {
+      //Add a snack bar that he registered
+      var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+
+      return "done";
+    } else if (response.statusCode == 404) {
+      print(response.body);
+      return "registered";
+    }
   }
 
   // static Future<Map> getTournaments() async {
