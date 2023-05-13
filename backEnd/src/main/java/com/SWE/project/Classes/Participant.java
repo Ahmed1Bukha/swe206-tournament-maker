@@ -50,7 +50,8 @@ public abstract class Participant {
             "remainingMatchesInRound" })
     protected Set<Tournament> tournaments = new HashSet<Tournament>();
 
-    @OneToMany(mappedBy = "match_participants")
+    @Transient
+    // @OneToMany(mappedBy = "match_participants")
     protected Set<Match> matches;
 
     public Participant() {
