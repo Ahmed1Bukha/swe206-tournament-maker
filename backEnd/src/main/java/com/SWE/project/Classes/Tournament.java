@@ -52,8 +52,9 @@ public abstract class Tournament {
     @JoinTable(name = "tournament_participants", joinColumns = @JoinColumn(name = "tournament_id", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "participant_id", referencedColumnName = "ID"))
     @JsonIgnoreProperties({ "tournaments", "goalsMade", "goalsRecieved", "wins", "points", "matches", "teams" })
     protected Set<Participant> participants = new HashSet<Participant>();
+    @OneToOne(targetEntity = com.SWE.project.Classes.Match.class)
 
-    @Transient
+    @JsonIgnoreProperties({ "match_participants", "tournament", "endDate" })
     protected Match currentMatch;
 
     @Column
@@ -61,8 +62,9 @@ public abstract class Tournament {
 
     @Column
     protected boolean finished = false;
+    @OneToMany(targetEntity = com.SWE.project.Classes.Match.class)
 
-    @Transient
+    @JsonIgnoreProperties({ "match_participants", "tournament", "endDate" })
     protected List<Match> tournamentMatches = new ArrayList<>();
 
     @Column
@@ -89,19 +91,21 @@ public abstract class Tournament {
     }
 
     public Tournament() {
-        
+
     }
-    public void storeMatches(){
-        for(Match t:tournamentMatches){
+
+    public void storeMatches() {
+        for (Match t : tournamentMatches) {
             generatedMatches.add(t.stringMatch());
         }
-        indexOfCurrent=tournamentMatches.indexOf(currentMatch);
+        indexOfCurrent = tournamentMatches.indexOf(currentMatch);
     }
-    public void startMatches(ArrayList<Match> array){
-            tournamentMatches=array;
-            currentMatch=tournamentMatches.get(indexOfCurrent);
+
+    public void startMatches(ArrayList<Match> array) {
+        tournamentMatches = array;
+        currentMatch = tournamentMatches.get(indexOfCurrent);
     }
-    
+
     public abstract void start();
 
     public abstract void generateMatches();
@@ -301,6 +305,6 @@ public abstract class Tournament {
                 // ", tournamentMatches='" + getTournamentMatches() + "'" +
                 "}";
     }
-    
+
     //
 }

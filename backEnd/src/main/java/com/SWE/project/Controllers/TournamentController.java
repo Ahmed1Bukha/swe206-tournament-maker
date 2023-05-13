@@ -11,6 +11,8 @@ import com.SWE.project.Enums.TOURNAMENT_TYPES;
 import com.SWE.project.Exceptions.*;
 import com.SWE.project.Repositories.*;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
+
 @RestController
 public class TournamentController {
 
@@ -46,9 +48,10 @@ public class TournamentController {
     @GetMapping("/Tournaments")
     List<Tournament> allTournaments() {
         try {
-            return tournamentRepo.findAll();
+            List<Tournament> tournamens = tournamentRepo.findAll();
+            return tournamens;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
         return null;
     }
@@ -56,13 +59,16 @@ public class TournamentController {
     @GetMapping("/Tournaments/getMatches/{tournamentId}")
     List<Match> getMatches(@PathVariable("tournamentId") Long id) {
         Tournament t = tournamentRepo.findById(id).orElseThrow(() -> new TournamentNotFoundException(id));
-        t.generateMatches(); // Throws error if tournament hasnt started yet
+        tranform(t);
         if (t instanceof EliminationTournament) {
             EliminationTournament et = (EliminationTournament) t;
             List<Match> result = new ArrayList<Match>();
-            for (Set<Match> s : et.getAllRounds())
-                for (Match m : s)
-                    result.add(m);
+            for (Match m : et.getTournamentMatches()) {
+                System.out.println("hhhh");
+                System.out.println(m.getId());
+                result.add(m);
+                System.out.println("hhhhhhhhhhhhhhhhhhh");
+            }
 
             return result;
         }
@@ -113,18 +119,18 @@ public class TournamentController {
         return tournamentRepo.save(newTournament);
     }
 
-    // @GetMapping("/Tournaments/forceCloseTournament/{id}")
-    // void forceClose(@PathVariable Long id) {
-    // Tournament t = tournamentRepo.findById(id).orElseThrow(() -> new
-    // TournamentNotFoundException(id));
+    @GetMapping("/Tournaments/forceCloseTournament/{id}")
+    void forceClose(@PathVariable Long id) {
+        Tournament t = tournamentRepo.findById(id).orElseThrow(() -> new TournamentNotFoundException(id));
 
-    // }
+    }
 
     @GetMapping("/EliminationTournaments/getMatches/{tournamentId}")
     Map<String, List<Map>> elimMatchesJsonFormat(@PathVariable("tournamentId") Long id) {
         EliminationTournament t = (EliminationTournament) tournamentRepo.findById(id)
                 .orElseThrow(() -> new TournamentNotFoundException(id));
-
+        tranform(t);
+        System.out.println(t.getTournamentMatches());
         if (t.getOpen())
             throw new TournamentRegistrationStillOpenException(id);
 
@@ -133,6 +139,7 @@ public class TournamentController {
         int i = 0;
 
         while (participantCount != 1) {
+            System.out.println("x");
             participantCount = (int) Math.ceil(participantCount / 2.0);
             numOfMatches += participantCount;
         }
@@ -234,20 +241,31 @@ public class TournamentController {
         tournamentRepo.deleteById(id);
     }
 
-     void tranform(Tournament t){
-        ArrayList<String> array= t.generatedMatches;
-        ArrayList<Match> matches=new ArrayList<>();
-        for(String i: array){
-            String[] matchArray= i.split(",");
-            if(matchArray[2].equals("Dummy")){
-                matches.add(new Match(new Participant[] {participantRepo.findById(Long.parseLong(matchArray[0])).orElseThrow(()->new StudentNotFoundException(Long.parseLong(matchArray[0]))) ,null}, true));
+    void tranform(Tournament t) {
+        if (t.getOpen())
+            return;
+        ArrayList<String> array = t.generatedMatches;
+        ArrayList<Match> matches = new ArrayList<>();
+        for (String i : array) {
+            String[] matchArray = i.split(",");
+            if (matchArray[2].equals("Dummy")) {
+                matches.add(new Match(
+                        new Participant[] { participantRepo.findById(Long.parseLong(matchArray[0]))
+                                .orElseThrow(() -> new StudentNotFoundException(Long.parseLong(matchArray[0]))), null },
+                        true));
+            } else {
+                matches.add(new Match(
+                        new Participant[] {
+                                participantRepo.findById(Long.parseLong(matchArray[0]))
+                                        .orElseThrow(() -> new StudentNotFoundException(Long.parseLong(matchArray[0]))),
+                                participantRepo.findById(Long.parseLong(matchArray[2])).orElseThrow(
+                                        () -> new StudentNotFoundException(Long.parseLong(matchArray[2]))) },
+                        Integer.parseInt(matchArray[1]), Integer.parseInt(matchArray[3]), false, false));
             }
-            else{
-                matches.add(new Match(new Participant[] {participantRepo.findById(Long.parseLong(matchArray[0])).orElseThrow(()->new StudentNotFoundException(Long.parseLong(matchArray[0]))) ,
-                    participantRepo.findById(Long.parseLong(matchArray[2])).orElseThrow(()->new StudentNotFoundException(Long.parseLong(matchArray[2])))},Integer.parseInt(matchArray[1]),Integer.parseInt(matchArray[3]),false, false));
-            }
-        }   
+        }
+        t.startMatches(matches);
     }
+
     @PostMapping("/Tournaments/addParticipant")
     Tournament addParticipant(@RequestBody Map<String, Long> ids) {
         long tournamentId = ids.get("tournamentId");
@@ -271,15 +289,11 @@ public class TournamentController {
                             studentId);
 
                 t.addParticipant(p);
-
-        
-
-             
+                t.storeMatches();
                 EliminationTournament tt = (EliminationTournament) t;
                 tt.getTournamentMatches().clear();
                 tt.setCurrentMatch(null);
                 tt.getAllRounds().clear();
-                t.storeMatches();
                 studentRepo.save(p);
 
                 // tournamentRepo.save(t);

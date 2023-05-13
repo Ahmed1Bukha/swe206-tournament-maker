@@ -50,9 +50,10 @@ public abstract class Participant {
             "remainingMatchesInRound" })
     protected Set<Tournament> tournaments = new HashSet<Tournament>();
 
-    @Transient
+    // @Transient
     // @OneToMany(mappedBy = "match_participants")
-    protected Set<Match> matches;
+    // @JsonIgnoreProperties({ "match_participants", "tournament", "endDate" })
+    // protected Set<Match> matches;
 
     public Participant() {
     }
@@ -121,13 +122,13 @@ public abstract class Participant {
         this.name = name;
     }
 
-    public Set<Match> getMatches() {
-        return this.matches;
-    }
+    // public Set<Match> getMatches() {
+    // return this.matches;
+    // }
 
-    public void setMatches(Set<Match> matches) {
-        this.matches = matches;
-    }
+    // public void setMatches(Set<Match> matches) {
+    // this.matches = matches;
+    // }
 
     @Override
     public boolean equals(Object o) {

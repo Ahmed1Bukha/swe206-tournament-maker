@@ -14,10 +14,10 @@ public class Match {
     @Column
     public Long id;
 
-    @ManyToOne
-    private Participant[] match_participants;
+    @OneToMany
+    private Participant[] matchparticipants;
 
-    @OneToOne(mappedBy = "currentMatch")
+    @OneToOne
     private Tournament tournament;
 
     @Column
@@ -33,21 +33,21 @@ public class Match {
     boolean dummyMatch; // dummy matches are used when team number are odd
 
     @Column
-    private Date endDate;
+    private Date endDate = new Date(0);
 
     public Match() {
     }
     // public Match(String word){
-    //     String[] array= word.split(",");
-    //     if(array[2].equals("Dummy")){
-    //         dummyMatch=finished=true;
-        
-    //     }
+    // String[] array= word.split(",");
+    // if(array[2].equals("Dummy")){
+    // dummyMatch=finished=true;
+
+    // }
     // }
     public Match(Participant[] match_participants, int scoreA, int scoreB,
             Boolean finished, Boolean dummyMatch) {
-        this.match_participants = new Participant[2];
-        this.match_participants = match_participants;
+        this.matchparticipants = new Participant[2];
+        this.matchparticipants = match_participants;
         this.scoreA = scoreA;
         this.scoreB = scoreB;
         this.finished = finished;
@@ -57,9 +57,9 @@ public class Match {
     public Match(Participant[] match_participants, boolean dummyMatch) {
         // this.id = id;
         // this.tournament = t;
-        this.match_participants = new Participant[2];
-        this.match_participants[0] = match_participants[0];
-        this.match_participants[1] = match_participants[1];
+        this.matchparticipants = new Participant[2];
+        this.matchparticipants[0] = match_participants[0];
+        this.matchparticipants[1] = match_participants[1];
         finished = dummyMatch;
         this.dummyMatch = dummyMatch;
     }
@@ -72,18 +72,18 @@ public class Match {
 
     public Participant decideWinner() {
         if (dummyMatch)
-            return match_participants[0];
+            return matchparticipants[0];
         if (scoreA > scoreB)
-            return match_participants[0];
-        return match_participants[1];
+            return matchparticipants[0];
+        return matchparticipants[1];
     }
 
     public Participant decideLoser() {
         if (dummyMatch)
-            return match_participants[1];
+            return matchparticipants[1];
         if (scoreA < scoreB)
-            return match_participants[0];
-        return match_participants[1];
+            return matchparticipants[0];
+        return matchparticipants[1];
     }
 
     public long getId() {
@@ -94,12 +94,12 @@ public class Match {
         this.id = id;
     }
 
-    public Participant[] getMatch_participants() {
-        return this.match_participants;
+    public Participant[] getMatchparticipants() {
+        return this.matchparticipants;
     }
 
-    public void setMatch_participants(Participant[] match_participants) {
-        this.match_participants = match_participants;
+    public void setMatchparticipants(Participant[] match_participants) {
+        this.matchparticipants = match_participants;
     }
 
     public int getScoreA() {
@@ -149,24 +149,24 @@ public class Match {
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
-    
+
     public String stringMatch() {
-        
+
         if (dummyMatch) {
-            return (match_participants[0].getId() +","+ scoreA+","+"Dummy"+","+"-1");
-            
+            return (matchparticipants[0].getId() + "," + scoreA + "," + "Dummy" + "," + "-1");
+
         }
-        return (match_participants[0].getId() +","+ scoreA+","+match_participants[1].getId()+","+scoreB);
+        return (matchparticipants[0].getId() + "," + scoreA + "," + matchparticipants[1].getId() + "," + scoreB);
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Match) {
             Match other = (Match) obj;
-            if ((match_participants[0] == other.match_participants[0]
-                    && match_participants[1] == other.match_participants[1])
-                    || (match_participants[1] == other.match_participants[0]
-                            && match_participants[0] == other.match_participants[1]))
+            if ((matchparticipants[0] == other.matchparticipants[0]
+                    && matchparticipants[1] == other.matchparticipants[1])
+                    || (matchparticipants[1] == other.matchparticipants[0]
+                            && matchparticipants[0] == other.matchparticipants[1]))
                 return true;
             return false;
         }
@@ -176,17 +176,17 @@ public class Match {
     @Override
     public String toString() {
         if (dummyMatch)
-            return match_participants[0].getName();
-        return match_participants[0].getName() + " vs " +
-                match_participants[1].getName() + (finished ? " (" + scoreA + " - " + scoreB
+            return matchparticipants[0].getName();
+        return matchparticipants[0].getName() + " vs " +
+                matchparticipants[1].getName() + (finished ? " (" + scoreA + " - " + scoreB
                         + ")" : "");
     }
 
     public boolean contains(Match other) {
-        if (other.match_participants[0] == match_participants[0] ||
-                other.match_participants[1] == match_participants[1]
-                || other.match_participants[1] == match_participants[0]
-                || other.match_participants[0] == match_participants[1])
+        if (other.matchparticipants[0] == matchparticipants[0] ||
+                other.matchparticipants[1] == matchparticipants[1]
+                || other.matchparticipants[1] == matchparticipants[0]
+                || other.matchparticipants[0] == matchparticipants[1])
             return true;
         return false;
     }

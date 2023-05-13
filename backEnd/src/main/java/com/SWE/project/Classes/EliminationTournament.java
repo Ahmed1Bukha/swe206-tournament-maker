@@ -9,6 +9,7 @@ import java.util.Set;
 
 import com.SWE.project.Enums.TOURNAMENT_TYPES;
 import com.SWE.project.Exceptions.TournamentRegistrationStillOpenException;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
@@ -29,6 +30,8 @@ import java.util.Objects;
 @JsonTypeName("ET")
 public class EliminationTournament extends Tournament {
     @OneToMany(targetEntity = com.SWE.project.Classes.Match.class)
+
+    @JsonIgnoreProperties({ "match_participants", "tournament", "endDate" })
     List<Set<Match>> allRounds = new ArrayList<Set<Match>>();
 
     @ManyToMany
