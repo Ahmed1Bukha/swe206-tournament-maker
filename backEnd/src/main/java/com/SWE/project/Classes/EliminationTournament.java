@@ -26,7 +26,8 @@ import java.util.Objects;
 @DiscriminatorValue("ET")
 @JsonTypeName("ET")
 public class EliminationTournament extends Tournament {
-    @OneToMany(targetEntity = com.SWE.project.Classes.Match.class)
+    // @OneToMany(targetEntity = com.SWE.project.Classes.Match.class)
+    @Transient
     List<Set<Match>> allRounds = new ArrayList<Set<Match>>();
 
     @ManyToMany
