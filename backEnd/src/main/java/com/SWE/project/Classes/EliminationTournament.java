@@ -27,7 +27,7 @@ import java.util.Objects;
 @JsonTypeName("ET")
 public class EliminationTournament extends Tournament {
     @OneToMany(targetEntity = com.SWE.project.Classes.Match.class)
-    List<List<Match>> allRounds = new ArrayList<List<Match>>();
+    List<Set<Match>> allRounds = new ArrayList<Set<Match>>();
 
     @ManyToMany
     @JoinTable(name = "elimination_tournament_current_participants", joinColumns = @JoinColumn(name = "tournament_id"), inverseJoinColumns = @JoinColumn(name = "participant_id"))
@@ -59,10 +59,8 @@ public class EliminationTournament extends Tournament {
         if (open)
             throw new TournamentRegistrationStillOpenException(this.id);
 
-        System.out.println(alreadyInitMatches);
         Set<Match> matchUps = new HashSet<>();
         Set<Participant> set = new HashSet<>(currentPlayers);
-        int index = 0;
         if (currentPlayers.size() == 1) {
             finished = true;
             return;
@@ -76,29 +74,24 @@ public class EliminationTournament extends Tournament {
         for (int i = 0; i < temp.size(); i += 2) {
             int num1 = i;
             int num2 = i + 1;
-            Match m = alreadyInitMatches.get(index);
             if (temp.get(num1) != null && temp.get(num2) != null) {
                 matchUps.add(new Match(
                         new Participant[] { temp.get(num1), temp.get(num2) },
                         false));
 
-                // m.setDummyMatch(false);
             } else if (temp.get(num1) != null) {
                 matchUps.add(
                         new Match(new Participant[] {
                                 temp.get(num1), null }, true));
-                // m.setDummyMatch(true);
 
             } else {
                 matchUps.add(
                         new Match(new Participant[] {
                                 temp.get(num2), null }, true));
-                // m.setDummyMatch(true);
             }
-            index++;
         }
-        tournamentMatches = alreadyInitMatches;
-        allRounds.add(alreadyInitMatches);
+        tournamentMatches = new ArrayList<Match>(matchUps);
+        allRounds.add(matchUps);
         remainingMatchesInRound = tournamentMatches.size();
     }
 
@@ -168,11 +161,11 @@ public class EliminationTournament extends Tournament {
         throw new IllegalAccessError("Unfinished tournament");
     }
 
-    public List<List<Match>> getAllRounds() {
+    public List<Set<Match>> getAllRounds() {
         return this.allRounds;
     }
 
-    public void setAllRounds(List<List<Match>> allRounds) {
+    public void setAllRounds(List<Set<Match>> allRounds) {
         this.allRounds = allRounds;
     }
 

@@ -18,7 +18,7 @@ public class Student extends Participant {
     private Set<Team> teams = new HashSet<Team>(); // Done
 
     @Column
-    private Long studentId;
+    public Long studentId;
 
     public Student() {
     }

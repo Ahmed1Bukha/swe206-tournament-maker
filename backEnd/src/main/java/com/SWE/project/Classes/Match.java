@@ -12,7 +12,7 @@ public class Match {
     @Id
     @GeneratedValue
     @Column
-    private Long id;
+    public Long id;
 
     @ManyToOne
     private Participant[] match_participants;
@@ -143,17 +143,19 @@ public class Match {
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
-    public HashMap<String,Integer> hashMatch(){
-        HashMap<String,Integer> retMap= new HashMap<>();
-        if(dummyMatch){
-            retMap.put(match_participants[0].getId()+"", scoreA);
+
+    public HashMap<String, Integer> hashMatch() {
+        HashMap<String, Integer> retMap = new HashMap<>();
+        if (dummyMatch) {
+            retMap.put(match_participants[0].getId() + "", scoreA);
             retMap.put("Dummy", scoreB);
             return retMap;
         }
-        retMap.put(match_participants[0].getId()+"", scoreA);
-        retMap.put(match_participants[1].getId()+"", scoreB);
+        retMap.put(match_participants[0].getId() + "", scoreA);
+        retMap.put(match_participants[1].getId() + "", scoreB);
         return retMap;
     }
+
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Match) {

@@ -27,7 +27,7 @@ public abstract class Tournament {
     @Column
     @Id
     @GeneratedValue
-    protected Long id;
+    public Long id;
 
     @Column(name = "tournament_name")
     protected String name;
@@ -53,9 +53,7 @@ public abstract class Tournament {
     @JsonIgnoreProperties({ "tournaments", "goalsMade", "goalsRecieved", "wins", "points", "matches", "teams" })
     protected Set<Participant> participants = new HashSet<Participant>();
 
-    @OneToOne
-    @JoinColumn
-    // @JsonIgnore
+    @Transient
     protected Match currentMatch;
 
     @Column
@@ -64,8 +62,7 @@ public abstract class Tournament {
     @Column
     protected boolean finished = false;
 
-    @OneToMany
-    @JoinColumn
+    @Transient
     protected List<Match> tournamentMatches = new ArrayList<>();
 
     @Column
@@ -74,9 +71,7 @@ public abstract class Tournament {
     @Column
     int studentsPerTeam = 1;
 
-    @OneToMany
-    @JoinColumn
-    public List<Match> alreadyInitMatches;
+    public ArrayList<String> generatedMatches = new ArrayList<>();
 
     protected Tournament(String name, int participantCount, int studentsPerTeam, Date startDate,
             Date endDate, double timeBetweenStages,
@@ -247,6 +242,14 @@ public abstract class Tournament {
 
     protected void stopRegistration() {
         open = false;
+    }
+
+    public List<String> getGeneratedMatches() {
+        return this.generatedMatches;
+    }
+
+    public void setGeneratedMatches(List<String> generatedMatches) {
+        this.generatedMatches = generatedMatches;
     }
 
     @Override

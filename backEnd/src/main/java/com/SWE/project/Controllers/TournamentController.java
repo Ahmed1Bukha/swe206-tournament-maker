@@ -55,20 +55,18 @@ public class TournamentController {
 
     @GetMapping("/Tournaments/getMatches/{tournamentId}")
     List<Match> getMatches(@PathVariable("tournamentId") Long id) {
-        // Tournament t = tournamentRepo.findById(id).orElseThrow(() -> new
-        // TournamentNotFoundException(id));
-        // t.generateMatches(); // Throws error if tournament hasnt started yet
-        // if (t instanceof EliminationTournament) {
-        // EliminationTournament et = (EliminationTournament) t;
-        // List<Match> result = new ArrayList<Match>();
-        // for (Set<Match> s : et.getAllRounds())
-        // for (Match m : s)
-        // result.add(m);
+        Tournament t = tournamentRepo.findById(id).orElseThrow(() -> new TournamentNotFoundException(id));
+        t.generateMatches(); // Throws error if tournament hasnt started yet
+        if (t instanceof EliminationTournament) {
+            EliminationTournament et = (EliminationTournament) t;
+            List<Match> result = new ArrayList<Match>();
+            for (Set<Match> s : et.getAllRounds())
+                for (Match m : s)
+                    result.add(m);
 
-        // return result;
-        // }
-        // return t.getTournamentMatches();
-        return null;
+            return result;
+        }
+        return t.getTournamentMatches();
     }
 
     @GetMapping("/Tournaments/getParticipants/{tournamentId}")
@@ -115,94 +113,67 @@ public class TournamentController {
         return tournamentRepo.save(newTournament);
     }
 
-    @GetMapping("/Tournaments/forceCloseTournament/{id}")
-    void forceClose(@PathVariable Long id) {
-        Tournament t = tournamentRepo.findById(id).orElseThrow(() -> new TournamentNotFoundException(id));
+    // @GetMapping("/Tournaments/forceCloseTournament/{id}")
+    // void forceClose(@PathVariable Long id) {
+    // Tournament t = tournamentRepo.findById(id).orElseThrow(() -> new
+    // TournamentNotFoundException(id));
 
-        ArrayList<Match> ms = new ArrayList<Match>();
+    // }
 
-        for (int i = 0; i < t.getParticipants().size(); i++) {
-            Match m = new Match();
-            ms.add(m);
-            matchRepo.save(m);
+    @GetMapping("/EliminationTournaments/getMatches/{tournamentId}")
+    Map<String, List<Map>> elimMatchesJsonFormat(@PathVariable("tournamentId") Long id) {
+        EliminationTournament t = (EliminationTournament) tournamentRepo.findById(id)
+                .orElseThrow(() -> new TournamentNotFoundException(id));
+
+        if (t.getOpen())
+            throw new TournamentRegistrationStillOpenException(id);
+
+        int participantCount = t.getParticipantCount();
+        int numOfMatches = 0;
+        int i = 0;
+
+        while (participantCount != 1) {
+            participantCount = (int) Math.ceil(participantCount / 2.0);
+            numOfMatches += participantCount;
         }
 
-        t.alreadyInitMatches = ms;
+        Map<Integer, Match> matches = new HashMap<Integer, Match>();
 
-        t.start();
+        for (Set<Match> set : t.getAllRounds()) {
+            for (Match m : set) {
+                matches.put(numOfMatches - i, m);
+                i++;
+            }
+        }
 
-        System.out.println(t.getTournamentMatches());
-        // for (Match m : t.getTournamentMatches()) {
-        // participantRepo.save(m.getMatch_participants()[0]);
-        // participantRepo.save(m.getMatch_participants()[1]);
-        // }
-        //
-        // participantRepo.save(t.getTournamentMatches());
-        System.out.println("Debug 3");
-        // System.out.println(t.getTournamentMatches().get(0).getId());
-        System.out.println("deded");
-        matchRepo.save(t.getTournamentMatches().get(0));
-        System.out.println("Debug 4");
-        tournamentRepo.save(t);
-        System.out.println("Debug 5");
+        Map<String, List<Map>> result = new HashMap<>();
+        result.put("nodes", new ArrayList<>());
+        result.put("edges", new ArrayList<>());
+
+        for (int j = numOfMatches; j > 0; j--) {
+            Map map = new HashMap<>();
+            map.put("id", j);
+            map.put("label", matches.get(j) != null ? matches.get(j).toString() : "");
+            result.get("nodes").add(map);
+        }
+
+        for (int j = 1; j < numOfMatches; j++) {
+            if (j * 2 <= numOfMatches) {
+                Map map = new HashMap<>();
+                map.put("from", j);
+                map.put("to", j * 2);
+                result.get("edges").add(map);
+                if (j * 2 + 1 <= numOfMatches) {
+                    map = new HashMap<>();
+                    map.put("from", j);
+                    map.put("to", j * 2 + 1);
+                    result.get("edges").add(map);
+                }
+            }
+        }
+
+        return result;
     }
-
-    // @GetMapping("/EliminationTournaments/getMatches/{tournamentId}")
-    // Map<String, List<Map>> elimMatchesJsonFormat(@PathVariable("tournamentId")
-    // Long id) {
-    // EliminationTournament t = (EliminationTournament)
-    // tournamentRepo.findById(id).orElseThrow(() -> {
-    // throw new TournamentNotFoundException(id);
-    // });
-
-    // int participantCount = t.getParticipantCount();
-    // int numOfMatches = 0;
-    // int i = 0;
-
-    // while (participantCount != 1) {
-    // participantCount = (int) Math.ceil(participantCount / 2.0);
-    // numOfMatches += participantCount;
-    // }
-
-    // Map<Integer, Match> matches = new HashMap<Integer, Match>();
-
-    // t.generateMatches();
-
-    // for (Set<Match> set : t.getAllRounds()) {
-    // for (Match m : set) {
-    // matches.put(numOfMatches - i, m);
-    // i++;
-    // }
-    // }
-
-    // Map<String, List<Map>> result = new HashMap<>();
-    // result.put("nodes", new ArrayList<>());
-    // result.put("edges", new ArrayList<>());
-
-    // for (int j = numOfMatches; j > 0; j--) {
-    // Map map = new HashMap<>();
-    // map.put("id", j);
-    // map.put("label", matches.get(j) != null ? matches.get(j).toString() : "");
-    // result.get("nodes").add(map);
-    // }
-
-    // for (int j = 1; j < numOfMatches; j++) {
-    // if (j * 2 <= numOfMatches) {
-    // Map map = new HashMap<>();
-    // map.put("from", j);
-    // map.put("to", j * 2);
-    // result.get("edges").add(map);
-    // if (j * 2 + 1 <= numOfMatches) {
-    // map = new HashMap<>();
-    // map.put("from", j);
-    // map.put("to", j * 2 + 1);
-    // result.get("edges").add(map);
-    // }
-    // }
-    // }
-
-    // return result;
-    // }
 
     @GetMapping("/Tournaments/{tournamentId}")
     Tournament oneTournament(@PathVariable("tournamentId") long id)
@@ -281,15 +252,22 @@ public class TournamentController {
                     }
 
                 if (isAlreadyRegistered)
-                    throw new StudentAlreadyRegisteredInThisTournamentException(t.getId(), studentId);
+                    throw new StudentAlreadyRegisteredInThisTournamentException(t.getId(),
+                            studentId);
 
                 t.addParticipant(p);
 
-                matchRepo.saveAll(t.getTournamentMatches());
+                p.getMatches().clear();
+
+                t.getTournamentMatches().clear();
+                t.setCurrentMatch(null);
+                EliminationTournament tt = (EliminationTournament) t;
+
+                tt.getAllRounds().clear();
 
                 studentRepo.save(p);
 
-                tournamentRepo.save(t);
+                // tournamentRepo.save(t);
             }, () -> {
                 throw new ParticipantNotFoundException(studentId);
             });
@@ -298,34 +276,6 @@ public class TournamentController {
         });
         System.out.println("ahh5");
         return temp.get();
-    }
-
-    @GetMapping("/Test/{id}")
-    public void test(@PathVariable Long id) {
-        Tournament t = tournamentRepo.findById(id).orElseThrow(() -> new TournamentNotFoundException(id));
-        Participant p1 = participantRepo.save(new Student(2020L, "sami"));
-        Participant p2 = participantRepo.save(new Student(2021L, "hami"));
-        // t.getTournamentMatches()
-        // .add(matchRepo.save(new Match(
-        // new Participant[] { p1, p2 }, false, t)));
-
-        EliminationTournament tt = (EliminationTournament) t;
-        // tt.setCurrentMatch(matchRepo.save(new Match((long) (Math.random() * 1000000),
-        // new Participant[2], false, t)));
-
-        System.out.println(matchRepo.findAll());
-
-        System.out.println(tournamentRepo.findAll());
-        // tt.get
-        // System.out.println("kmsksmksmskm");
-        // participantRepo.save(p1);
-        // System.out.println("kmsksmksmskqweqweqm");
-
-        // participantRepo.save(p2);
-        // System.out.println("33");
-        // tt.setCurrentMatch(null);
-        t = tournamentRepo.save(t);
-        // System.out.println(t.getCurrentMatch());
     }
 
     // @PostMapping("/Match")
