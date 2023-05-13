@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:swe206/UI_componenets/match_card_admin.dart';
 
 import '../home_admin/tournament_page_admin.dart';
+import 'const.dart';
 
 class TournamentCardAdmin extends StatelessWidget {
   const TournamentCardAdmin(
@@ -19,6 +20,7 @@ class TournamentCardAdmin extends StatelessWidget {
       required this.tournamentBased,
       required this.isOpen,
       required this.isFinished,
+      required this.studentPerTeam,
       super.key});
   final int id;
   final String title;
@@ -29,11 +31,14 @@ class TournamentCardAdmin extends StatelessWidget {
   final String endDate;
   final int timeBetween;
   final String tournamentBased;
-  final Map<String, List<MatchCardAdmin>> matches;
+  final List<dynamic> matches;
   final bool isOpen;
   final bool isFinished;
+  final int studentPerTeam;
   @override
   Widget build(BuildContext context) {
+    String statusTournament = status == "true" ? "Open for register" : "closed";
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -43,28 +48,55 @@ class TournamentCardAdmin extends StatelessWidget {
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Container(
-          width: MediaQuery.of(context).size.width - 20,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.black),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width - 20,
-                decoration: const BoxDecoration(color: Color(0xff9AB6FF)),
-                child: Text(
-                  textAlign: TextAlign.center,
-                  title,
-                  style: const TextStyle(fontSize: 30),
+        child: PhysicalModel(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.white,
+          elevation: 15,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image(
+                      image: const AssetImage("lib/assets/img/football.jpg"),
+                      width: MediaQuery.of(context).size.width - 50,
+                    ),
+                  ),
                 ),
-              ),
-              Text("Game: $game"),
-              Text("Tournament type: $type"),
-              Text("Current status: $status")
-            ],
+                Container(
+                  width: MediaQuery.of(context).size.width - 20,
+                  decoration: const BoxDecoration(
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(20)),
+                  ),
+                  child: Text(
+                    textAlign: TextAlign.left,
+                    title,
+                    style: h3,
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Game: $game",
+                  style: h4,
+                ),
+                Text(
+                  "Tournament type: $type",
+                  style: h4,
+                ),
+                Text(
+                  "Current status: $statusTournament",
+                  style: h4,
+                )
+              ],
+            ),
           ),
         ),
       ),

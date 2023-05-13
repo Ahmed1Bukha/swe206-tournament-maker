@@ -129,6 +129,8 @@ class _AuthPageAdminState extends State<AuthPageAdmin> {
                             isLoading = false;
                           });
                           if (response == "IsAdmin") {
+                            Navigator.of(context)
+                                .popUntil((route) => route.isFirst);
                             Navigator.pushReplacementNamed(
                                 context, MainPageAdmin.id);
                           } else {

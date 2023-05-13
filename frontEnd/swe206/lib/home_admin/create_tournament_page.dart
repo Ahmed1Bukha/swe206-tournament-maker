@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:swe206/UI_componenets/const.dart';
 import 'package:swe206/home_admin/create_types_pages/create_elimination.dart';
 import 'package:swe206/home_admin/create_types_pages/round_robin.dart';
 
@@ -14,8 +15,11 @@ class _CreatePageState extends State<CreatePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: (const Text(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: (Text(
           "Create Tournament",
+          style: h2,
         )),
       ),
       body: Padding(
@@ -24,13 +28,7 @@ class _CreatePageState extends State<CreatePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Center(
-                child: Text(
-                  "Select type of the tournament: ",
-                  style: TextStyle(fontSize: 25),
-                ),
-              ),
-              Row(
+              Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -43,9 +41,25 @@ class _CreatePageState extends State<CreatePage> {
                         ),
                       );
                     },
-                    child: const Text(
-                      "Elimination",
-                      style: TextStyle(fontSize: 25),
+                    child: Card(
+                      elevation: 20,
+                      child: Column(
+                        children: [
+                          Text(
+                            "Elemination",
+                            style: h3,
+                          ),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image(
+                              image: const AssetImage(
+                                  "lib/assets/img/elemination.jpeg"),
+                              width: MediaQuery.of(context).size.width - 100,
+                              height: 200,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   TextButton(
@@ -57,9 +71,28 @@ class _CreatePageState extends State<CreatePage> {
                         ),
                       );
                     },
-                    child: const Text(
-                      "Round robin table",
-                      style: TextStyle(fontSize: 25),
+                    child: Card(
+                      elevation: 20,
+                      child: Column(
+                        children: [
+                          Text(
+                            "Round robin table",
+                            style: h3,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image(
+                                image: const AssetImage(
+                                    "lib/assets/img/image.png"),
+                                width: MediaQuery.of(context).size.width - 100,
+                                height: 200,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],

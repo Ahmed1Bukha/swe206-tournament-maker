@@ -40,6 +40,7 @@ dependencies:
   flutter_svg: ^2.0.5
   loading_indicator: ^3.1.0
   shared_preferences: ^2.1.1
+  json_table: ^2.0.1
 
 dev_dependencies:
   flutter_test:
