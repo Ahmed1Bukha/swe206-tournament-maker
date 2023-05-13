@@ -9,7 +9,6 @@ import java.util.Set;
 
 import com.SWE.project.Enums.TOURNAMENT_TYPES;
 import com.SWE.project.Exceptions.TournamentRegistrationStillOpenException;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
@@ -30,7 +29,7 @@ import java.util.Objects;
 @JsonTypeName("ET")
 public class EliminationTournament extends Tournament {
     @OneToMany(targetEntity = com.SWE.project.Classes.Match.class)
-    List<Set<String>> allRounds = new ArrayList<Set<String>>();
+    List<String> allRounds = new ArrayList<String>();
 
     @ManyToMany
     @JoinTable(name = "elimination_tournament_current_participants", joinColumns = @JoinColumn(name = "tournament_id"), inverseJoinColumns = @JoinColumn(name = "participant_id"))
@@ -94,14 +93,14 @@ public class EliminationTournament extends Tournament {
             }
         }
         tournamentMatches = new ArrayList<Match>(matchUps);
-        Set<String> matchUpsString = new HashSet<>();
-        for (Match i : matchUps) {
-            matchUpsString.add(i.stringMatch());
+        String matchUpsString= "";
+        for(Match i:matchUps){
+                matchUpsString=matchUpsString+".";
         }
-        allRounds.add(matchUpsString);
+        allRounds.add(matchUpsString.substring(0, matchUpsString.length()-1));
         remainingMatchesInRound = tournamentMatches.size();
     }
-
+    
     @Override
     public void start() {
         if (open) {
@@ -160,20 +159,20 @@ public class EliminationTournament extends Tournament {
         throw new IllegalAccessError("Unfinished tournament");
     }
 
-    public Participant secondPlace() {
-        if (finished) {
-            Match lastRound = (Match) allRounds.get(allRounds.size() - 1).toArray()[0];
-            return lastRound.decideLoser();
-        }
-        throw new IllegalAccessError("Unfinished tournament");
+    // public Participant secondPlace() {
+    //     if (finished) {
+    //         Match lastRound = (Match) allRounds.get(allRounds.size() - 1).toArray()[0];
+    //         return lastRound.decideLoser();
+    //     }
+    //     throw new IllegalAccessError("Unfinished tournament");
+    // }
+
+    public List<String> getAllRounds() {
+      return allRounds;
+
     }
 
-    public List<Set<String>> getAllRounds() {
-        return allRounds;
-
-    }
-
-    public void setAllRounds(List<Set<String>> allRounds) {
+    public void setAllRounds(List<String> allRounds) {
         this.allRounds = allRounds;
     }
 
