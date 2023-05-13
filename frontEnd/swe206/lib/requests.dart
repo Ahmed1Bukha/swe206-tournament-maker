@@ -277,6 +277,22 @@ class Requests {
     return students;
   }
 
+  static dynamic getEleminationJson(int id) async {
+    var matchJson = await getRequest("EliminationTournaments/getMatches/${id}");
+    print("json is");
+    print(matchJson);
+
+    return matchJson;
+  }
+
+  static dynamic getRoundRobinJson(int id) async {
+    // var matchJson = await getRequest("RoundRobinTournaments/getMatches/${id}");
+    final String jsonSample = '[{"id":1},{"id":2}]';
+    var json = jsonDecode(jsonSample);
+
+    return json;
+  }
+
   // static Future<Map> getTournaments() async {
   //   return getRequest("Tournaments");
   // }
