@@ -144,16 +144,13 @@ public class Match {
         this.endDate = endDate;
     }
 
-    public HashMap<String, Integer> hashMatch() {
-        HashMap<String, Integer> retMap = new HashMap<>();
+    public String stringMatch() {
+        
         if (dummyMatch) {
-            retMap.put(match_participants[0].getId() + "", scoreA);
-            retMap.put("Dummy", scoreB);
-            return retMap;
+            return (match_participants[0].getId() +","+ scoreA+","+"Dummy"+","+"-1");
+            
         }
-        retMap.put(match_participants[0].getId() + "", scoreA);
-        retMap.put(match_participants[1].getId() + "", scoreB);
-        return retMap;
+        return (match_participants[0].getId() +","+ scoreA+","+"Dummy"+","+"-1");
     }
 
     @Override
