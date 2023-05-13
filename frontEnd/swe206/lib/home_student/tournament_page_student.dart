@@ -92,7 +92,7 @@ class _TournamentPageState extends State<TournamentPage> {
                     Center(
                       child: Text(widget.tournamentWidget.title, style: h1),
                     ),
-                    Card(
+                    const Card(
                       elevation: 20,
                       child: Image(
                         image: AssetImage("lib/assets/img/football.jpg"),

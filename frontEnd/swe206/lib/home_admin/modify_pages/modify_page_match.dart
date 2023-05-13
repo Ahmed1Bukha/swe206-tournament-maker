@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:swe206/UI_componenets/const.dart';
 import 'package:swe206/UI_componenets/match_card_admin.dart';
 
 class ModifyMatchPage extends StatefulWidget {
@@ -16,14 +17,20 @@ class _ModifyMatchPageState extends State<ModifyMatchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Modify Match"),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "Modify Match",
+          style: h2,
+        ),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             "Enter Score:",
-            style: TextStyle(fontSize: 20),
+            style: h3,
           ),
           SizedBox(
             height: 10,
@@ -39,6 +46,7 @@ class _ModifyMatchPageState extends State<ModifyMatchPage> {
                   Center(
                     child: Text(
                       widget.matchInfo.participantA,
+                      style: h4,
                     ),
                   ),
                   SizedBox(
@@ -54,6 +62,7 @@ class _ModifyMatchPageState extends State<ModifyMatchPage> {
                 children: [
                   Text(
                     widget.matchInfo.participantB,
+                    style: h4,
                   ),
                   SizedBox(
                     child: TextField(),
@@ -70,7 +79,7 @@ class _ModifyMatchPageState extends State<ModifyMatchPage> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text("Submit"))
+              child: const Text("Submit"))
         ],
       ),
     );
