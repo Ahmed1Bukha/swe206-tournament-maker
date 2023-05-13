@@ -19,6 +19,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
+
 import java.util.Objects;
 
 @Entity
@@ -27,6 +29,7 @@ import java.util.Objects;
 @JsonTypeName("ET")
 public class EliminationTournament extends Tournament {
     @OneToMany(targetEntity = com.SWE.project.Classes.Match.class)
+    @Transient
     List<Set<Match>> allRounds = new ArrayList<Set<Match>>();
 
     @ManyToMany

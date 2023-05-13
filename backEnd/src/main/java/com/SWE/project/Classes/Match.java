@@ -37,17 +37,21 @@ public class Match {
 
     public Match() {
     }
-    public Match(String word){
-        String[] array= String.split
-    }
+    // public Match(String word){
+    //     String[] array= word.split(",");
+    //     if(array[2].equals("Dummy")){
+    //         dummyMatch=finished=true;
+        
+    //     }
+    // }
     public Match(Participant[] match_participants, int scoreA, int scoreB,
-            Boolean finished, Boolean dummyMatch, Date endDate) {
+            Boolean finished, Boolean dummyMatch) {
+        this.match_participants = new Participant[2];
         this.match_participants = match_participants;
         this.scoreA = scoreA;
         this.scoreB = scoreB;
         this.finished = finished;
         this.dummyMatch = dummyMatch;
-        this.endDate = endDate;
     }
 
     public Match(Participant[] match_participants, boolean dummyMatch) {

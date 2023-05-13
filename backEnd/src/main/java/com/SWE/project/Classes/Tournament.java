@@ -46,7 +46,7 @@ public abstract class Tournament {
 
     @Column
     protected TOURNAMENT_TYPES tournamentType;
-
+    int indexOfCurrent;
     // @JsonIgnore
     @ManyToMany(targetEntity = com.SWE.project.Classes.Participant.class)
     @JoinTable(name = "tournament_participants", joinColumns = @JoinColumn(name = "tournament_id", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "participant_id", referencedColumnName = "ID"))
@@ -89,9 +89,19 @@ public abstract class Tournament {
     }
 
     public Tournament() {
-
+        
     }
-
+    public void storeMatches(){
+        for(Match t:tournamentMatches){
+            generatedMatches.add(t.stringMatch());
+        }
+        indexOfCurrent=tournamentMatches.indexOf(currentMatch);
+    }
+    public void startMatches(ArrayList<Match> array){
+            tournamentMatches=array;
+            currentMatch=tournamentMatches.get(indexOfCurrent);
+    }
+    
     public abstract void start();
 
     public abstract void generateMatches();
@@ -248,7 +258,7 @@ public abstract class Tournament {
         return this.generatedMatches;
     }
 
-    public void setGeneratedMatches(List<String> generatedMatches) {
+    public void setGeneratedMatches(ArrayList<String> generatedMatches) {
         this.generatedMatches = generatedMatches;
     }
 
@@ -291,5 +301,6 @@ public abstract class Tournament {
                 // ", tournamentMatches='" + getTournamentMatches() + "'" +
                 "}";
     }
+    
     //
 }
