@@ -139,20 +139,36 @@ public class TournamentController {
         int i = 0;
 
         while (participantCount != 1) {
-            System.out.println("x");
             participantCount = (int) Math.ceil(participantCount / 2.0);
             numOfMatches += participantCount;
         }
 
         Map<Integer, Match> matches = new HashMap<Integer, Match>();
 
-        for (Set<Match> set : t.getAllRounds()) {
-            for (Match m : set) {
-                matches.put(numOfMatches - i, m);
+        for (List<String> set : t.getHhhhhhhh()) {
+            for (String m : set) {
+                String[] matchArray = m.split(",");
+                if (matchArray[2].equals("Dummy")) {
+                    matches.put(numOfMatches - i, new Match(
+                            new Participant[] { participantRepo.findById(Long.parseLong(matchArray[0]))
+                                    .orElseThrow(() -> new StudentNotFoundException(Long.parseLong(matchArray[0]))),
+                                    null },
+                            true));
+                } else {
+                    matches.put(numOfMatches - i, new Match(
+                            new Participant[] {
+                                    participantRepo.findById(Long.parseLong(matchArray[0]))
+                                            .orElseThrow(
+                                                    () -> new StudentNotFoundException(Long.parseLong(matchArray[0]))),
+                                    participantRepo.findById(Long.parseLong(matchArray[2])).orElseThrow(
+                                            () -> new StudentNotFoundException(Long.parseLong(matchArray[2]))) },
+                            Integer.parseInt(matchArray[1]), Integer.parseInt(matchArray[3]),
+                            !(matchArray[1].equals("-1") && matchArray[3].equals("-1")), false));
+                }
                 i++;
             }
         }
-
+        System.out.println(matches);
         Map<String, List<Map>> result = new HashMap<>();
         result.put("nodes", new ArrayList<>());
         result.put("edges", new ArrayList<>());
@@ -260,7 +276,8 @@ public class TournamentController {
                                         .orElseThrow(() -> new StudentNotFoundException(Long.parseLong(matchArray[0]))),
                                 participantRepo.findById(Long.parseLong(matchArray[2])).orElseThrow(
                                         () -> new StudentNotFoundException(Long.parseLong(matchArray[2]))) },
-                        Integer.parseInt(matchArray[1]), Integer.parseInt(matchArray[3]), false, false));
+                        Integer.parseInt(matchArray[1]), Integer.parseInt(matchArray[3]),
+                        !(matchArray[1].equals("-1") && matchArray[3].equals("-1")), false));
             }
         }
         t.startMatches(matches);
@@ -293,7 +310,7 @@ public class TournamentController {
                 EliminationTournament tt = (EliminationTournament) t;
                 tt.getTournamentMatches().clear();
                 tt.setCurrentMatch(null);
-                tt.getAllRounds().clear();
+                // tt.getAllRounds().clear();
                 studentRepo.save(p);
 
                 // tournamentRepo.save(t);

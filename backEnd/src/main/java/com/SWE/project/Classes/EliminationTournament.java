@@ -29,8 +29,8 @@ import java.util.Objects;
 @DiscriminatorValue("ET")
 @JsonTypeName("ET")
 public class EliminationTournament extends Tournament {
-    @OneToMany(targetEntity = com.SWE.project.Classes.Match.class)
-    List<Set<String>> allRounds = new ArrayList<Set<String>>();
+    // @OneToMany(targetEntity = ArrayList.class)
+    List<ArrayList<String>> hhhHhhh = new ArrayList<ArrayList<String>>();
 
     @ManyToMany
     @JoinTable(name = "elimination_tournament_current_participants", joinColumns = @JoinColumn(name = "tournament_id"), inverseJoinColumns = @JoinColumn(name = "participant_id"))
@@ -71,7 +71,7 @@ public class EliminationTournament extends Tournament {
         if (set.size() % 2 == 1)
             set.add(null);
         ArrayList<Participant> temp = new ArrayList<>(set);
-        if (allRounds.size() == 0) {
+        if (hhhhhhhh.size() == 0) {
             Collections.shuffle(temp);
         }
         for (int i = 0; i < temp.size(); i += 2) {
@@ -94,11 +94,11 @@ public class EliminationTournament extends Tournament {
             }
         }
         tournamentMatches = new ArrayList<Match>(matchUps);
-        Set<String> matchUpsString = new HashSet<>();
+        ArrayList<String> matchUpsString = new ArrayList<>();
         for (Match i : matchUps) {
             matchUpsString.add(i.stringMatch());
         }
-        allRounds.add(matchUpsString);
+        hhhhhhhh.add(matchUpsString);
         remainingMatchesInRound = tournamentMatches.size();
     }
 
@@ -162,19 +162,19 @@ public class EliminationTournament extends Tournament {
 
     public Participant secondPlace() {
         if (finished) {
-            Match lastRound = (Match) allRounds.get(allRounds.size() - 1).toArray()[0];
+            Match lastRound = (Match) hhhhhhhh.get(hhhhhhhh.size() - 1).toArray()[0];
             return lastRound.decideLoser();
         }
         throw new IllegalAccessError("Unfinished tournament");
     }
 
-    public List<Set<String>> getAllRounds() {
-        return allRounds;
+    public List<ArrayList<String>> getHhhhhhhh() {
+        return hhhhhhhh;
 
     }
 
-    public void setAllRounds(List<Set<String>> allRounds) {
-        this.allRounds = allRounds;
+    public void setHhhhhhhh(List<ArrayList<String>> allRounds) {
+        this.hhhhhhhh = allRounds;
     }
 
     public List<Participant> getCurrentPlayers() {
@@ -197,7 +197,7 @@ public class EliminationTournament extends Tournament {
     public String toString() {
         return "{" +
                 super.toString().substring(1, super.toString().length() - 1) +
-                ", allRounds='" + getAllRounds() + "'" +
+                ", allRounds='" + getHhhhhhhh() + "'" +
                 ", currentPlayers='" + getCurrentPlayers() + "'" +
                 ", remainingMatchesInRound='" + getRemainingMatchesInRound() + "'" +
                 "}";
