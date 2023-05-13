@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.SWE.project.Enums.TOURNAMENT_TYPES;
+import com.SWE.project.Exceptions.TournamentRegistrationStillOpenException;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
@@ -26,7 +27,7 @@ import java.util.Objects;
 @JsonTypeName("ET")
 public class EliminationTournament extends Tournament {
     @OneToMany(targetEntity = com.SWE.project.Classes.Match.class)
-    List<Set<Match>> allRounds = new ArrayList<Set<Match>>();
+    List<List<Match>> allRounds = new ArrayList<List<Match>>();
 
     @ManyToMany
     @JoinTable(name = "elimination_tournament_current_participants", joinColumns = @JoinColumn(name = "tournament_id"), inverseJoinColumns = @JoinColumn(name = "participant_id"))
@@ -39,12 +40,13 @@ public class EliminationTournament extends Tournament {
     public EliminationTournament() {
     }
 
-    public EliminationTournament(String name, int participantCount, int studentsPerTeam, int[] startDate, int[] endDate,
+    public EliminationTournament(String name, int participantCount, int studentsPerTeam, int[] startDate,
+            int[] endDate,
             double timeBetweenStages,
             String tournamentType, String sport) {
-        super(name, participantCount, studentsPerTeam, new Date(startDate[0], startDate[1], startDate[2]),
-                new Date(endDate[0], endDate[1], endDate[2]), timeBetweenStages,
-                tournamentType == "INDIVIDUAL" ? TOURNAMENT_TYPES.INDIVIDUAL : TOURNAMENT_TYPES.TEAM_BASED, sport);
+        super(name, participantCount, studentsPerTeam, new Date(startDate[2], startDate[1], startDate[0]),
+                new Date(endDate[2], endDate[1], endDate[0]), timeBetweenStages,
+                tournamentType.equals("INDIVIDUAL") ? TOURNAMENT_TYPES.INDIVIDUAL : TOURNAMENT_TYPES.TEAM_BASED, sport);
     }
 
     public EliminationTournament(String name, int participantCount, int studentsPerTeam, Date startDate, Date endDate,
@@ -54,8 +56,13 @@ public class EliminationTournament extends Tournament {
     }
 
     public void generateMatches() {
+        if (open)
+            throw new TournamentRegistrationStillOpenException(this.id);
+
+        System.out.println(alreadyInitMatches);
         Set<Match> matchUps = new HashSet<>();
         Set<Participant> set = new HashSet<>(currentPlayers);
+        int index = 0;
         if (currentPlayers.size() == 1) {
             finished = true;
             return;
@@ -69,28 +76,45 @@ public class EliminationTournament extends Tournament {
         for (int i = 0; i < temp.size(); i += 2) {
             int num1 = i;
             int num2 = i + 1;
+            Match m = alreadyInitMatches.get(index);
             if (temp.get(num1) != null && temp.get(num2) != null) {
-                matchUps.add(new Match(new Participant[] { temp.get(num1), temp.get(num2) },
+                matchUps.add(new Match(
+                        new Participant[] { temp.get(num1), temp.get(num2) },
                         false));
+
+                // m.setDummyMatch(false);
             } else if (temp.get(num1) != null) {
-                matchUps.add(new Match(new Participant[] { temp.get(num1), null }, true));
+                matchUps.add(
+                        new Match(new Participant[] {
+                                temp.get(num1), null }, true));
+                // m.setDummyMatch(true);
 
             } else {
-                matchUps.add(new Match(new Participant[] { temp.get(num2), null }, true));
+                matchUps.add(
+                        new Match(new Participant[] {
+                                temp.get(num2), null }, true));
+                // m.setDummyMatch(true);
             }
+            index++;
         }
-        tournamentMatches = new ArrayList<>(matchUps);
-        allRounds.add(matchUps);
+        tournamentMatches = alreadyInitMatches;
+        allRounds.add(alreadyInitMatches);
         remainingMatchesInRound = tournamentMatches.size();
     }
 
     @Override
     public void start() {
-        if (open)
+        if (open) {
+            System.out.println("Debug 2.1");
             stopRegistration();
-
-        currentMatch = tournamentMatches.get(0);
-        remainingMatchesInRound--;
+            System.out.println("Debug 2.2");
+            generateMatches();
+            System.out.println("Debug 2.3");
+            currentMatch = tournamentMatches.get(0);
+            System.out.println("Debug 2.4");
+            remainingMatchesInRound--;
+            System.out.println("Debug 2.5");
+        }
     }
 
     @Override
@@ -144,11 +168,11 @@ public class EliminationTournament extends Tournament {
         throw new IllegalAccessError("Unfinished tournament");
     }
 
-    public List<Set<Match>> getAllRounds() {
+    public List<List<Match>> getAllRounds() {
         return this.allRounds;
     }
 
-    public void setAllRounds(List<Set<Match>> allRounds) {
+    public void setAllRounds(List<List<Match>> allRounds) {
         this.allRounds = allRounds;
     }
 
@@ -173,7 +197,7 @@ public class EliminationTournament extends Tournament {
         return "{" +
                 super.toString().substring(1, super.toString().length() - 1) +
                 ", allRounds='" + getAllRounds() + "'" +
-                // ", currentPlayers='" + getCurrentPlayers() + "'" +
+                ", currentPlayers='" + getCurrentPlayers() + "'" +
                 ", remainingMatchesInRound='" + getRemainingMatchesInRound() + "'" +
                 "}";
     }

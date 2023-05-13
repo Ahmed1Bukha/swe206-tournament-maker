@@ -15,7 +15,7 @@ import jakarta.persistence.*;
 public class Student extends Participant {
     @ManyToMany(mappedBy = "team_members")
     @JsonIgnoreProperties({ "team_members" })
-    private Set<Team> teams; // Done
+    private Set<Team> teams = new HashSet<Team>(); // Done
 
     @Column
     private Long studentId;

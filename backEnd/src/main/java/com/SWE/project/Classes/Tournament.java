@@ -5,6 +5,7 @@ import java.util.*;
 import com.SWE.project.Enums.*;
 import com.SWE.project.Exceptions.TournamentRegistrationClosedException;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -32,7 +33,7 @@ public abstract class Tournament {
     protected String name;
 
     @Column
-    protected int ParticipantCount;
+    protected int participantCount;
 
     @Column
     protected Date startDate;
@@ -52,8 +53,9 @@ public abstract class Tournament {
     @JsonIgnoreProperties({ "tournaments", "goalsMade", "goalsRecieved", "wins", "points", "matches", "teams" })
     protected Set<Participant> participants = new HashSet<Participant>();
 
-    @OneToOne(mappedBy = "tournament") // Possible issue
-    @PrimaryKeyJoinColumn
+    @OneToOne
+    @JoinColumn
+    // @JsonIgnore
     protected Match currentMatch;
 
     @Column
@@ -62,7 +64,8 @@ public abstract class Tournament {
     @Column
     protected boolean finished = false;
 
-    @OneToMany(mappedBy = "tournament")
+    @OneToMany
+    @JoinColumn
     protected List<Match> tournamentMatches = new ArrayList<>();
 
     @Column
@@ -71,11 +74,15 @@ public abstract class Tournament {
     @Column
     int studentsPerTeam = 1;
 
+    @OneToMany
+    @JoinColumn
+    public List<Match> alreadyInitMatches;
+
     protected Tournament(String name, int participantCount, int studentsPerTeam, Date startDate,
             Date endDate, double timeBetweenStages,
             TOURNAMENT_TYPES tournamentType, String sport) {
         this.name = name;
-        this.ParticipantCount = participantCount;
+        this.participantCount = participantCount;
         this.studentsPerTeam = tournamentType == TOURNAMENT_TYPES.INDIVIDUAL ? this.studentsPerTeam
                 : studentsPerTeam;
         this.startDate = startDate;
@@ -90,17 +97,17 @@ public abstract class Tournament {
 
     }
 
-    abstract void start();
+    public abstract void start();
 
-    abstract void generateMatches();
+    public abstract void generateMatches();
 
-    abstract void enterResults(int firstScore, int secondScore);
+    public abstract void enterResults(int firstScore, int secondScore);
 
     public void addParticipant(Participant x) {
-        if (ParticipantCount == participants.size() || !open) {
-            this.open = false;
+        if (participantCount == participants.size() || !open) {
             throw new TournamentRegistrationClosedException(this.id);
         }
+
         switch (tournamentType) {
             case INDIVIDUAL -> {
                 if (x instanceof Team)
@@ -113,6 +120,9 @@ public abstract class Tournament {
         }
         participants.add(x);
         x.addTournament(this);
+        if (participantCount == participants.size())
+            start(); // Obviously incorrect. For testing purposes. In a real life
+                     // scenario, it would also depend on the start date of the tournament.
     }
 
     public long getId() {
@@ -228,11 +238,11 @@ public abstract class Tournament {
     }
 
     public int getParticipantCount() {
-        return this.ParticipantCount;
+        return this.participantCount;
     }
 
     public void setParticipantCount(int num) {
-        this.ParticipantCount = num;
+        this.participantCount = num;
     }
 
     protected void stopRegistration() {
@@ -275,7 +285,7 @@ public abstract class Tournament {
                 ", currentMatch='" + getCurrentMatch() + "'" +
                 ", open='" + isOpen() + "'" +
                 ", finished='" + isFinished() + "'" +
-                ", tournamentMatches='" + getTournamentMatches() + "'" +
+                // ", tournamentMatches='" + getTournamentMatches() + "'" +
                 "}";
     }
     //

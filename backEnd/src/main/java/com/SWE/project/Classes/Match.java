@@ -9,23 +9,20 @@ import java.util.Objects;
 public class Match {
     @Id
     @GeneratedValue
-    @Column(name = "match_id")
+    @Column
     private Long id;
 
     @ManyToOne
     private Participant[] match_participants;
 
-    @ManyToOne
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "match_id")
+    @OneToOne(mappedBy = "currentMatch")
     private Tournament tournament;
 
     @Column
-    Integer scoreA;
+    Integer scoreA = -1;
 
     @Column
-    Integer scoreB;
+    Integer scoreB = -1;
 
     @Column
     boolean finished;
@@ -39,11 +36,9 @@ public class Match {
     public Match() {
     }
 
-    public Match(long id, Participant[] match_participants, Tournament tournament, int scoreA, int scoreB,
+    public Match(Participant[] match_participants, int scoreA, int scoreB,
             Boolean finished, Boolean dummyMatch, Date endDate) {
-        this.id = id;
         this.match_participants = match_participants;
-        this.tournament = tournament;
         this.scoreA = scoreA;
         this.scoreB = scoreB;
         this.finished = finished;
@@ -51,7 +46,9 @@ public class Match {
         this.endDate = endDate;
     }
 
-    Match(Participant[] match_participants, boolean dummyMatch) {
+    public Match(Participant[] match_participants, boolean dummyMatch) {
+        // this.id = id;
+        // this.tournament = t;
         this.match_participants = new Participant[2];
         this.match_participants[0] = match_participants[0];
         this.match_participants[1] = match_participants[1];
@@ -97,14 +94,6 @@ public class Match {
         this.match_participants = match_participants;
     }
 
-    public Tournament getTournament() {
-        return this.tournament;
-    }
-
-    public void setTournament(Tournament tournament) {
-        this.tournament = tournament;
-    }
-
     public int getScoreA() {
         return this.scoreA;
     }
@@ -121,8 +110,12 @@ public class Match {
         this.scoreB = scoreB;
     }
 
-    public Boolean isFinished() {
-        return this.finished;
+    public Tournament getTournament() {
+        return this.tournament;
+    }
+
+    public void setTournament(Tournament t) {
+        this.tournament = t;
     }
 
     public Boolean getFinished() {
@@ -131,10 +124,6 @@ public class Match {
 
     public void setFinished(Boolean finished) {
         this.finished = finished;
-    }
-
-    public Boolean isDummyMatch() {
-        return this.dummyMatch;
     }
 
     public Boolean getDummyMatch() {
@@ -172,7 +161,8 @@ public class Match {
         if (dummyMatch)
             return match_participants[0].getName();
         return match_participants[0].getName() + " vs " +
-                match_participants[1].getName();
+                match_participants[1].getName() + (finished ? " (" + scoreA + " - " + scoreB
+                        + ")" : "");
     }
 
     public boolean contains(Match other) {

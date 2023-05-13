@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.SWE.project.Enums.TOURNAMENT_TYPES;
@@ -40,9 +41,9 @@ public class RoundRobinTournament extends Tournament {
     public RoundRobinTournament(String name, int participantCount, int studentsPerTeam, int[] startDate, int[] endDate,
             double timeBetweenStages,
             String tournamentType, String sport) {
-        super(name, participantCount, studentsPerTeam, new Date(startDate[0], startDate[1], startDate[2]),
-                new Date(endDate[0], endDate[1], endDate[2]), timeBetweenStages,
-                tournamentType == "INDIVIDUAL" ? TOURNAMENT_TYPES.INDIVIDUAL : TOURNAMENT_TYPES.TEAM_BASED, sport);
+        super(name, participantCount, studentsPerTeam, new Date(startDate[2], startDate[1], startDate[0]),
+                new Date(endDate[2], endDate[1], endDate[0]), timeBetweenStages,
+                tournamentType.equals("INDIVIDUAL") ? TOURNAMENT_TYPES.INDIVIDUAL : TOURNAMENT_TYPES.TEAM_BASED, sport);
     }
 
     public RoundRobinTournament(String name, int participantCount, int studentsPerTeam, Date startDate, Date endDate,
@@ -51,14 +52,14 @@ public class RoundRobinTournament extends Tournament {
         super(name, participantCount, studentsPerTeam, startDate, endDate, timeBetweenStages, tournamentType, sport);
     }
 
-    void start() {
+    public void start() {
         if (open)
             stopRegistration();
         currentMatch = tournamentMatches.get(0);
     }
 
     @Override
-    void generateMatches() {
+    public void generateMatches() {
         ArrayList<Participant> array = new ArrayList<>(participants);
         if (!(participants.size() % 2 == 0)) {
             array.add(null);
@@ -75,19 +76,27 @@ public class RoundRobinTournament extends Tournament {
             if (b == null)
                 tournamentMatches.add(new Match(new Participant[] { firstTeam }, true));
             else
-                tournamentMatches.add(new Match(new Participant[] { firstTeam, b }, false));
+                tournamentMatches
+                        .add(new Match(new Participant[] {
+                                firstTeam, b }, false));
 
             for (int j = 1; j < numberOfMatchesPerRound; j++) {
                 Participant a = array.get((i + j) % array.size());
                 b = array.get((i + array.size() - j) % array.size());
 
                 if (a == null)
-                    tournamentMatches.add(new Match(new Participant[] { b, null }, true));
+                    tournamentMatches.add(
+                            new Match(new Participant[] { b, null },
+                                    true));
                 else if (b == null)
-                    tournamentMatches.add(new Match(new Participant[] { a, null }, true));
+                    tournamentMatches.add(
+                            new Match(new Participant[] { a, null },
+                                    true));
 
                 else
-                    tournamentMatches.add(new Match(new Participant[] { a, b }, false));
+                    tournamentMatches
+                            .add(new Match(new Participant[] { a, b },
+                                    false));
             }
         }
     }
@@ -119,8 +128,7 @@ public class RoundRobinTournament extends Tournament {
     }
 
     @Override
-    void enterResults(int winnerScore, int loserScore) {
-
+    public void enterResults(int winnerScore, int loserScore) {
         currentMatch.enterResults(winnerScore, loserScore);
         int index = tournamentMatches.indexOf(currentMatch);
         currentMatch.decideWinner().win(winnerScore, loserScore);
