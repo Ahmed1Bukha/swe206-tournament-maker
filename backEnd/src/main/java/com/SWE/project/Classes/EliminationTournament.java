@@ -29,7 +29,7 @@ import java.util.Objects;
 @JsonTypeName("ET")
 public class EliminationTournament extends Tournament {
     @OneToMany(targetEntity = com.SWE.project.Classes.Match.class)
-    List<Set<Match>> allRounds = new ArrayList<Set<Match>>();
+    List<Set<String>> allRounds = new ArrayList<Set<String>>();
 
     @ManyToMany
     @JoinTable(name = "elimination_tournament_current_participants", joinColumns = @JoinColumn(name = "tournament_id"), inverseJoinColumns = @JoinColumn(name = "participant_id"))
@@ -93,10 +93,14 @@ public class EliminationTournament extends Tournament {
             }
         }
         tournamentMatches = new ArrayList<Match>(matchUps);
-        allRounds.add(matchUps);
+        Set<String> matchUpsString= new HashSet<>();
+        for(Match i:matchUps){
+            matchUpsString.add(i.stringMatch());
+        }
+        allRounds.add(matchUpsString);
         remainingMatchesInRound = tournamentMatches.size();
     }
-
+    
     @Override
     public void start() {
         if (open) {
@@ -163,11 +167,12 @@ public class EliminationTournament extends Tournament {
         throw new IllegalAccessError("Unfinished tournament");
     }
 
-    public List<Set<Match>> getAllRounds() {
-        return this.allRounds;
+    public List<Set<String>> getAllRounds() {
+      return allRounds;
+
     }
 
-    public void setAllRounds(List<Set<Match>> allRounds) {
+    public void setAllRounds(List<Set<String>> allRounds) {
         this.allRounds = allRounds;
     }
 
