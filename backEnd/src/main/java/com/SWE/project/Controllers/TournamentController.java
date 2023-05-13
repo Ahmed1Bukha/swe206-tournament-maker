@@ -24,7 +24,7 @@ public class TournamentController {
     private final TeamRepo teamRepo;
 
     @Autowired
-    private final ParticipantRepo participantRepo;
+    public final ParticipantRepo participantRepo;
 
     @Autowired
     private final MatchRepo matchRepo;
@@ -234,12 +234,27 @@ public class TournamentController {
         tournamentRepo.deleteById(id);
     }
 
+     void tranform(Tournament t){
+        ArrayList<String> array= t.generatedMatches;
+        ArrayList<Match> matches=new ArrayList<>();
+        for(String i: array){
+            String[] matchArray= i.split(",");
+            if(matchArray[2].equals("Dummy")){
+                matches.add(new Match(new Participant[] {participantRepo.findById(Long.parseLong(matchArray[0])).orElseThrow(()->new StudentNotFoundException(Long.parseLong(matchArray[0]))) ,null}, true));
+            }
+            else{
+                matches.add(new Match(new Participant[] {participantRepo.findById(Long.parseLong(matchArray[0])).orElseThrow(()->new StudentNotFoundException(Long.parseLong(matchArray[0]))) ,
+                    participantRepo.findById(Long.parseLong(matchArray[2])).orElseThrow(()->new StudentNotFoundException(Long.parseLong(matchArray[2])))},Integer.parseInt(matchArray[1]),Integer.parseInt(matchArray[3]),false, false));
+            }
+        }   
+    }
     @PostMapping("/Tournaments/addParticipant")
     Tournament addParticipant(@RequestBody Map<String, Long> ids) {
         long tournamentId = ids.get("tournamentId");
         long studentId = ids.get("participantId");
         Optional<Tournament> temp = tournamentRepo.findById(tournamentId);
         temp.ifPresentOrElse(t -> {
+            tranform(t);
             studentRepo.findByStudentId(studentId).ifPresentOrElse(p -> {
                 if (!(t.getOpen()))
                     throw new TournamentRegistrationClosedException(tournamentId);
@@ -257,14 +272,14 @@ public class TournamentController {
 
                 t.addParticipant(p);
 
-                p.getMatches().clear();
+        
 
-                t.getTournamentMatches().clear();
-                t.setCurrentMatch(null);
+             
                 EliminationTournament tt = (EliminationTournament) t;
-
+                tt.getTournamentMatches().clear();
+                tt.setCurrentMatch(null);
                 tt.getAllRounds().clear();
-
+                t.storeMatches();
                 studentRepo.save(p);
 
                 // tournamentRepo.save(t);
