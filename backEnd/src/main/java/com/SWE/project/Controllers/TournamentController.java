@@ -135,14 +135,14 @@ public class TournamentController {
     Map roundRobinJsonFormat(@PathVariable("tournamentId") Long id) {
         // Tournament t =
     }
-    @GetMapping("/EliminationTournaments/getCurrentMatch/{tournamentId}")
+    @GetMapping("/Tournaments/getCurrentMatch/{tournamentId}")
     Map<String,String> currentMatchNames(@PathVariable("tournamentId") Long id){
         Tournament t =  tournamentRepo.findById(id)
         .orElseThrow(() -> new TournamentNotFoundException(id));
         tranform(t);
         Map<String,String> retMap = new HashMap<>();
         retMap.put("ParticepentA", t.getCurrentMatch().getMatchparticipants()[0].getName());
-        retMap.put("ParticepentA", t.getCurrentMatch().getMatchparticipants()[1].getName());
+        retMap.put("ParticepentB", t.getCurrentMatch().getMatchparticipants()[1].getName());
         return retMap;
        
     }
