@@ -361,9 +361,7 @@ public class TournamentController {
 
                 t.addParticipant(p);
                 t.storeMatches();
-                
-                t.getTournamentMatches().clear();
-                t.setCurrentMatch(null);
+
                 t.getTournamentMatches().clear();
                 t.setCurrentMatch(null);
                 // tt.getAllRounds().clear();

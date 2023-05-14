@@ -95,6 +95,7 @@ public abstract class Tournament {
     }
 
     public void storeMatches() {
+        generatedMatches= new ArrayList<>();
         for (Match t : tournamentMatches) {
             generatedMatches.add(t.stringMatch());
         }
