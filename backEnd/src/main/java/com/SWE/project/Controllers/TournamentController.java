@@ -158,13 +158,13 @@ public class TournamentController {
 
         for (String preset : t.getAllRounds()) {
             System.out.println("Preset: " + preset);
-            String[] set = preset.split(".");
+            String[] set = preset.split("x");
             if (set.length == 0) {
                 String[] x = { preset };
                 set = x;
             }
             for (String m : set) {
-                String[] matchArray = m.split("x");
+                String[] matchArray = m.split(",");
                 System.out.println("M:" + m);
                 if (matchArray[2].equals("Dummy")) {
                     matches.put(numOfMatches - i, new Match(
