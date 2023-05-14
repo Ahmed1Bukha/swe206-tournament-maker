@@ -152,10 +152,10 @@ public class TournamentController {
         Map<String, List<String>> result = new HashMap<String, List<String>>();
 
         List<String> x;
-        for (int i = 1; i <= roundCount; i++) {
+        for (int i = 1; i <= matchesPerRound; i++) {
             x = new ArrayList<String>();
-            for (int j = 0; j < matchesPerRound; j++) {
-                x.add(t.getTournamentMatches().get((i - 1) * matchesPerRound + j).toString());
+            for (int j = 0; j < roundCount; j++) {
+                x.add(t.getTournamentMatches().get((i - 1) * roundCount + j).toString());
             }
             result.put("Round " + i, x);
         }
