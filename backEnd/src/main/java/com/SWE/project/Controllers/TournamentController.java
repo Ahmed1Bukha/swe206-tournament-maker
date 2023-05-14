@@ -122,7 +122,13 @@ public class TournamentController {
         Tournament t = tournamentRepo.findById(id).orElseThrow(() -> new TournamentNotFoundException(id));
 
     }
-
+    @GetMapping("/Tournaments/EnterResults/{tournamentId}/{scoreA}/{scoreB}")
+    void enterResults(@PathVariable("tournamentId") Long id,@PathVariable("scoreA") int scoreA,@PathVariable("scoreB") int scoreB){
+        Tournament t =  tournamentRepo.findById(id)
+        .orElseThrow(() -> new TournamentNotFoundException(id));
+        tranform(t);
+        t.enterResults(scoreA, scoreB);
+    }
     @GetMapping("/RoundRobinTournaments/getMatches/{tournamentId}")
     Map<String, List<String>> roundRobinJsonFormat(@PathVariable("tournamentId") Long id) {
         RoundRobinTournament t = (RoundRobinTournament) tournamentRepo.findById(id)
@@ -149,7 +155,17 @@ public class TournamentController {
 
         return result;
     }
-
+    @GetMapping("/Tournaments/getCurrentMatch/{tournamentId}")
+    Map<String,String> currentMatchNames(@PathVariable("tournamentId") Long id){
+        Tournament t =  tournamentRepo.findById(id)
+        .orElseThrow(() -> new TournamentNotFoundException(id));
+        tranform(t);
+        Map<String,String> retMap = new HashMap<>();
+        retMap.put("ParticepentA", t.getCurrentMatch().getMatchparticipants()[0].getName());
+        retMap.put("ParticepentB", t.getCurrentMatch().getMatchparticipants()[1].getName());
+        return retMap;
+       
+    }
     @GetMapping("/EliminationTournaments/getMatches/{tournamentId}")
     Map<String, List<Map>> elimMatchesJsonFormat(@PathVariable("tournamentId") Long id) {
         EliminationTournament t = (EliminationTournament) tournamentRepo.findById(id)
@@ -171,7 +187,7 @@ public class TournamentController {
 
         for (String preset : t.getAllRounds()) {
             System.out.println("Preset: " + preset);
-            String[] set = preset.split(".");
+            String[] set = preset.split("x");
             if (set.length == 0) {
                 String[] x = { preset };
                 set = x;
