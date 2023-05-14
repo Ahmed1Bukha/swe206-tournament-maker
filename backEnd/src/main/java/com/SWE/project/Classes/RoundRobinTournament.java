@@ -146,6 +146,9 @@ public class RoundRobinTournament extends Tournament {
             else
                 finished = true;
         }
+        if(finished){
+            winner=findWinner();
+        }
     }
 
     public void printPoints() {

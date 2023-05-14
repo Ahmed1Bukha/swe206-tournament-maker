@@ -150,10 +150,14 @@ public class EliminationTournament extends Tournament {
             currentMatch = tournamentMatches.get(0);
             remainingMatchesInRound--;
         }
+        if(finished){
+            winner();
+        }
     }
 
     public Participant winner() {
         if (finished) {
+            winner= currentPlayers.get(0);
             return currentPlayers.get(0);
         }
         throw new IllegalAccessError("Unfinished tournament");
