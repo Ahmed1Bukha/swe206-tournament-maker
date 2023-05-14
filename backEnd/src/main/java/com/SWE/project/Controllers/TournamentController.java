@@ -164,7 +164,7 @@ public class TournamentController {
                 set = x;
             }
             for (String m : set) {
-                String[] matchArray = m.split(",");
+                String[] matchArray = m.split("x");
                 System.out.println("M:" + m);
                 if (matchArray[2].equals("Dummy")) {
                     matches.put(numOfMatches - i, new Match(

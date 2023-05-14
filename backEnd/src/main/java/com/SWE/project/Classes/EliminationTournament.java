@@ -94,7 +94,7 @@ public class EliminationTournament extends Tournament {
         tournamentMatches = new ArrayList<Match>(matchUps);
         String matchUpsString = "";
         for (Match i : matchUps) {
-            matchUpsString = matchUpsString + i.stringMatch() + ".";
+            matchUpsString = matchUpsString + i.stringMatch() + "x";
         }
         System.out.println(matchUpsString);
         allRounds.add(matchUpsString.substring(0, matchUpsString.length() - 1));
