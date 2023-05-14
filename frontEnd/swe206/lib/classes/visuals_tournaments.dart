@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
+import 'package:http/http.dart';
 import 'package:json_table/json_table.dart';
 import 'package:swe206/requests.dart';
 
@@ -38,7 +39,27 @@ class VisualsTournament {
   getRoundRobin(int tournamentID) async {
     var json = await Requests.getRoundRobinJson(tournamentID);
 
-    return JsonTable(json);
+//     final String jsonSample =
+//         '[{"name":"Ram","email":"ram@gmail.com","age":23,"DOB":"1990-12-01"},'
+//         '{"name":"Shyam","email":"shyam23@gmail.com","age":18,"DOB":"1995-07-01"},'
+//         '{"name":"John","email":"john@gmail.com","age":10,"DOB":"2000-02-24"},'
+//         '{"name":"Ram","age":12,"DOB":"2000-02-01"}]';
+//     var t = jsonDecode(jsonSample);
+// //Create your column list
+//     var columns = [
+//       JsonTableColumn("name", label: "Name"),
+//       JsonTableColumn("age", label: "Age"),
+//       JsonTableColumn("email", label: "E-mail", defaultValue: "NA"),
+//     ];
+//     return JsonTable(t, columns: columns);
+
+    int lengthList = json.length;
+    List<JsonTableColumn> headers = [];
+    for (int i = 0; i < json.length; i++) {
+      headers.add(JsonTableColumn("Round${i}", label: "Round${i}"));
+    }
+    print("roubin");
+    return JsonTable(columns: headers, json);
   }
 }
 

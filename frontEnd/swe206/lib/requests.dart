@@ -98,16 +98,15 @@ class Requests {
     for (int i = 0; i < tournamentsJson.length; i++) {
       tournaments.add(
         TournamentCardStudent(
-          tournamentsJson[i]["name"],
-          tournamentsJson[i]["sport"],
-          tournamentsJson[i]["type"],
-          tournamentsJson[i]["open"].toString(),
-          tournamentsJson[i]["tournamentType"],
-          tournamentsJson[i]['id'],
-          tournamentsJson[i]['startDate'],
-          tournamentsJson[i]['endDate'],
-          tournamentsJson[i]['studentsPerTeam'],
-        ),
+            tournamentsJson[i]["name"],
+            tournamentsJson[i]["sport"],
+            tournamentsJson[i]["type"],
+            tournamentsJson[i]["open"].toString(),
+            tournamentsJson[i]["tournamentType"],
+            tournamentsJson[i]['id'],
+            tournamentsJson[i]['startDate'],
+            tournamentsJson[i]['endDate'],
+            tournamentsJson[i]['studentsPerTeam'], []),
       );
     }
     return tournaments;
@@ -161,20 +160,22 @@ class Requests {
     for (int i = 0; i < tournamentsJson.length; i++) {
       tournaments.add(
         TournamentCardAdmin(
-          title: tournamentsJson[i]["name"],
-          game: tournamentsJson[i]["sport"],
-          tournamentBased: tournamentsJson[i]["type"],
-          status: tournamentsJson[i]["open"].toString(),
-          type: tournamentsJson[i]["tournamentType"],
-          id: tournamentsJson[i]['id'],
-          startDate: tournamentsJson[i]['startDate'],
-          endDate: tournamentsJson[i]['endDate'],
-          studentPerTeam: tournamentsJson[i]['studentsPerTeam'],
-          matches: tournamentsJson[i]["tournamentMatches"],
-          timeBetween: tournamentsJson[i]["timeBetweenStages"].round(),
-          isOpen: tournamentsJson[i]["open"],
-          isFinished: tournamentsJson[i]["finished"],
-        ),
+            title: tournamentsJson[i]["name"],
+            game: tournamentsJson[i]["sport"],
+            tournamentBased: tournamentsJson[i]["type"],
+            status: tournamentsJson[i]["open"].toString(),
+            type: tournamentsJson[i]["tournamentType"],
+            id: tournamentsJson[i]['id'],
+            startDate: tournamentsJson[i]['startDate'],
+            endDate: tournamentsJson[i]['endDate'],
+            studentPerTeam: tournamentsJson[i]['studentsPerTeam'],
+            matches: tournamentsJson[i]["tournamentMatches"],
+            timeBetween: tournamentsJson[i]["timeBetweenStages"].round(),
+            isOpen: tournamentsJson[i]["open"],
+            isFinished: tournamentsJson[i]["finished"],
+            winner: []
+            // tournaments[i]['winner'] == null ? "" : tournaments[i]['winner'],
+            ),
       );
     }
     return tournaments;
@@ -286,17 +287,20 @@ class Requests {
   }
 
   static dynamic getRoundRobinJson(int id) async {
-    // var matchJson = await getRequest("RoundRobinTournaments/getMatches/${id}");
-    final String jsonSample = '[{"id":1},{"id":2}]';
-    var json = jsonDecode(jsonSample);
+    var matchJson = await getRequest("RoundRobinTournaments/getMatches/${id}");
 
-    return json;
+    return matchJson;
   }
 
   static dynamic enterResult(int id, int scoreA, int scoreB) async {
     Map<String, dynamic> body = {};
     var res = await postRequest(
         "Tournaments/EnterResults/${id}/${scoreA}/${scoreB}", body);
+    return res;
+  }
+
+  static dynamic getNames(int id) async {
+    var res = await getRequest("Tournaments/getCurrentMatch/${id}");
     return res;
   }
 

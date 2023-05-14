@@ -26,7 +26,8 @@ class _TournamentPageState extends State<TournamentPage> {
     });
     if (widget.tournamentWidget.type == "EliminationTournament") {
       graph = await visual.getEleminationTournament(widget.tournamentWidget.id);
-    } else if (widget.tournamentWidget.type == "RoundRobinTournaments") {
+    } else if (widget.tournamentWidget.type == "RoundRobinTournament") {
+      print("Round robin");
       graph = await visual.getRoundRobin(widget.tournamentWidget.id);
     } else {
       graph = Text("Error");

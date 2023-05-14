@@ -21,6 +21,7 @@ class TournamentCardAdmin extends StatelessWidget {
       required this.isOpen,
       required this.isFinished,
       required this.studentPerTeam,
+      required this.winner,
       super.key});
   final int id;
   final String title;
@@ -35,6 +36,7 @@ class TournamentCardAdmin extends StatelessWidget {
   final bool isOpen;
   final bool isFinished;
   final int studentPerTeam;
+  final List<dynamic> winner;
   @override
   Widget build(BuildContext context) {
     String statusTournament = status == "true" ? "Open for register" : "closed";

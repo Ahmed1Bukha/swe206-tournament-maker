@@ -17,6 +17,7 @@ class TournamentPageAdmin extends StatefulWidget {
 class _TournamentPageAdminState extends State<TournamentPageAdmin> {
   VisualsTournament visual = VisualsTournament();
   bool isModifiyable = true;
+  bool enterMatchScore = false;
   dynamic graph;
   getGraph() async {
     setState(() {
@@ -38,6 +39,7 @@ class _TournamentPageAdminState extends State<TournamentPageAdmin> {
   bool isLoading = false;
   @override
   void initState() {
+    isOpen = widget.tournamentCard.status == "true";
     if (widget.tournamentCard.status == "Finished") {
       isModifiyable = false;
     }
@@ -123,7 +125,8 @@ class _TournamentPageAdminState extends State<TournamentPageAdmin> {
                         ],
                       ),
                       Visibility(
-                        visible: widget.tournamentCard.isFinished,
+                        visible: !widget.tournamentCard.isOpen &
+                            !widget.tournamentCard.isFinished,
                         child: TextButton(
                           onPressed: () {
                             Navigator.pushReplacement(
@@ -148,17 +151,15 @@ class _TournamentPageAdminState extends State<TournamentPageAdmin> {
                             ),
                             SizedBox(
                               height: 400,
-                              child: Expanded(
-                                child: InteractiveViewer(
-                                  scaleEnabled: false,
-                                  constrained: false,
-                                  boundaryMargin: EdgeInsets.all(400),
-                                  minScale: 0.01,
-                                  maxScale: 5.6,
-                                  child: isLoading
-                                      ? CircularProgressIndicator()
-                                      : graph,
-                                ),
+                              child: InteractiveViewer(
+                                scaleEnabled: false,
+                                constrained: false,
+                                boundaryMargin: EdgeInsets.all(400),
+                                minScale: 0.01,
+                                maxScale: 5.6,
+                                child: isLoading
+                                    ? CircularProgressIndicator()
+                                    : graph,
                               ),
                             )
                           ],

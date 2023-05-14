@@ -15,6 +15,7 @@ class TournamentCardStudent extends StatelessWidget {
       this.startDate,
       this.endDate,
       this.numberOfParticipant,
+      this.winner,
       {super.key});
   final String title;
   final String game;
@@ -25,6 +26,7 @@ class TournamentCardStudent extends StatelessWidget {
   final int id;
   final String startDate;
   final String endDate;
+  final List<dynamic> winner;
 
   @override
   Widget build(BuildContext context) {
