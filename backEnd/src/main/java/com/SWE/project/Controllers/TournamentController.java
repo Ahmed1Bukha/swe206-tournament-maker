@@ -124,7 +124,13 @@ public class TournamentController {
         Tournament t = tournamentRepo.findById(id).orElseThrow(() -> new TournamentNotFoundException(id));
 
     }
-
+    @GetMapping("/Tournaments/EnterResults/{tournamentId}/{scoreA}/{scoreB}")
+    void enterResults(@PathVariable("tournamentId") Long id,@PathVariable("scoreA") int scoreA,@PathVariable("scoreB") int scoreB){
+        Tournament t =  tournamentRepo.findById(id)
+        .orElseThrow(() -> new TournamentNotFoundException(id));
+        tranform(t);
+        t.enterResults(scoreA, scoreB);
+    }
     @GetMapping("/RoundRobinTournaments/getMatches/{tournamentId}")
     Map roundRobinJsonFormat(@PathVariable("tournamentId") Long id) {
         // Tournament t =
