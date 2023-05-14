@@ -125,6 +125,11 @@ public class TournamentController {
 
     }
 
+    @GetMapping("/RoundRobinTournaments/getMatches/{tournamentId}")
+    Map roundRobinJsonFormat(@PathVariable("tournamentId") Long id) {
+        // Tournament t =
+    }
+
     @GetMapping("/EliminationTournaments/getMatches/{tournamentId}")
     Map<String, List<Map>> elimMatchesJsonFormat(@PathVariable("tournamentId") Long id) {
         EliminationTournament t = (EliminationTournament) tournamentRepo.findById(id)
@@ -145,9 +150,16 @@ public class TournamentController {
 
         Map<Integer, Match> matches = new HashMap<Integer, Match>();
 
-        for (List<String> set : t.getHhhhhhhh()) {
+        for (String preset : t.getAllRounds()) {
+            System.out.println("Preset: " + preset);
+            String[] set = preset.split(".");
+            if (set.length == 0) {
+                String[] x = { preset };
+                set = x;
+            }
             for (String m : set) {
                 String[] matchArray = m.split(",");
+                System.out.println("M:" + m);
                 if (matchArray[2].equals("Dummy")) {
                     matches.put(numOfMatches - i, new Match(
                             new Participant[] { participantRepo.findById(Long.parseLong(matchArray[0]))
@@ -168,7 +180,7 @@ public class TournamentController {
                 i++;
             }
         }
-        System.out.println(matches);
+        System.out.println(matches + "nnn");
         Map<String, List<Map>> result = new HashMap<>();
         result.put("nodes", new ArrayList<>());
         result.put("edges", new ArrayList<>());

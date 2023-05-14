@@ -9,7 +9,6 @@ import java.util.Set;
 
 import com.SWE.project.Enums.TOURNAMENT_TYPES;
 import com.SWE.project.Exceptions.TournamentRegistrationStillOpenException;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
@@ -29,8 +28,7 @@ import java.util.Objects;
 @DiscriminatorValue("ET")
 @JsonTypeName("ET")
 public class EliminationTournament extends Tournament {
-    // @OneToMany(targetEntity = ArrayList.class)
-    List<ArrayList<String>> hhhHhhh = new ArrayList<ArrayList<String>>();
+    List<String> allRounds = new ArrayList<String>();
 
     @ManyToMany
     @JoinTable(name = "elimination_tournament_current_participants", joinColumns = @JoinColumn(name = "tournament_id"), inverseJoinColumns = @JoinColumn(name = "participant_id"))
@@ -71,7 +69,7 @@ public class EliminationTournament extends Tournament {
         if (set.size() % 2 == 1)
             set.add(null);
         ArrayList<Participant> temp = new ArrayList<>(set);
-        if (hhhhhhhh.size() == 0) {
+        if (allRounds.size() == 0) {
             Collections.shuffle(temp);
         }
         for (int i = 0; i < temp.size(); i += 2) {
@@ -94,11 +92,12 @@ public class EliminationTournament extends Tournament {
             }
         }
         tournamentMatches = new ArrayList<Match>(matchUps);
-        ArrayList<String> matchUpsString = new ArrayList<>();
+        String matchUpsString = "";
         for (Match i : matchUps) {
-            matchUpsString.add(i.stringMatch());
+            matchUpsString = matchUpsString + i.stringMatch() + ".";
         }
-        hhhhhhhh.add(matchUpsString);
+        System.out.println(matchUpsString);
+        allRounds.add(matchUpsString.substring(0, matchUpsString.length() - 1));
         remainingMatchesInRound = tournamentMatches.size();
     }
 
@@ -160,21 +159,21 @@ public class EliminationTournament extends Tournament {
         throw new IllegalAccessError("Unfinished tournament");
     }
 
-    public Participant secondPlace() {
-        if (finished) {
-            Match lastRound = (Match) hhhhhhhh.get(hhhhhhhh.size() - 1).toArray()[0];
-            return lastRound.decideLoser();
-        }
-        throw new IllegalAccessError("Unfinished tournament");
+    // public Participant secondPlace() {
+    // if (finished) {
+    // Match lastRound = (Match) allRounds.get(allRounds.size() - 1).toArray()[0];
+    // return lastRound.decideLoser();
+    // }
+    // throw new IllegalAccessError("Unfinished tournament");
+    // }
+
+    public List<String> getAllRounds() {
+        return allRounds;
+
     }
 
-    public List<ArrayList<String>> getHhhhhhhh() {
-        return hhhhhhhh;
-
-    }
-
-    public void setHhhhhhhh(List<ArrayList<String>> allRounds) {
-        this.hhhhhhhh = allRounds;
+    public void setAllRounds(List<String> allRounds) {
+        this.allRounds = allRounds;
     }
 
     public List<Participant> getCurrentPlayers() {
@@ -197,7 +196,7 @@ public class EliminationTournament extends Tournament {
     public String toString() {
         return "{" +
                 super.toString().substring(1, super.toString().length() - 1) +
-                ", allRounds='" + getHhhhhhhh() + "'" +
+                ", allRounds='" + getAllRounds() + "'" +
                 ", currentPlayers='" + getCurrentPlayers() + "'" +
                 ", remainingMatchesInRound='" + getRemainingMatchesInRound() + "'" +
                 "}";
