@@ -137,7 +137,7 @@ public class TournamentController {
 
     }
     @GetMapping("/RoundRobinTournaments/getMatches/{tournamentId}")
-    List<String> roundRobinJsonFormat(@PathVariable("tournamentId") Long id) {
+    List<Map<String,String>> roundRobinJsonFormat(@PathVariable("tournamentId") Long id) {
         RoundRobinTournament t = (RoundRobinTournament) tournamentRepo.findById(id)
                 .orElseThrow(() -> new TournamentNotFoundException(id));
 
@@ -145,16 +145,17 @@ public class TournamentController {
         ArrayList<ArrayList<Match>> rounds = t.generateRounds();
         if (t.getOpen())
             throw new TournamentRegistrationStillOpenException(id);
-        List<String> result = new ArrayList<String>();
+            List<Map<String,String>> result = new ArrayList<Map<String,String>>();
         
         for(int i=0;i<rounds.get(0).size();i++){
+            HashMap<String,String> temp= new HashMap<>();
             int counter=1;
-            String current="";
             for(ArrayList<Match> j: rounds){
-                current= current + "Round "+counter+":"+j.get(i).toString()+",";
+               temp.put("Round "+counter, j.get(i).toString());
+                counter++;
             }
-            result.add( current.substring(0, current.length()-1));
-            counter++;
+            result.add(temp);
+            temp=null;
         }
         // int roundCount = t.getParticipants().size() - 1;
         // int matchesPerRound = t.getParticipants().size() / 2;
