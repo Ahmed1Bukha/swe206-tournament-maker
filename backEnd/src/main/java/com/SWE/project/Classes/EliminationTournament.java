@@ -122,6 +122,7 @@ public class EliminationTournament extends Tournament {
         currentPlayers.addAll(participants);
     }
 
+    
     @Override
     public void enterResults(int firstScore, int secondScore) {
 

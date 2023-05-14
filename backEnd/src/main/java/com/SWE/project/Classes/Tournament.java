@@ -73,7 +73,13 @@ public abstract class Tournament {
 
     @Column
     int studentsPerTeam = 1;
+    public Participant getWinner(){
+        return winner;
+    }
 
+    public void setWinner(Participant winner){
+        this.winner=winner;
+    }
     public ArrayList<String> generatedMatches = new ArrayList<>();
 
     protected Tournament(String name, int participantCount, int studentsPerTeam, Date startDate,
