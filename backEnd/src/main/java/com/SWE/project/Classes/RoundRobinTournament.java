@@ -53,9 +53,11 @@ public class RoundRobinTournament extends Tournament {
     }
 
     public void start() {
-        if (open)
+        if (open) {
             stopRegistration();
-        currentMatch = tournamentMatches.get(0);
+            generateMatches();
+            currentMatch = tournamentMatches.get(0);
+        }
     }
 
     @Override
