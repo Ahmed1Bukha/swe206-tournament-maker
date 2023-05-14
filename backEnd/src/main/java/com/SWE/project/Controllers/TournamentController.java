@@ -137,28 +137,37 @@ public class TournamentController {
 
     }
     @GetMapping("/RoundRobinTournaments/getMatches/{tournamentId}")
-    Map<String, List<String>> roundRobinJsonFormat(@PathVariable("tournamentId") Long id) {
+    Map<String, String> roundRobinJsonFormat(@PathVariable("tournamentId") Long id) {
         RoundRobinTournament t = (RoundRobinTournament) tournamentRepo.findById(id)
                 .orElseThrow(() -> new TournamentNotFoundException(id));
 
         tranform(t);
-
+        ArrayList<ArrayList<Match>> rounds = t.generateRounds();
         if (t.getOpen())
             throw new TournamentRegistrationStillOpenException(id);
+        Map<String, String> result = new HashMap<String,String>();
 
-        int roundCount = t.getParticipants().size() - 1;
-        int matchesPerRound = t.getParticipants().size() / 2;
-
-        Map<String, List<String>> result = new HashMap<String, List<String>>();
-
-        List<String> x;
-        for (int i = 1; i <= matchesPerRound; i++) {
-            x = new ArrayList<String>();
-            for (int j = 0; j < roundCount; j++) {
-                x.add(t.getTournamentMatches().get((i - 1) * roundCount + j).toString());
+        for(int i=0;i<rounds.get(0).size();i++){
+            int counter=1;
+            String current="";
+            for(ArrayList<Match> j: rounds){
+                current="Round "+counter+":"+j.get(i).toString()+",";
             }
-            result.put("Round " + i, x);
+            result.put("Row "+counter, current.substring(0, current.length()-1));
+            counter++;
         }
+        // int roundCount = t.getParticipants().size() - 1;
+        // int matchesPerRound = t.getParticipants().size() / 2;
+
+
+        // List<String> x;
+        // for (int i = 1; i <= matchesPerRound; i++) {
+        //     x = new ArrayList<String>();
+        //     for (int j = 0; j < roundCount; j++) {
+        //         x.add(t.getTournamentMatches().get((i - 1) * roundCount + j).toString());
+        //     }
+        //     result.put("Round " + i, x);
+        // }
 
         return result;
     }
