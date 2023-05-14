@@ -44,7 +44,7 @@ public abstract class Tournament {
     @Column
     protected double timeBetweenStages;
     @OneToOne
-    protected Participant winner;
+    protected Participant winner= new Student(0L,"");
     @Column
     protected TOURNAMENT_TYPES tournamentType;
     int indexOfCurrent;
