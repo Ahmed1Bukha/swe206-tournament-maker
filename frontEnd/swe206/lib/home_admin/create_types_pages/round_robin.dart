@@ -215,17 +215,14 @@ class _CreateRoundPageState extends State<CreateRoundPage> {
                               var res = await Requests.addRoundRobin(
                                   myTournamentController.text,
                                   int.parse(myNumberParticipantController.text),
-                                  DateTime.parse(fromUntilDate.startDate
-                                          .toString()
-                                          .split(" ")[0])
-                                      .millisecondsSinceEpoch
+                                  fromUntilDate.startDate
+                                      .toString()
+                                      .split(" ")[0]
                                       .toString(),
-                                  DateTime.parse(fromUntilDate.endDate
-                                          .toString()
-                                          .split(" ")[0])
-                                      .millisecondsSinceEpoch
-                                      .toString(),
-                                  int.parse(myNumberDaysController.text),
+                                  fromUntilDate.endDate
+                                      .toString()
+                                      .split(" ")[0],
+                                  double.parse(myNumberDaysController.text),
                                   _character.toString().split(".")[1],
                                   numberOfMembers,
                                   dropdownvalue);

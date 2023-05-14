@@ -67,6 +67,7 @@ class _TournamentPageState extends State<TournamentPage> {
   @override
   void initState() {
     isOpen = widget.tournamentWidget.status == "true" ? true : false;
+    print(isOpen);
     getGraph();
     super.initState();
   }
@@ -176,7 +177,7 @@ class _TournamentPageState extends State<TournamentPage> {
                       height: 40,
                     ),
                     Visibility(
-                      visible: isOpen,
+                      visible: !isOpen,
                       child: Column(
                         children: [
                           Center(

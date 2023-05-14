@@ -219,7 +219,7 @@ class _CreateEleminationPageState extends State<CreateEleminationPage> {
                                   fromUntilDate.endDate
                                       .toString()
                                       .split(" ")[0],
-                                  int.parse(myNumberDaysController.text),
+                                  double.parse(myNumberDaysController.text),
                                   _character.toString().split(".")[1],
                                   numberOfMembers,
                                   dropdownvalue);

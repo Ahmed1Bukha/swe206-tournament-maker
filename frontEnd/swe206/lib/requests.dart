@@ -189,7 +189,7 @@ class Requests {
       int participantCount,
       String startDate,
       String endDate,
-      int timeBetween,
+      double timeBetween,
       String tournamentType,
       int numberOfMembers,
       String game) async {
@@ -221,7 +221,7 @@ class Requests {
       int participantCount,
       String startDate,
       String endDate,
-      int timeBetween,
+      double timeBetween,
       String tournamentType,
       int numberOfMembers,
       String game) async {
@@ -291,6 +291,13 @@ class Requests {
     var json = jsonDecode(jsonSample);
 
     return json;
+  }
+
+  static dynamic enterResult(int id, int scoreA, int scoreB) async {
+    Map<String, dynamic> body = {};
+    var res = await postRequest(
+        "Tournaments/EnterResults/${id}/${scoreA}/${scoreB}", body);
+    return res;
   }
 
   // static Future<Map> getTournaments() async {

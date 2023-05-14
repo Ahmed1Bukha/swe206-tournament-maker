@@ -123,7 +123,7 @@ class _TournamentPageAdminState extends State<TournamentPageAdmin> {
                         ],
                       ),
                       Visibility(
-                        visible: isModifiyable,
+                        visible: widget.tournamentCard.isFinished,
                         child: TextButton(
                           onPressed: () {
                             Navigator.pushReplacement(
@@ -133,7 +133,7 @@ class _TournamentPageAdminState extends State<TournamentPageAdmin> {
                                       widget.tournamentCard)),
                             );
                           },
-                          child: Text("Modifiy tournament"),
+                          child: Text("Enter Match Result"),
                         ),
                       ),
                       Visibility(

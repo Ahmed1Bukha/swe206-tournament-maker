@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:swe206/UI_componenets/tournament_card_admin.dart';
 
+import '../../UI_componenets/const.dart';
 import '../../requests.dart';
 
 class ModifyTournamentPage extends StatefulWidget {
@@ -13,7 +14,8 @@ class ModifyTournamentPage extends StatefulWidget {
 }
 
 class _ModifyTournamentPageState extends State<ModifyTournamentPage> {
-  final myTournamentController = TextEditingController();
+  final myTournamentControllerA = TextEditingController();
+  final myTournamentControllerB = TextEditingController();
   var games = ["football"];
   String dropdownvalue = "football";
   bool isLoading = false;
@@ -29,7 +31,6 @@ class _ModifyTournamentPageState extends State<ModifyTournamentPage> {
 
   @override
   void initState() {
-    myTournamentController.text = widget.tournamentCard.title;
     dropdownvalue = widget.tournamentCard.game;
 
     getGames();
@@ -41,73 +42,80 @@ class _ModifyTournamentPageState extends State<ModifyTournamentPage> {
     final _formKey = GlobalKey<FormState>();
     return Scaffold(
       appBar: AppBar(
-        title: Text("Modify tournament"),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "Enter result",
+          style: h2,
+        ),
       ),
       body: isLoading
           ? CircularProgressIndicator()
-          : Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
+          : Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Enter Score:",
+                  style: h3,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      "Tournament title:",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    TextFormField(
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter some text';
-                        }
-                        return null;
-                      },
-                      controller: myTournamentController,
-                      decoration: const InputDecoration(
-                        hintText: "Enter tournament name",
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    const Text(
-                      "Tournament game:",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    Center(
-                      child: getDropDownButton(),
-                    ),
-                    const SizedBox(
-                      height: 50,
-                    ),
-                    Center(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          //TODO connect to backend to add the stuff.
-                          if (_formKey.currentState!.validate()) {
-                            // If the form is valid, display a snackbar. In the real world,
-                            // you'd often call a server or save the information in a database.
-                            print(myTournamentController.text);
-                            print(dropdownvalue);
-
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              // we can use this as await.
-                              const SnackBar(content: Text('Processing Data')),
-                            );
-                            Navigator.pop(context);
-                          }
-                        },
-                        child: const Text(
-                          "Submit",
-                          style: TextStyle(fontSize: 30),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Center(
+                          child: Text(
+                            "A",
+                            style: h4,
+                          ),
                         ),
-                      ),
+                        SizedBox(
+                          child: TextField(
+                            controller: myTournamentControllerA,
+                          ),
+                          width: 50,
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      width: 30,
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          "B",
+                          style: h4,
+                        ),
+                        SizedBox(
+                          child: TextField(
+                            controller: myTournamentControllerB,
+                          ),
+                          width: 50,
+                        )
+                      ],
                     )
                   ],
                 ),
-              ),
+                SizedBox(
+                  height: 50,
+                ),
+                ElevatedButton(
+                    onPressed: () async {
+                      var res = await Requests.enterResult(
+                          widget.tournamentCard.id,
+                          int.parse(myTournamentControllerA.text),
+                          int.parse(myTournamentControllerB.text));
+                      print(res);
+                      // Navigator.pop(context);
+                    },
+                    child: const Text("Submit"))
+              ],
             ),
     );
   }

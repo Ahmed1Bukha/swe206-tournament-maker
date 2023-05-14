@@ -43,7 +43,7 @@ public abstract class Tournament {
 
     @Column
     protected double timeBetweenStages;
-    @Column
+    @OneToOne
     protected Participant winner;
     @Column
     protected TOURNAMENT_TYPES tournamentType;
