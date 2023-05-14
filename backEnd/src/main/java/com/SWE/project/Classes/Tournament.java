@@ -293,18 +293,23 @@ public abstract class Tournament {
     @Override
     public String toString() {
         return "{" +
-                "name='" + getName() + "'" +
+                " id='" + getId() + "'" +
+                ", name='" + getName() + "'" +
+                ", participantCount='" + getParticipantCount() + "'" +
                 ", startDate='" + getStartDate() + "'" +
                 ", endDate='" + getEndDate() + "'" +
                 ", timeBetweenStages='" + getTimeBetweenStages() + "'" +
                 ", tournamentType='" + getTournamentType() + "'" +
+                // ", indexOfCurrent='" + getIndexOfCurrent() + "'" +
                 ", participants='" + getParticipants() + "'" +
                 ", currentMatch='" + getCurrentMatch() + "'" +
                 ", open='" + isOpen() + "'" +
                 ", finished='" + isFinished() + "'" +
-                // ", tournamentMatches='" + getTournamentMatches() + "'" +
+                ", tournamentMatches='" + getTournamentMatches() + "'" +
+                ", sport='" + getSport() + "'" +
+                ", studentsPerTeam='" + getStudentsPerTeam() + "'" +
+                ", generatedMatches='" + getGeneratedMatches() + "'" +
                 "}";
     }
 
-    //
 }

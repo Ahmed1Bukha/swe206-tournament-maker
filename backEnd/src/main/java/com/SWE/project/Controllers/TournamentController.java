@@ -56,24 +56,22 @@ public class TournamentController {
         return null;
     }
 
-    @GetMapping("/Tournaments/getMatches/{tournamentId}")
-    List<Match> getMatches(@PathVariable("tournamentId") Long id) {
-        Tournament t = tournamentRepo.findById(id).orElseThrow(() -> new TournamentNotFoundException(id));
-        tranform(t);
-        if (t instanceof EliminationTournament) {
-            EliminationTournament et = (EliminationTournament) t;
-            List<Match> result = new ArrayList<Match>();
-            for (Match m : et.getTournamentMatches()) {
-                System.out.println("hhhh");
-                System.out.println(m.getId());
-                result.add(m);
-                System.out.println("hhhhhhhhhhhhhhhhhhh");
-            }
+    // @GetMapping("/Tournaments/getMatches/{tournamentId}")
+    // List<Match> getMatches(@PathVariable("tournamentId") Long id) {
+    // Tournament t = tournamentRepo.findById(id).orElseThrow(() -> new
+    // TournamentNotFoundException(id));
+    // tranform(t);
+    // if (t instanceof EliminationTournament) {
+    // EliminationTournament et = (EliminationTournament) t;
+    // List<Match> result = new ArrayList<Match>();
+    // for (Match m : et.getTournamentMatches()) {
+    // result.add(m);
+    // }
 
-            return result;
-        }
-        return t.getTournamentMatches();
-    }
+    // return result;
+    // }
+    // return t.getTournamentMatches();
+    // }
 
     @GetMapping("/Tournaments/getParticipants/{tournamentId}")
     Set<Participant> getParticipants(@PathVariable("tournamentId") long id)
@@ -126,8 +124,30 @@ public class TournamentController {
     }
 
     @GetMapping("/RoundRobinTournaments/getMatches/{tournamentId}")
-    Map roundRobinJsonFormat(@PathVariable("tournamentId") Long id) {
-        // Tournament t =
+    Map<String, List<String>> roundRobinJsonFormat(@PathVariable("tournamentId") Long id) {
+        RoundRobinTournament t = (RoundRobinTournament) tournamentRepo.findById(id)
+                .orElseThrow(() -> new TournamentNotFoundException(id));
+
+        tranform(t);
+
+        if (t.getOpen())
+            throw new TournamentRegistrationStillOpenException(id);
+
+        int roundCount = t.getParticipants().size() - 1;
+        int matchesPerRound = t.getParticipants().size() / 2;
+
+        Map<String, List<String>> result = new HashMap<String, List<String>>();
+
+        List<String> x;
+        for (int i = 1; i <= roundCount; i++) {
+            x = new ArrayList<String>();
+            for (int j = 0; j < matchesPerRound; j++) {
+                x.add(t.getTournamentMatches().get((i - 1) * matchesPerRound + j).toString());
+            }
+            result.put("Round " + i, x);
+        }
+
+        return result;
     }
 
     @GetMapping("/EliminationTournaments/getMatches/{tournamentId}")
@@ -135,7 +155,6 @@ public class TournamentController {
         EliminationTournament t = (EliminationTournament) tournamentRepo.findById(id)
                 .orElseThrow(() -> new TournamentNotFoundException(id));
         tranform(t);
-        System.out.println(t.getTournamentMatches());
         if (t.getOpen())
             throw new TournamentRegistrationStillOpenException(id);
 
@@ -319,9 +338,8 @@ public class TournamentController {
 
                 t.addParticipant(p);
                 t.storeMatches();
-                EliminationTournament tt = (EliminationTournament) t;
-                tt.getTournamentMatches().clear();
-                tt.setCurrentMatch(null);
+                t.getTournamentMatches().clear();
+                t.setCurrentMatch(null);
                 // tt.getAllRounds().clear();
                 studentRepo.save(p);
 
