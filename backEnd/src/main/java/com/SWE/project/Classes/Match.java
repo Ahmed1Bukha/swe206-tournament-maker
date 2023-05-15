@@ -182,8 +182,8 @@ public class Match {
                         + ")" : "");
     }
     public String partString(){
-        if(dummyMatch) return matchparticipants[0]+" v "+"Dummy";
-        return matchparticipants[0]+" v "+matchparticipants[1];
+        if(dummyMatch) return matchparticipants[0].name+" v "+"Dummy";
+        return matchparticipants[0].name+" v "+matchparticipants[1];
     }
     public boolean contains(Match other) {
         if (other.matchparticipants[0] == matchparticipants[0] ||
