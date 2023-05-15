@@ -66,7 +66,7 @@ public class TournamentController {
             List<Tournament> tournamens = tournamentRepo.findAll();
             List<List<String>> matches= new ArrayList<>();
             for(Tournament i: tournamens){
-                if(!i.isOpen()){
+                if(!i.isOpen()&&!i.isFinished()){
                 tranform(i);
                 List<String> temp= new ArrayList<>();
                 temp.add(i.getName());
