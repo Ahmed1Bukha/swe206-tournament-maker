@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:swe206/UI_componenets/match_card_admin.dart';
 import 'package:swe206/UI_componenets/student_card_admin.dart';
 import 'package:swe206/UI_componenets/tournament_card_admin.dart';
 import 'package:swe206/UI_componenets/tournament_card_student.dart';
@@ -27,6 +28,19 @@ class Requests {
 
       var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
       return decodedResponse;
+    } catch (e) {
+      throw HttpException("Get request to /$endpoint failed");
+    }
+  }
+
+  static Future getRequestres(String endpoint) async {
+    try {
+      var response = await client.get(
+        Uri.http(url, "/$endpoint"),
+        headers: header,
+      );
+
+      return response;
     } catch (e) {
       throw HttpException("Get request to /$endpoint failed");
     }
@@ -66,10 +80,12 @@ class Requests {
           //Save ID:
           final SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString('StudentID', userName);
+          await prefs.setString('Email', decoderes["email"]);
 
           Map<String, dynamic> body = {
             "name": decoderes["name"],
-            "studentId": int.parse(userName)
+            "studentId": int.parse(userName),
+            "email": decoderes["email"]
           };
           Response res = await postRequest("students", body);
 
@@ -115,6 +131,7 @@ class Requests {
   static addParticipant(int tournamentID) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? studentID = prefs.getString('StudentID');
+    final String? emailStudent = prefs.getString('Email');
 
     Map<String, int> body = {
       "tournamentId": tournamentID,
@@ -125,6 +142,8 @@ class Requests {
     if (response.statusCode == 200) {
       //Add a snack bar that he registered
       var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+      print(emailStudent.toString());
+      await sendEmail(["xxbu7aamedxx@gmail.com"], tournamentID);
       return "done";
     } else if (response.statusCode == 404) {
       return "registered";
@@ -135,21 +154,31 @@ class Requests {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? studentID = prefs.getString('StudentID');
 
-    teamIDS.add(int.parse(studentID.toString()));
-    Map<String, dynamic> body = {
-      "name": teamName,
-      "team_members": teamIDS,
-      "tournament_id": tournamentID
-    };
-    Response response = await postRequest("teams", body);
+    bool checkTeamMates = await checkTeamMember(teamIDS);
+    if (checkTeamMates) {
+      teamIDS.add(int.parse(studentID.toString()));
 
-    if (response.statusCode == 200) {
-      //Add a snack bar that he registered
-      var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+      Map<String, dynamic> body = {
+        "name": teamName,
+        "team_members": teamIDS,
+        "tournament_id": tournamentID
+      };
 
-      return "done";
-    } else if (response.statusCode == 404) {
-      print(response.body);
+      Response response = await postRequest("teams", body);
+
+      if (response.statusCode == 200) {
+        //Add a snack bar that he registered
+
+        var decodedResponse =
+            jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+        var emails = await getEmails(teamIDS);
+        await sendEmail(emails, tournamentID);
+        return "done";
+      } else if (response.statusCode == 404) {
+        print(response.body);
+        return "registered";
+      }
+    } else {
       return "registered";
     }
   }
@@ -160,29 +189,36 @@ class Requests {
     for (int i = 0; i < tournamentsJson.length; i++) {
       tournaments.add(
         TournamentCardAdmin(
-            title: tournamentsJson[i]["name"],
-            game: tournamentsJson[i]["sport"],
-            tournamentBased: tournamentsJson[i]["type"],
-            status: tournamentsJson[i]["open"].toString(),
-            type: tournamentsJson[i]["tournamentType"],
-            id: tournamentsJson[i]['id'],
-            startDate: tournamentsJson[i]['startDate'],
-            endDate: tournamentsJson[i]['endDate'],
-            studentPerTeam: tournamentsJson[i]['studentsPerTeam'],
-            matches: tournamentsJson[i]["tournamentMatches"],
-            timeBetween: tournamentsJson[i]["timeBetweenStages"].round(),
-            isOpen: tournamentsJson[i]["open"],
-            isFinished: tournamentsJson[i]["finished"],
-            winner: []
-            // tournaments[i]['winner'] == null ? "" : tournaments[i]['winner'],
-            ),
+          title: tournamentsJson[i]["name"],
+          game: tournamentsJson[i]["sport"],
+          tournamentBased: tournamentsJson[i]["type"],
+          status: tournamentsJson[i]["open"].toString(),
+          type: tournamentsJson[i]["tournamentType"],
+          id: tournamentsJson[i]['id'],
+          startDate: tournamentsJson[i]['startDate'],
+          endDate: tournamentsJson[i]['endDate'],
+          studentPerTeam: tournamentsJson[i]['studentsPerTeam'],
+          matches: tournamentsJson[i]["tournamentMatches"],
+          timeBetween: tournamentsJson[i]["timeBetweenStages"].round(),
+          isOpen: tournamentsJson[i]["open"],
+          isFinished: tournamentsJson[i]["finished"],
+          winner: [],
+        ),
       );
     }
     return tournaments;
   }
 
   static dynamic getMatchesAdmin() async {
-    var tournamentsJson = await getRequest("Tournaments");
+    var tournamentsJson = await getRequest("Tournaments/allCurrentMatches");
+    List<MatchCardAdmin> matches = [];
+    for (int i = 0; i < tournamentsJson.length; i++) {
+      matches.add(new MatchCardAdmin(
+          id: id,
+          participantA: participantA,
+          participantB: participantB,
+          tournamentName: tournamentName));
+    }
   }
 
   static addElemeniation(
@@ -304,35 +340,36 @@ class Requests {
     return res;
   }
 
-  // static Future<Map> getTournaments() async {
-  //   return getRequest("Tournaments");
-  // }
+  static checkTeamMember(List<int> ids) async {
+    for (int i = 0; i < ids.length; i++) {
+      Response res = await getRequestres(
+          "https://us-central1-swe206-221.cloudfunctions.net/app/User?username=${ids[i]}");
+      if (res.statusCode != 200) {
+        return false;
+      }
+    }
+    return true;
+  }
 
-  // Future<Map> putRequest(String endpoint) async {
-  //   try {
-  //     var response = await client.put(
-  //       Uri.http(url, "/$endpoint"),
-  //       headers: header,
-  //     );
-  //     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
-  //     return decodedResponse;
-  //   } catch (e) {
-  //     throw HttpException("Get request to /$endpoint failed");
-  //   }
-  // }
+  static sendEmail(List<String> emails, int tournamentIDS) async {
+    for (int i = 0; i < emails.length; i++) {
+      print(tournamentIDS);
+      var res = await postRequest(
+          "Tournaments/SendConfirmation/${tournamentIDS}/rayankingdom1111@gmail.com",
+          {});
+      print(res);
+    }
+  }
 
-  // Future<Map> deleteRequest(String endpoint) async {
-  //   try {
-  //     var response = await client.delete(
-  //       Uri.http(url, "/$endpoint"),
-  //       headers: header,
-  //     );
-  //     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
-  //     return decodedResponse;
-  //   } catch (e) {
-  //     throw HttpException("Get request to /$endpoint failed");
-  //   }
-  // }
+  static getEmails(List<int> ids) async {
+    List<dynamic> emails = [];
+    for (int i = 0; i < ids.length; i++) {
+      var res = await getRequest(
+          "https://us-central1-swe206-221.cloudfunctions.net/app/User?username=${ids}");
+      emails.add(res["email"]);
+    }
+    return emails;
+  }
 
   static void close() => client.close();
 }

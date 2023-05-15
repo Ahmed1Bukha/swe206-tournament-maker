@@ -90,7 +90,7 @@ class TournamentCardAdmin extends StatelessWidget {
                   style: h4,
                 ),
                 Text(
-                  "Tournament type: $type",
+                  "Tournament type: $tournamentBased",
                   style: h4,
                 ),
                 Text(

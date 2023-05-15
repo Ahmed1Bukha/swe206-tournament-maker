@@ -11,24 +11,12 @@ class MatchCardAdmin extends StatelessWidget {
       {required this.id,
       required this.participantA,
       required this.participantB,
-      required this.game,
-      required this.date,
-      required this.scoreA,
-      required this.scoreB,
-      required this.title,
-      required this.endDate,
-      required this.finished,
+      required this.tournamentName,
       super.key});
   final int id;
   final String participantA;
   final String participantB;
-  final String game;
-  final String date;
-  final int scoreA;
-  final int scoreB;
-  final String title;
-  final String endDate;
-  final bool finished;
+  final String tournamentName;
 
   @override
   Widget build(BuildContext context) {
@@ -72,20 +60,12 @@ class MatchCardAdmin extends StatelessWidget {
                   ),
                   child: Text(
                     textAlign: TextAlign.left,
-                    title,
+                    tournamentName,
                     style: h3,
                   ),
                 ),
                 const SizedBox(
                   height: 10,
-                ),
-                Text(
-                  "Game: $game",
-                  style: h4,
-                ),
-                Text(
-                  "EndDate: $endDate",
-                  style: h4,
                 ),
               ],
             ),

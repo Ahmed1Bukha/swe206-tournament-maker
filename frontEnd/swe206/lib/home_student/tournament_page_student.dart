@@ -24,9 +24,10 @@ class _TournamentPageState extends State<TournamentPage> {
     setState(() {
       isLoading = true;
     });
-    if (widget.tournamentWidget.type == "EliminationTournament") {
+    if (widget.tournamentWidget.type == "EliminationTournament" && !isOpen) {
       graph = await visual.getEleminationTournament(widget.tournamentWidget.id);
-    } else if (widget.tournamentWidget.type == "RoundRobinTournament") {
+    } else if (widget.tournamentWidget.type == "RoundRobinTournament" &&
+        !isOpen) {
       print("Round robin");
       graph = await visual.getRoundRobin(widget.tournamentWidget.id);
     } else {
@@ -189,17 +190,15 @@ class _TournamentPageState extends State<TournamentPage> {
                           ),
                           SizedBox(
                             height: 400,
-                            child: Expanded(
-                              child: InteractiveViewer(
-                                scaleEnabled: false,
-                                constrained: false,
-                                boundaryMargin: EdgeInsets.all(400),
-                                minScale: 0.01,
-                                maxScale: 5.6,
-                                child: isLoading
-                                    ? CircularProgressIndicator()
-                                    : graph,
-                              ),
+                            child: InteractiveViewer(
+                              scaleEnabled: false,
+                              constrained: false,
+                              boundaryMargin: EdgeInsets.all(400),
+                              minScale: 0.01,
+                              maxScale: 5.6,
+                              child: isLoading
+                                  ? CircularProgressIndicator()
+                                  : graph,
                             ),
                           )
                         ],

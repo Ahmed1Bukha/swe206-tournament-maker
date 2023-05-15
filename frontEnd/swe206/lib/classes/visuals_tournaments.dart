@@ -53,10 +53,11 @@ class VisualsTournament {
 //     ];
 //     return JsonTable(t, columns: columns);
 
-    int lengthList = json.length;
+    int lengthList = json[0].length;
+
     List<JsonTableColumn> headers = [];
-    for (int i = 0; i < json.length; i++) {
-      headers.add(JsonTableColumn("Round${i}", label: "Round${i}"));
+    for (int i = 0; i < lengthList; i++) {
+      headers.add(JsonTableColumn("Round ${i + 1}", label: "Round ${i + 1}"));
     }
     print("roubin");
     return JsonTable(columns: headers, json);

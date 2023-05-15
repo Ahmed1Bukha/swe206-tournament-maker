@@ -23,9 +23,13 @@ class _TournamentPageAdminState extends State<TournamentPageAdmin> {
     setState(() {
       isLoading = true;
     });
-    if (widget.tournamentCard.type == "EliminationTournament") {
+    print(widget.tournamentCard.tournamentBased);
+    if (widget.tournamentCard.tournamentBased == "EliminationTournament" &&
+        !widget.tournamentCard.isOpen) {
       graph = await visual.getEleminationTournament(widget.tournamentCard.id);
-    } else if (widget.tournamentCard.type == "RoundRobinTournaments") {
+    } else if (widget.tournamentCard.tournamentBased ==
+            "RoundRobinTournament" &&
+        !widget.tournamentCard.isOpen) {
       graph = await visual.getRoundRobin(widget.tournamentCard.id);
     } else {
       graph = Text("Error");
@@ -91,7 +95,7 @@ class _TournamentPageAdminState extends State<TournamentPageAdmin> {
                             height: 10,
                           ),
                           Text(
-                            "Type: ${widget.tournamentCard.type}",
+                            "Type: ${widget.tournamentCard.tournamentBased}",
                             style: infoTournament,
                           ),
                           SizedBox(
@@ -119,7 +123,7 @@ class _TournamentPageAdminState extends State<TournamentPageAdmin> {
                             height: 10,
                           ),
                           Text(
-                            "StartDate: ${widget.tournamentCard.endDate.split(":")[0]}",
+                            "EndDate: ${widget.tournamentCard.endDate.split(":")[0]}",
                             style: infoTournament,
                           ),
                         ],
