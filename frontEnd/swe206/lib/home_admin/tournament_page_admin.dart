@@ -128,6 +128,21 @@ class _TournamentPageAdminState extends State<TournamentPageAdmin> {
                           ),
                         ],
                       ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Visibility(
+                        visible: widget.tournamentCard.isFinished,
+                        child: Center(
+                          child: Text(
+                            "Winner is: ${widget.tournamentCard.winner}",
+                            style: h3,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
                       Visibility(
                         visible: !widget.tournamentCard.isOpen &
                             !widget.tournamentCard.isFinished,

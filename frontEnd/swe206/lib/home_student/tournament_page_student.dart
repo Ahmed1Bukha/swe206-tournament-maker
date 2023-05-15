@@ -176,7 +176,16 @@ class _TournamentPageState extends State<TournamentPage> {
                       ),
                     ),
                     SizedBox(
-                      height: 40,
+                      height: 60,
+                    ),
+                    Visibility(
+                      visible: widget.tournamentWidget.isFinished,
+                      child: Center(
+                        child: Text(
+                          "Winner is: ${widget.tournamentWidget.winner}",
+                          style: h3,
+                        ),
+                      ),
                     ),
                     Visibility(
                       visible: !isOpen,
