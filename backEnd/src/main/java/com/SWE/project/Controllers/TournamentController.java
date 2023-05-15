@@ -394,4 +394,14 @@ public class TournamentController {
     // for
     // return matchRepo.save(match);
     // }
+
+@PostMapping("/Tournaments/SendConfirmation/{tournamentId}/{Email}")
+void sendEmail(@PathVariable("tournamentId") Long id,@PathVariable("Email") String email){
+    Optional<Tournament> temp = tournamentRepo.findById(id);
+    temp.ifPresentOrElse(t -> {
+        Mail.sendMail(email, t);
+    }, () -> {
+        throw new TournamentNotFoundException(id);
+    });
+}
 }

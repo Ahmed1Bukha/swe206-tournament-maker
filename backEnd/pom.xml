@@ -17,6 +17,13 @@
 		<java.version>19</java.version>
 	</properties>
 	<dependencies>
+
+		<dependency>
+			<groupId>com.courier</groupId>
+			<artifactId>courier-java</artifactId>
+			<version>1.8.0</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.modelmapper</groupId>
 			<artifactId>modelmapper</artifactId>
@@ -56,5 +63,5 @@
 			</plugin>
 		</plugins>
 	</build>
-
+	
 </project>

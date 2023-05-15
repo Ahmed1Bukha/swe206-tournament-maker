@@ -18,6 +18,8 @@ public class Student extends Participant {
     private Set<Team> teams = new HashSet<Team>(); // Done
 
     @Column
+    public String email;
+    @Column
     public Long studentId;
 
     public Student() {
