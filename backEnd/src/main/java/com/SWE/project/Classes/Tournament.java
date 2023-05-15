@@ -44,7 +44,7 @@ public abstract class Tournament {
     @Column
     protected double timeBetweenStages; 
     @Column
-    protected String winner;
+    protected String winner="";
     @Column
     protected TOURNAMENT_TYPES tournamentType;
     int indexOfCurrent;
