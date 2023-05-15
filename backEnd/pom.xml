@@ -22,6 +22,7 @@
 			<groupId>com.courier</groupId>
 			<artifactId>courier-java</artifactId>
 			<version>1.8.0</version>
+			<scope>compile</scope>
 		</dependency>
 
 		<dependency>

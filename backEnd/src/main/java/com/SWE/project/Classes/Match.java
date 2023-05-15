@@ -181,7 +181,10 @@ public class Match {
                 matchparticipants[1].getName() + (finished ? " (" + scoreA + " - " + scoreB
                         + ")" : "");
     }
-
+    public String partString(){
+        if(dummyMatch) return matchparticipants[0]+" v "+"Dummy";
+        return matchparticipants[0]+" v "+matchparticipants[1];
+    }
     public boolean contains(Match other) {
         if (other.matchparticipants[0] == matchparticipants[0] ||
                 other.matchparticipants[1] == matchparticipants[1]

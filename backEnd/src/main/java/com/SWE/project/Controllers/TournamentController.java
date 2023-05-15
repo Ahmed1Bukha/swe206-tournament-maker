@@ -55,7 +55,21 @@ public class TournamentController {
         }
         return null;
     }
-
+    @GetMapping("/Tournaments/allCurrentMatches")
+    HashMap<String,String> allCurrentMatches() {
+        try {
+            List<Tournament> tournamens = tournamentRepo.findAll();
+            HashMap<String,String> matches= new HashMap<>();
+            for(Tournament i: tournamens){
+                tranform(i);
+                matches.put(i.getId()+"",i.getCurrentMatch().partString());
+            }
+            return matches;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
     // @GetMapping("/Tournaments/getMatches/{tournamentId}")
     // List<Match> getMatches(@PathVariable("tournamentId") Long id) {
     // Tournament t = tournamentRepo.findById(id).orElseThrow(() -> new
