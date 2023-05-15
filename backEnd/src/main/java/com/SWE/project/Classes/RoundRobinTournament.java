@@ -135,10 +135,18 @@ public class RoundRobinTournament extends Tournament {
     @Override
     public void enterResults(int winnerScore, int loserScore) {
         currentMatch.enterResults(winnerScore, loserScore);
+        if(winnerScore!=loserScore){
+            currentMatch.decideWinner().win(winnerScore, loserScore);
+            currentMatch.decideLoser().lost(loserScore, winnerScore);
+        }
+        else{
+            Participant[] parray =currentMatch.getMatchparticipants();
+            for(Participant i: parray){
+                i.draw(winnerScore, loserScore);
+            }
+        }
         int index = tournamentMatches.indexOf(currentMatch);
-        currentMatch.decideWinner().win(winnerScore, loserScore);
 
-        currentMatch.decideLoser().lost(loserScore, winnerScore);
         if (!(index == tournamentMatches.size() - 1))
             currentMatch = tournamentMatches.get(index + 1);
         else
@@ -174,7 +182,15 @@ public class RoundRobinTournament extends Tournament {
     public Participant findWinner() {
         Comparator<Participant> poinComparator = new Comparator<Participant>() {
             public int compare(Participant a, Participant b) {
-                return a.getPoints() - b.getPoints();
+                if(a.getPoints()!=b.getPoints()){
+                    return a.getPoints() - b.getPoints();
+                }
+                else{
+                    if(a.getGoalsMade()!=b.getGoalsMade()){
+                        return a.getGoalsMade()-b.getGoalsMade();
+                    }
+                    return 1;
+                }
             }
 
         };
