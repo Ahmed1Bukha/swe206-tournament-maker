@@ -145,7 +145,7 @@ class Requests {
       //Add a snack bar that he registered
       var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
       print(emailStudent.toString());
-      await sendEmail(["xxbu7aamedxx@gmail.com"], tournamentID);
+      await sendEmail([emailStudent.toString()], tournamentID);
       return "done";
     } else if (response.statusCode == 404) {
       return "registered";
@@ -367,8 +367,7 @@ class Requests {
     for (int i = 0; i < emails.length; i++) {
       print(tournamentIDS);
       var res = await postRequest(
-          "Tournaments/SendConfirmation/${tournamentIDS}/rayankingdom1111@gmail.com",
-          {});
+          "Tournaments/SendConfirmation/${tournamentIDS}/${emails[i]}", {});
       print(res);
     }
   }
