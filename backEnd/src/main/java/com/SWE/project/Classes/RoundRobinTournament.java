@@ -76,7 +76,7 @@ public class RoundRobinTournament extends Tournament {
             Participant b = (Student) array.get((specialIndex));
 
             if (b == null)
-                tournamentMatches.add(new Match(new Participant[] { firstTeam }, true));
+                tournamentMatches.add(new Match(new Participant[] { firstTeam,null }, true));
             else
                 tournamentMatches
                         .add(new Match(new Participant[] {
@@ -114,11 +114,14 @@ public class RoundRobinTournament extends Tournament {
             numberOfMatchesPerRound = participants.size() / 2;
 
         }
+        int counter=0;
         for (int i = 0; i < numberOfRounds; i++) {
             temp.add(new ArrayList<Match>());
+
             for (int j = 0; j < numberOfMatchesPerRound; j++) {
-                temp.get(i).add(tournamentMatches.get(j));
+                temp.get(i).add(tournamentMatches.get(j+counter));
             }
+            counter+=numberOfMatchesPerRound;
         }
         return temp;
     }
