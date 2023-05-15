@@ -123,7 +123,8 @@ class Requests {
             tournamentsJson[i]['startDate'],
             tournamentsJson[i]['endDate'],
             tournamentsJson[i]['studentsPerTeam'],
-            tournamentsJson[i]['winner']),
+            tournamentsJson[i]['winner'],
+            tournamentsJson[i]['finished']),
       );
     }
     return tournaments;
