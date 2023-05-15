@@ -61,14 +61,19 @@ public class TournamentController {
         return null;
     }
     @GetMapping("/Tournaments/allCurrentMatches")
-    HashMap<String,String> allCurrentMatches() {
+    List<List<String>>  allCurrentMatches() {
         try {
             List<Tournament> tournamens = tournamentRepo.findAll();
-            HashMap<String,String> matches= new HashMap<>();
+            List<List<String>> matches= new ArrayList<>();
             for(Tournament i: tournamens){
                 if(!i.isOpen()){
                 tranform(i);
-                matches.put(i.getId()+"",i.getCurrentMatch().partString());}    
+                List<String> temp= new ArrayList<>();
+                temp.add(i.getName());
+                temp.add(i.getId()+"");
+                temp.addAll(i.getCurrentMatch().partString());
+
+                matches.add(temp); 
             }
             return matches;
         } catch (Exception e) {

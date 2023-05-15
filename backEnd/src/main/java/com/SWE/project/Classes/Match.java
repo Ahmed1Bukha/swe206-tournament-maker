@@ -4,6 +4,7 @@ import java.sql.Date;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -181,9 +182,15 @@ public class Match {
                 matchparticipants[1].getName() + (finished ? " (" + scoreA + " - " + scoreB
                         + ")" : "");
     }
-    public String partString(){
-        if(dummyMatch) return matchparticipants[0].name+" v "+"Dummy";
-        return matchparticipants[0].name+" v "+matchparticipants[1];
+    public ArrayList<String> partString(){
+        ArrayList<String> retList= new ArrayList<>();
+        if(dummyMatch) {
+        retList.add(matchparticipants[0].name);
+        retList.add("Dummy");
+        return retList;}
+        retList.add(matchparticipants[0].name);
+        retList.add(matchparticipants[1].name);
+        return retList;
     }
     public boolean contains(Match other) {
         if (other.matchparticipants[0] == matchparticipants[0] ||
