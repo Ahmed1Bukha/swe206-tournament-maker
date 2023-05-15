@@ -150,7 +150,8 @@ public class RoundRobinTournament extends Tournament {
                 finished = true;
         }
         if(finished){
-            winner=findWinner();
+            winner=findWinner().getName();
+            findWinner().addWonTournament(this);
         }
     }
 

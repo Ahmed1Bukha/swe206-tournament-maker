@@ -158,7 +158,8 @@ public class EliminationTournament extends Tournament {
 
     public Participant winner() {
         if (finished) {
-            winner= currentPlayers.get(0);
+            winner= currentPlayers.get(0).getName();
+            currentPlayers.get(0).addTournament(this);
             return currentPlayers.get(0);
         }
         throw new IllegalAccessError("Unfinished tournament");

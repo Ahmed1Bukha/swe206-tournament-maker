@@ -50,6 +50,13 @@ public abstract class Participant {
             "remainingMatchesInRound" })
     protected Set<Tournament> tournaments = new HashSet<Tournament>();
 
+    
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "participants", targetEntity = com.SWE.project.Classes.Tournament.class)
+    @JsonIgnoreProperties({ "type", "startDate", "endDate", "timeBetweenStages", "tournamentType", "participants",
+            "currentMatch", "open", "finished", "tournamentMatches", "allRounds", "currentPlayers",
+            "remainingMatchesInRound" })
+    protected Set<Tournament> wTournaments = new HashSet<Tournament>();
+
     // @Transient
     // @OneToMany(mappedBy = "match_participants")
     // @JsonIgnoreProperties({ "match_participants", "tournament", "endDate" })
@@ -57,7 +64,7 @@ public abstract class Participant {
 
     public Participant() {
     }
-
+    abstract void addWonTournament(Tournament tournament);
     abstract void addTournament(Tournament tournament);
 
     abstract void win(int GoalsMade, int goalsRecieved);

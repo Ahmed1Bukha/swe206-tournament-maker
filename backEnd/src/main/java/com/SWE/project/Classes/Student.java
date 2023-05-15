@@ -16,7 +16,7 @@ public class Student extends Participant {
     @ManyToMany(mappedBy = "team_members")
     @JsonIgnoreProperties({ "team_members" })
     private Set<Team> teams = new HashSet<Team>(); // Done
-
+    
     @Column
     public String email;
     @Column
@@ -84,7 +84,10 @@ public class Student extends Participant {
                 && points == student.points && id == student.id && Objects.equals(name,
                         student.name);
     }
-
+    @Override
+    void addWonTournament(Tournament tournament) {
+        wTournaments.add(tournament);
+    }
     @Override
     public int hashCode() {
         return 31 * super.hashCode() + Objects.hash(goalsMade, goalsRecieved, wins, points, id, name);

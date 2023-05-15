@@ -37,7 +37,12 @@ public class Team extends Participant {
         this.goalsRecieved += goalsRecieved;
         wins++;
     }
-
+    @Override
+    void addWonTournament(Tournament tournament) {
+        for(Student i: team_members ){
+            i.addWonTournament(tournament);
+        }
+    }
     @Override
     public void lost(int goalsMade, int goalsRecieved) {
         this.goalsMade += goalsMade;

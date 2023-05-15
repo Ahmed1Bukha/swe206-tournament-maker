@@ -43,8 +43,8 @@ public abstract class Tournament {
 
     @Column
     protected double timeBetweenStages; 
-    @OneToOne
-    protected Participant winner;
+    @Column
+    protected String winner;
     @Column
     protected TOURNAMENT_TYPES tournamentType;
     int indexOfCurrent;
@@ -73,11 +73,11 @@ public abstract class Tournament {
 
     @Column
     int studentsPerTeam = 1;
-    public Participant getWinner(){
+    public String getWinner(){
         return winner;
     }
 
-    public void setWinner(Participant winner){
+    public void setWinner(String winner){
         this.winner=winner;
     }
     public ArrayList<String> generatedMatches = new ArrayList<>();
