@@ -223,7 +223,9 @@ class _CreateEleminationPageState extends State<CreateEleminationPage> {
                                   _character.toString().split(".")[1],
                                   numberOfMembers,
                                   dropdownvalue);
-                              print(res);
+                              print(fromUntilDate.startDate
+                                  .toString()
+                                  .split(" ")[0]);
                               ScaffoldMessenger.of(context).clearSnackBars();
                               if (res == "done") {
                                 ScaffoldMessenger.of(context).showSnackBar(

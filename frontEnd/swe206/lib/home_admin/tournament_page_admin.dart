@@ -19,6 +19,7 @@ class _TournamentPageAdminState extends State<TournamentPageAdmin> {
   bool isModifiyable = true;
   bool enterMatchScore = false;
   dynamic graph;
+  dynamic roundTable = Text("");
   getGraph() async {
     setState(() {
       isLoading = true;
@@ -31,6 +32,7 @@ class _TournamentPageAdminState extends State<TournamentPageAdmin> {
             "RoundRobinTournament" &&
         !widget.tournamentCard.isOpen) {
       graph = await visual.getRoundRobin(widget.tournamentCard.id);
+      roundTable = await visual.getRoundRobinTable(widget.tournamentCard.id);
     } else {
       graph = Text("Error");
     }
@@ -109,7 +111,7 @@ class _TournamentPageAdminState extends State<TournamentPageAdmin> {
                             height: 10,
                           ),
                           Text(
-                            "Status: ${widget.tournamentCard.status}",
+                            "Status: ${widget.tournamentCard.status == "false" ? "closed" : "open"}",
                             style: infoTournament,
                           ),
                           SizedBox(
@@ -184,6 +186,11 @@ class _TournamentPageAdminState extends State<TournamentPageAdmin> {
                           ],
                         ),
                       ),
+                      Visibility(
+                          // visible: widget.tournamentCard.timeBetween ==
+                          //         "RoundRobinTournament" &&
+                          //     !isOpen,
+                          child: roundTable)
                     ],
                   ),
                 ),

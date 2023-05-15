@@ -62,6 +62,16 @@ class VisualsTournament {
     print("roubin");
     return JsonTable(columns: headers, json);
   }
+
+  getRoundRobinTable(int tournamentID) async {
+    var json = await Requests.getRoundRobinJsonTable(tournamentID);
+    print(json);
+    List<JsonTableColumn> headers = [
+      JsonTableColumn("Participant", label: "Participant"),
+      JsonTableColumn("Score", label: "Score")
+    ];
+    return JsonTable(columns: headers, json);
+  }
 }
 
 Widget rectangleWidget(String title) {

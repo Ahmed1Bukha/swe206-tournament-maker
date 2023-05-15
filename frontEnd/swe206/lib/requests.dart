@@ -333,6 +333,13 @@ class Requests {
     return matchJson;
   }
 
+  static dynamic getRoundRobinJsonTable(int id) async {
+    var matchJson = await getRequest(
+        "EliminationTournaments/leaderBoard/${id}"); //TODO Fix the thing
+
+    return matchJson;
+  }
+
   static dynamic enterResult(int id, int scoreA, int scoreB) async {
     Map<String, dynamic> body = {};
     var res = await postRequest(
