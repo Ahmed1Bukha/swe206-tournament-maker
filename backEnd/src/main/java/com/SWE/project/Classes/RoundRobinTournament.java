@@ -41,8 +41,8 @@ public class RoundRobinTournament extends Tournament {
     public RoundRobinTournament(String name, int participantCount, int studentsPerTeam, int[] startDate, int[] endDate,
             double timeBetweenStages,
             String tournamentType, String sport) {
-        super(name, participantCount, studentsPerTeam, new Date(startDate[2], startDate[1], startDate[0]),
-                new Date(endDate[2], endDate[1], endDate[0]), timeBetweenStages,
+        super(name, participantCount, studentsPerTeam, new Date(startDate[0], startDate[1], startDate[2]),
+                new Date(endDate[0], endDate[1], endDate[2]), timeBetweenStages,
                 tournamentType.equals("INDIVIDUAL") ? TOURNAMENT_TYPES.INDIVIDUAL : TOURNAMENT_TYPES.TEAM_BASED, sport);
     }
 
@@ -76,7 +76,7 @@ public class RoundRobinTournament extends Tournament {
             Participant b = (Student) array.get((specialIndex));
 
             if (b == null)
-                tournamentMatches.add(new Match(new Participant[] { firstTeam,null }, true));
+                tournamentMatches.add(new Match(new Participant[] { firstTeam, null }, true));
             else
                 tournamentMatches
                         .add(new Match(new Participant[] {
@@ -114,14 +114,14 @@ public class RoundRobinTournament extends Tournament {
             numberOfMatchesPerRound = participants.size() / 2;
 
         }
-        int counter=0;
+        int counter = 0;
         for (int i = 0; i < numberOfRounds; i++) {
             temp.add(new ArrayList<Match>());
 
             for (int j = 0; j < numberOfMatchesPerRound; j++) {
-                temp.get(i).add(tournamentMatches.get(j+counter));
+                temp.get(i).add(tournamentMatches.get(j + counter));
             }
-            counter+=numberOfMatchesPerRound;
+            counter += numberOfMatchesPerRound;
         }
         return temp;
     }
@@ -135,13 +135,12 @@ public class RoundRobinTournament extends Tournament {
     @Override
     public void enterResults(int winnerScore, int loserScore) {
         currentMatch.enterResults(winnerScore, loserScore);
-        if(winnerScore!=loserScore){
+        if (winnerScore != loserScore) {
             currentMatch.decideWinner().win(winnerScore, loserScore);
             currentMatch.decideLoser().lost(loserScore, winnerScore);
-        }
-        else{
-            Participant[] parray =currentMatch.getMatchparticipants();
-            for(Participant i: parray){
+        } else {
+            Participant[] parray = currentMatch.getMatchparticipants();
+            for (Participant i : parray) {
                 i.draw(winnerScore, loserScore);
             }
         }
@@ -157,8 +156,8 @@ public class RoundRobinTournament extends Tournament {
             else
                 finished = true;
         }
-        if(finished){
-            winner=findWinner().getName();
+        if (finished) {
+            winner = findWinner().getName();
             findWinner().addWonTournament(this);
         }
     }
@@ -182,12 +181,11 @@ public class RoundRobinTournament extends Tournament {
     public Participant findWinner() {
         Comparator<Participant> poinComparator = new Comparator<Participant>() {
             public int compare(Participant a, Participant b) {
-                if(a.getPoints()!=b.getPoints()){
+                if (a.getPoints() != b.getPoints()) {
                     return a.getPoints() - b.getPoints();
-                }
-                else{
-                    if(a.getGoalsMade()!=b.getGoalsMade()){
-                        return a.getGoalsMade()-b.getGoalsMade();
+                } else {
+                    if (a.getGoalsMade() != b.getGoalsMade()) {
+                        return a.getGoalsMade() - b.getGoalsMade();
                     }
                     return 1;
                 }

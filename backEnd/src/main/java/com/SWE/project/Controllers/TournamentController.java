@@ -60,21 +60,23 @@ public class TournamentController {
         }
         return null;
     }
+
     @GetMapping("/Tournaments/allCurrentMatches")
-    List<List<String>>  allCurrentMatches() {
+    List<List<String>> allCurrentMatches() {
         try {
             List<Tournament> tournamens = tournamentRepo.findAll();
-            List<List<String>> matches= new ArrayList<>();
-            for(Tournament i: tournamens){
-                if(!i.isOpen()&&!i.isFinished()){
-                tranform(i);
-                List<String> temp= new ArrayList<>();
-                temp.add(i.getName());
-                temp.add(i.getId()+"");
-                temp.addAll(i.getCurrentMatch().partString());
+            List<List<String>> matches = new ArrayList<>();
+            for (Tournament i : tournamens) {
+                if (!i.isOpen() && !i.isFinished()) {
+                    tranform(i);
+                    List<String> temp = new ArrayList<>();
+                    temp.add(i.getName());
+                    temp.add(i.getId() + "");
+                    temp.addAll(i.getCurrentMatch().partString());
 
-                matches.add(temp); 
-            }}
+                    matches.add(temp);
+                }
+            }
             return matches;
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -99,18 +101,19 @@ public class TournamentController {
     // return t.getTournamentMatches();
     // }
     @GetMapping("/EliminationTournaments/leaderBoard/{tournamentId}")
-    List<HashMap<String,String>> leaderBord(@PathVariable("tournamentId") long id)
+    List<HashMap<String, String>> leaderBord(@PathVariable("tournamentId") long id)
             throws TournamentNotFoundException {
-                List<HashMap<String,String>> retList= new ArrayList<>();
-               Set<Participant> t= tournamentRepo.findById(id).orElseThrow(() -> new TournamentNotFoundException(id)).getParticipants();
-               for(Participant i: t){
-                    HashMap<String,String> retMap= new HashMap<>();
-                    retMap.put("Participant", i.getName());
-                    retMap.put("Score", i.getPoints()+"");
-                    retList.add(retMap);
-                    retMap=null;
-               }
-               return retList;
+        List<HashMap<String, String>> retList = new ArrayList<>();
+        Set<Participant> t = tournamentRepo.findById(id).orElseThrow(() -> new TournamentNotFoundException(id))
+                .getParticipants();
+        for (Participant i : t) {
+            HashMap<String, String> retMap = new HashMap<>();
+            retMap.put("Participant", i.getName());
+            retMap.put("Score", i.getPoints() + "");
+            retList.add(retMap);
+            retMap = null;
+        }
+        return retList;
     }
 
     @GetMapping("/Tournaments/getParticipants/{tournamentId}")
@@ -126,10 +129,10 @@ public class TournamentController {
         int studentsPerTeam = (int) body.get("studentsPerTeam");
         String[] s = ((String) body.get("startDate")).split("-");
         int[] startDate = new int[] { Integer.parseInt(s[0]) - 1900, Integer.parseInt(s[1]) - 1,
-                Integer.parseInt(s[2]) - 1 };
+                Integer.parseInt(s[2]) + 1 };
         s = ((String) body.get("endDate")).split("-");
         int[] endDate = new int[] { Integer.parseInt(s[0]) - 1900, Integer.parseInt(s[1]) - 1,
-                Integer.parseInt(s[2]) - 1 };
+                Integer.parseInt(s[2]) + 1 };
         double timeBetweenStages = (double) body.get("timeBetweenStages");
         String tournamentType = (String) body.get("tournamentType");
         String sport = (String) body.get("sport");
@@ -145,15 +148,17 @@ public class TournamentController {
         int studentsPerTeam = (int) body.get("studentsPerTeam");
         String[] s = ((String) body.get("startDate")).split("-");
         int[] startDate = new int[] { Integer.parseInt(s[0]) - 1900, Integer.parseInt(s[1]) - 1,
-                Integer.parseInt(s[2]) - 1 };
+                Integer.parseInt(s[2]) + 1 };
         s = ((String) body.get("endDate")).split("-");
         int[] endDate = new int[] { Integer.parseInt(s[0]) - 1900, Integer.parseInt(s[1]) - 1,
-                Integer.parseInt(s[2]) - 1 };
+                Integer.parseInt(s[2]) + 1 };
         double timeBetweenStages = (double) body.get("timeBetweenStages");
         String tournamentType = (String) body.get("tournamentType");
         String sport = (String) body.get("sport");
         EliminationTournament newTournament = new EliminationTournament(name, participantCount, studentsPerTeam,
                 startDate, endDate, timeBetweenStages, tournamentType, sport);
+
+        System.out.println(newTournament.getStartDate());
         return tournamentRepo.save(newTournament);
     }
 
@@ -162,22 +167,25 @@ public class TournamentController {
         Tournament t = tournamentRepo.findById(id).orElseThrow(() -> new TournamentNotFoundException(id));
 
     }
+
     @PostMapping("/Tournaments/EnterResults/{tournamentId}/{scoreA}/{scoreB}")
-    void enterResults(@PathVariable("tournamentId") Long id,@PathVariable("scoreA") int scoreA,@PathVariable("scoreB") int scoreB){
-        Tournament t =  tournamentRepo.findById(id)
-        .orElseThrow(() -> new TournamentNotFoundException(id));
+    void enterResults(@PathVariable("tournamentId") Long id, @PathVariable("scoreA") int scoreA,
+            @PathVariable("scoreB") int scoreB) {
+        Tournament t = tournamentRepo.findById(id)
+                .orElseThrow(() -> new TournamentNotFoundException(id));
         tranform(t);
         t.enterResults(scoreA, scoreB);
         t.storeMatches();
-                
+
         t.getTournamentMatches().clear();
         t.setCurrentMatch(null);
         // tt.getAllRounds().clear();
         tournamentRepo.save(t);
 
     }
+
     @GetMapping("/RoundRobinTournaments/getMatches/{tournamentId}")
-    List<Map<String,String>> roundRobinJsonFormat(@PathVariable("tournamentId") Long id) {
+    List<Map<String, String>> roundRobinJsonFormat(@PathVariable("tournamentId") Long id) {
         RoundRobinTournament t = (RoundRobinTournament) tournamentRepo.findById(id)
                 .orElseThrow(() -> new TournamentNotFoundException(id));
 
@@ -185,44 +193,45 @@ public class TournamentController {
         ArrayList<ArrayList<Match>> rounds = t.generateRounds();
         if (t.getOpen())
             throw new TournamentRegistrationStillOpenException(id);
-            List<Map<String,String>> result = new ArrayList<Map<String,String>>();
-        
-        for(int i=0;i<rounds.get(0).size();i++){
-            HashMap<String,String> temp= new HashMap<>();
-            int counter=1;
-            for(ArrayList<Match> j: rounds){
-               temp.put("Round "+counter, j.get(i).toString());
+        List<Map<String, String>> result = new ArrayList<Map<String, String>>();
+
+        for (int i = 0; i < rounds.get(0).size(); i++) {
+            HashMap<String, String> temp = new HashMap<>();
+            int counter = 1;
+            for (ArrayList<Match> j : rounds) {
+                temp.put("Round " + counter, j.get(i).toString());
                 counter++;
             }
             result.add(temp);
-            temp=null;
+            temp = null;
         }
         // int roundCount = t.getParticipants().size() - 1;
         // int matchesPerRound = t.getParticipants().size() / 2;
 
-
         // List<String> x;
         // for (int i = 1; i <= matchesPerRound; i++) {
-        //     x = new ArrayList<String>();
-        //     for (int j = 0; j < roundCount; j++) {
-        //         x.add(t.getTournamentMatches().get((i - 1) * roundCount + j).toString());
-        //     }
-        //     result.put("Round " + i, x);
+        // x = new ArrayList<String>();
+        // for (int j = 0; j < roundCount; j++) {
+        // x.add(t.getTournamentMatches().get((i - 1) * roundCount + j).toString());
+        // }
+        // result.put("Round " + i, x);
         // }
 
         return result;
     }
+
     @GetMapping("/Tournaments/getCurrentMatch/{tournamentId}")
-    Map<String,String> currentMatchNames(@PathVariable("tournamentId") Long id){
-        Tournament t =  tournamentRepo.findById(id)
-        .orElseThrow(() -> new TournamentNotFoundException(id));
+    Map<String, String> currentMatchNames(@PathVariable("tournamentId") Long id) {
+        Tournament t = tournamentRepo.findById(id)
+                .orElseThrow(() -> new TournamentNotFoundException(id));
         tranform(t);
-        Map<String,String> retMap = new HashMap<>();
+        Map<String, String> retMap = new HashMap<>();
         retMap.put("ParticepentA", t.getCurrentMatch().getMatchparticipants()[0].getName());
         retMap.put("ParticepentB", t.getCurrentMatch().getMatchparticipants()[1].getName());
         return retMap;
-       
+
     }
+
     @GetMapping("/EliminationTournaments/getMatches/{tournamentId}")
     Map<String, List<Map>> elimMatchesJsonFormat(@PathVariable("tournamentId") Long id) {
         EliminationTournament t = (EliminationTournament) tournamentRepo.findById(id)
@@ -435,34 +444,34 @@ public class TournamentController {
     // return matchRepo.save(match);
     // }
 
-@PostMapping("/Tournaments/SendConfirmation/{tournamentId}/{Email}")
-void sendEmail(@PathVariable("tournamentId") Long id,@PathVariable("Email") String email){
-    Optional<Tournament> temp = tournamentRepo.findById(id);
-    temp.ifPresentOrElse(t -> {
-        Courier.init("pk_prod_54B8G219FE4XQ5G7685VZXWJ77QN");
+    @PostMapping("/Tournaments/SendConfirmation/{tournamentId}/{Email}")
+    void sendEmail(@PathVariable("tournamentId") Long id, @PathVariable("Email") String email) {
+        Optional<Tournament> temp = tournamentRepo.findById(id);
+        temp.ifPresentOrElse(t -> {
+            Courier.init("pk_prod_54B8G219FE4XQ5G7685VZXWJ77QN");
 
-    SendEnhancedRequestBody request = new SendEnhancedRequestBody();
-    SendRequestMessage message = new SendRequestMessage();
+            SendEnhancedRequestBody request = new SendEnhancedRequestBody();
+            SendRequestMessage message = new SendRequestMessage();
 
-    HashMap<String, String> to = new HashMap<String, String>();
-    to.put("email", email);
-    message.setTo(to);
-    message.setTemplate("GC78WFH3AKMG74P0CWXJ9AQ7GT51");
+            HashMap<String, String> to = new HashMap<String, String>();
+            to.put("email", email);
+            message.setTo(to);
+            message.setTemplate("GC78WFH3AKMG74P0CWXJ9AQ7GT51");
 
-    HashMap<String, Object> data = new HashMap<String, Object>();
-    data.put("tournamentName", t.getName());
-    message.setData(data);
+            HashMap<String, Object> data = new HashMap<String, Object>();
+            data.put("tournamentName", t.getName());
+            message.setData(data);
 
-    request.setMessage(message);
-    try {
-        SendEnhancedResponseBody response = new SendService().sendEnhancedMessage(request);
-        System.out.println(response);
-    } catch (IOException e) {
-        System.out.println("e");
-        e.printStackTrace();
+            request.setMessage(message);
+            try {
+                SendEnhancedResponseBody response = new SendService().sendEnhancedMessage(request);
+                System.out.println(response);
+            } catch (IOException e) {
+                System.out.println("e");
+                e.printStackTrace();
+            }
+        }, () -> {
+            throw new TournamentNotFoundException(id);
+        });
     }
-    }, () -> {
-        throw new TournamentNotFoundException(id);
-    });
-}
 }

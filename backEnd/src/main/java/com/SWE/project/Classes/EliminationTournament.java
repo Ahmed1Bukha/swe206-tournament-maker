@@ -45,8 +45,8 @@ public class EliminationTournament extends Tournament {
             int[] endDate,
             double timeBetweenStages,
             String tournamentType, String sport) {
-        super(name, participantCount, studentsPerTeam, new Date(startDate[2], startDate[1], startDate[0]),
-                new Date(endDate[2], endDate[1], endDate[0]), timeBetweenStages,
+        super(name, participantCount, studentsPerTeam, new Date(startDate[0], startDate[1], startDate[2]),
+                new Date(endDate[0], endDate[1], endDate[2]), timeBetweenStages,
                 tournamentType.equals("INDIVIDUAL") ? TOURNAMENT_TYPES.INDIVIDUAL : TOURNAMENT_TYPES.TEAM_BASED, sport);
     }
 
@@ -122,7 +122,6 @@ public class EliminationTournament extends Tournament {
         currentPlayers.addAll(participants);
     }
 
-    
     @Override
     public void enterResults(int firstScore, int secondScore) {
 
@@ -151,14 +150,14 @@ public class EliminationTournament extends Tournament {
             currentMatch = tournamentMatches.get(0);
             remainingMatchesInRound--;
         }
-        if(finished){
+        if (finished) {
             winner();
         }
     }
 
     public Participant winner() {
         if (finished) {
-            winner= currentPlayers.get(0).getName();
+            winner = currentPlayers.get(0).getName();
             currentPlayers.get(0).addTournament(this);
             return currentPlayers.get(0);
         }
