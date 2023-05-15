@@ -136,13 +136,13 @@ public class RoundRobinTournament extends Tournament {
     public void enterResults(int winnerScore, int loserScore) {
         currentMatch.enterResults(winnerScore, loserScore);
         if(winnerScore!=loserScore){
-            currentMatch.decideWinner().win(winnerScore, loserScore,this.getId()+"");
+            currentMatch.decideWinner().win(winnerScore, loserScore);
             currentMatch.decideLoser().lost(loserScore, winnerScore);
         }
         else{
             Participant[] parray =currentMatch.getMatchparticipants();
             for(Participant i: parray){
-                i.draw(winnerScore, loserScore,this.getId()+"");
+                i.draw(winnerScore, loserScore);
             }
         }
         int index = tournamentMatches.indexOf(currentMatch);
@@ -158,8 +158,8 @@ public class RoundRobinTournament extends Tournament {
                 finished = true;
         }
         if(finished){
-            winner=findWinner(this.getId()+"").getName();
-            findWinner(this.getId()+"").addWonTournament(this);
+            winner=findWinner().getName();
+            findWinner().addWonTournament(this);
         }
     }
 
@@ -179,11 +179,11 @@ public class RoundRobinTournament extends Tournament {
         }
     }
 
-    public Participant findWinner(String tournamentId) {
+    public Participant findWinner() {
         Comparator<Participant> poinComparator = new Comparator<Participant>() {
             public int compare(Participant a, Participant b) {
-                if(a.getPoints(tournamentId)!=b.getPoints(tournamentId)){
-                    return a.getPoints(tournamentId) - b.getPoints(tournamentId);
+                if(a.getPoints()!=b.getPoints()){
+                    return a.getPoints() - b.getPoints();
                 }
                 else{
                     if(a.getGoalsMade()!=b.getGoalsMade()){
@@ -199,10 +199,10 @@ public class RoundRobinTournament extends Tournament {
         return array.get(array.size() - 1);
     }
 
-    public ArrayList<Participant> findLeaderBoard(String tournamentId) {
+    public ArrayList<Participant> findLeaderBoard() {
         Comparator<Participant> poinComparator = new Comparator<Participant>() {
             public int compare(Participant a, Participant b) {
-                return a.getPoints(tournamentId) - b.getPoints(tournamentId);
+                return a.getPoints() - b.getPoints();
             }
         };
         ArrayList<Participant> array = new ArrayList<>(participants);

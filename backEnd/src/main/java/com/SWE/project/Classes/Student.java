@@ -31,13 +31,8 @@ public class Student extends Participant {
     }
 
     @Override
-    public void win(int goalsMade, int goalsRecieved,String tournamentId) {
-        if(points.keySet().contains(tournamentId)){
-            points.put(tournamentId, points.get(tournamentId)+1);
-        }
-        else{
-            points.put(tournamentId, 1);
-        }
+    public void win(int goalsMade, int goalsRecieved) {
+        points += 3;
         this.goalsMade += goalsMade;
         this.goalsRecieved += goalsRecieved;
         wins++;
@@ -50,15 +45,10 @@ public class Student extends Participant {
     }
 
     @Override
-    public void draw(int GoalsMade, int goalsRecieved,String tournamentId) {
+    public void draw(int GoalsMade, int goalsRecieved) {
         this.goalsMade += goalsMade;
         this.goalsRecieved += goalsRecieved;
-        if(points.keySet().contains(tournamentId)){
-            points.put(tournamentId, points.get(tournamentId)+1);
-        }
-        else{
-            points.put(tournamentId, 1);
-        }
+        points += 1;
     }
 
     @Override

@@ -106,7 +106,7 @@ public class TournamentController {
                for(Participant i: t){
                     HashMap<String,String> retMap= new HashMap<>();
                     retMap.put("Participant", i.getName());
-                    retMap.put("Score", i.getPoints(id+"")+"");
+                    retMap.put("Score", i.getPoints()+"");
                     retList.add(retMap);
                     retMap=null;
                }

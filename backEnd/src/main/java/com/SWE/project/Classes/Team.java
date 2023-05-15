@@ -31,18 +31,12 @@ public class Team extends Participant {
     }
 
     @Override
-    public void win(int goalsMade, int goalsRecieved,String tournamentId) {
-        if(points.keySet().contains(tournamentId)){
-            points.put(tournamentId, points.get(tournamentId)+1);
-        }
-        else{
-            points.put(tournamentId, 1);
-        }
+    public void win(int goalsMade, int goalsRecieved) {
+        points += 3;
         this.goalsMade += goalsMade;
         this.goalsRecieved += goalsRecieved;
         wins++;
     }
-
     @Override
     void addWonTournament(Tournament tournament) {
         for(Student i: team_members ){
@@ -56,16 +50,13 @@ public class Team extends Participant {
     }
 
     @Override
-    public void draw(int GoalsMade, int goalsRecieved,String tournamentId) {
+    public void draw(int GoalsMade, int goalsRecieved) {
         this.goalsMade += goalsMade;
         this.goalsRecieved += goalsRecieved;
-        if(points.keySet().contains(tournamentId)){
-            points.put(tournamentId, points.get(tournamentId)+1);
-        }
-        else{
-            points.put(tournamentId, 1);}
-        }
-    
+        points += 1;
+
+    }
+
     @Override
     public void addTournament(Tournament tournament) {
         this.tournaments = new HashSet<Tournament>(Arrays.asList(tournament));
