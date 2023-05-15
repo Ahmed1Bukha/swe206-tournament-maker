@@ -81,6 +81,7 @@ public class TournamentController {
         }
         return null;
     }
+
     // @GetMapping("/Tournaments/getMatches/{tournamentId}")
     // List<Match> getMatches(@PathVariable("tournamentId") Long id) {
     // Tournament t = tournamentRepo.findById(id).orElseThrow(() -> new
@@ -97,6 +98,20 @@ public class TournamentController {
     // }
     // return t.getTournamentMatches();
     // }
+    @GetMapping("/EliminationTournaments/leaderBoard/{tournamentId}")
+    List<HashMap<String,String>> leaderBord(@PathVariable("tournamentId") long id)
+            throws TournamentNotFoundException {
+                List<HashMap<String,String>> retList= new ArrayList<>();
+               Set<Participant> t= tournamentRepo.findById(id).orElseThrow(() -> new TournamentNotFoundException(id)).getParticipants();
+               for(Participant i: t){
+                    HashMap<String,String> retMap= new HashMap<>();
+                    retMap.put("Participant", i.getName());
+                    retMap.put("Score", i.getPoints()+"");
+                    retList.add(retMap);
+                    retMap=null;
+               }
+               return retList;
+    }
 
     @GetMapping("/Tournaments/getParticipants/{tournamentId}")
     Set<Participant> getParticipants(@PathVariable("tournamentId") long id)
