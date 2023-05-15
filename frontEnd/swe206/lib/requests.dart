@@ -122,7 +122,8 @@ class Requests {
             tournamentsJson[i]['id'],
             tournamentsJson[i]['startDate'],
             tournamentsJson[i]['endDate'],
-            tournamentsJson[i]['studentsPerTeam'], []),
+            tournamentsJson[i]['studentsPerTeam'],
+            tournamentsJson[i]['winner']),
       );
     }
     return tournaments;
@@ -187,6 +188,7 @@ class Requests {
     var tournamentsJson = await getRequest("Tournaments");
     List<dynamic> tournaments = [];
     for (int i = 0; i < tournamentsJson.length; i++) {
+      print(tournamentsJson[i]);
       tournaments.add(
         TournamentCardAdmin(
           title: tournamentsJson[i]["name"],
@@ -202,7 +204,7 @@ class Requests {
           timeBetween: tournamentsJson[i]["timeBetweenStages"].round(),
           isOpen: tournamentsJson[i]["open"],
           isFinished: tournamentsJson[i]["finished"],
-          winner: [],
+          winner: tournamentsJson[i]["winner"],
         ),
       );
     }
