@@ -12,6 +12,11 @@ import com.SWE.project.Exceptions.*;
 import com.SWE.project.Repositories.*;
 
 import ch.qos.logback.core.net.SyslogOutputStream;
+import models.SendEnhancedRequestBody;
+import models.SendEnhancedResponseBody;
+import models.SendRequestMessage;
+import services.Courier;
+import services.SendService;
 
 @RestController
 public class TournamentController {
@@ -61,8 +66,9 @@ public class TournamentController {
             List<Tournament> tournamens = tournamentRepo.findAll();
             HashMap<String,String> matches= new HashMap<>();
             for(Tournament i: tournamens){
+                if(!i.isOpen()){
                 tranform(i);
-                matches.put(i.getId()+"",i.getCurrentMatch().partString());
+                matches.put(i.getId()+"",i.getCurrentMatch().partString());}    
             }
             return matches;
         } catch (Exception e) {
@@ -413,7 +419,28 @@ public class TournamentController {
 void sendEmail(@PathVariable("tournamentId") Long id,@PathVariable("Email") String email){
     Optional<Tournament> temp = tournamentRepo.findById(id);
     temp.ifPresentOrElse(t -> {
-        Mail.sendMail(email, t);
+        Courier.init("pk_prod_54B8G219FE4XQ5G7685VZXWJ77QN");
+
+    SendEnhancedRequestBody request = new SendEnhancedRequestBody();
+    SendRequestMessage message = new SendRequestMessage();
+
+    HashMap<String, String> to = new HashMap<String, String>();
+    to.put("email", email);
+    message.setTo(to);
+    message.setTemplate("GC78WFH3AKMG74P0CWXJ9AQ7GT51");
+
+    HashMap<String, Object> data = new HashMap<String, Object>();
+    data.put("tournamentName", t.getName());
+    message.setData(data);
+
+    request.setMessage(message);
+    try {
+        SendEnhancedResponseBody response = new SendService().sendEnhancedMessage(request);
+        System.out.println(response);
+    } catch (IOException e) {
+        System.out.println("e");
+        e.printStackTrace();
+    }
     }, () -> {
         throw new TournamentNotFoundException(id);
     });
