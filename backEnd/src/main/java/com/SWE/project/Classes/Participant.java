@@ -1,5 +1,6 @@
 package com.SWE.project.Classes;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,7 +39,7 @@ public abstract class Participant {
     protected Integer wins = 0;
 
     @Column
-    protected Integer points = 0;
+    protected HashMap<String,Integer> points = new HashMap<>();
 
     @Column
     protected String name;
@@ -67,9 +68,9 @@ public abstract class Participant {
     abstract void addWonTournament(Tournament tournament);
     abstract void addTournament(Tournament tournament);
 
-    abstract void win(int GoalsMade, int goalsRecieved);
+    abstract void win(int GoalsMade, int goalsRecieved,String tournamentId);
 
-    abstract void draw(int GoalsMade, int goalsRecieved);
+    abstract void draw(int GoalsMade, int goalsRecieved,String tournamentId);
 
     abstract void lost(int GoalsMade, int goalsRecieved);
 
@@ -117,11 +118,11 @@ public abstract class Participant {
         this.wins = wins;
     }
 
-    public int getPoints() {
-        return points;
+    public int getPoints(String TournamentId) {
+        return points.get(TournamentId);
     }
 
-    public void setPoints(int points) {
+    public void setPoints(HashMap<String,Integer> points) {
         this.points = points;
     }
 
@@ -162,7 +163,7 @@ public abstract class Participant {
                 ", goalsMade='" + getGoalsMade() + "'" +
                 ", goalsRecieved='" + getGoalsRecieved() + "'" +
                 ", wins='" + getWins() + "'" +
-                ", points='" + getPoints() + "'" +
+                ", points='" + points + "'" +
                 ", name='" + getName() + "'" +
                 "}";
     }
