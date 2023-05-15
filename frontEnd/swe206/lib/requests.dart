@@ -213,12 +213,14 @@ class Requests {
     var tournamentsJson = await getRequest("Tournaments/allCurrentMatches");
     List<MatchCardAdmin> matches = [];
     for (int i = 0; i < tournamentsJson.length; i++) {
-      matches.add(new MatchCardAdmin(
-          id: id,
-          participantA: participantA,
-          participantB: participantB,
-          tournamentName: tournamentName));
+      print(tournamentsJson);
+      matches.add(MatchCardAdmin(
+          id: int.parse(tournamentsJson[i][1]),
+          participantA: tournamentsJson[i][2],
+          participantB: tournamentsJson[i][3],
+          tournamentName: tournamentsJson[i][0]));
     }
+    return matches;
   }
 
   static addElemeniation(

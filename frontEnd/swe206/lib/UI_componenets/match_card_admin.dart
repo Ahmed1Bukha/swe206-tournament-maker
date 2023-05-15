@@ -67,6 +67,12 @@ class MatchCardAdmin extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
+                Center(
+                  child: Text(
+                    "${participantA} vs ${participantB}",
+                    style: h4,
+                  ),
+                )
               ],
             ),
           ),

@@ -31,27 +31,6 @@ class MatchPageAdmin extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
-          Center(
-            child: Text(
-              "${matchCardAdmin.scoreA}   ${matchCardAdmin.scoreB}",
-              style: h4,
-              textAlign: TextAlign.center,
-            ),
-          ),
-          Center(
-            child: Text(
-              "Game:${matchCardAdmin.game}",
-              style: h4,
-              textAlign: TextAlign.center,
-            ),
-          ),
-          Center(
-            child: Text(
-              "Date:${matchCardAdmin.date}",
-              style: h4,
-              textAlign: TextAlign.center,
-            ),
-          ),
           TextButton(
             onPressed: () {
               Navigator.pushReplacement(

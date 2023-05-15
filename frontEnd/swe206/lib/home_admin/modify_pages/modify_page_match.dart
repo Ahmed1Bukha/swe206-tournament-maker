@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:swe206/UI_componenets/const.dart';
 import 'package:swe206/UI_componenets/match_card_admin.dart';
+import 'package:swe206/requests.dart';
 
 class ModifyMatchPage extends StatefulWidget {
   const ModifyMatchPage(this.matchInfo, {super.key});
@@ -13,6 +14,8 @@ class ModifyMatchPage extends StatefulWidget {
 }
 
 class _ModifyMatchPageState extends State<ModifyMatchPage> {
+  TextEditingController myPartcipantA = new TextEditingController();
+  TextEditingController myPartcipantB = new TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,7 +53,9 @@ class _ModifyMatchPageState extends State<ModifyMatchPage> {
                     ),
                   ),
                   SizedBox(
-                    child: TextField(),
+                    child: TextField(
+                      controller: myPartcipantA,
+                    ),
                     width: 50,
                   )
                 ],
@@ -65,7 +70,9 @@ class _ModifyMatchPageState extends State<ModifyMatchPage> {
                     style: h4,
                   ),
                   SizedBox(
-                    child: TextField(),
+                    child: TextField(
+                      controller: myPartcipantB,
+                    ),
                     width: 50,
                   )
                 ],
@@ -76,8 +83,13 @@ class _ModifyMatchPageState extends State<ModifyMatchPage> {
             height: 50,
           ),
           ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
+                await Requests.enterResult(
+                    widget.matchInfo.id,
+                    int.parse(myPartcipantA.text),
+                    int.parse(myPartcipantB.text));
                 Navigator.pop(context);
+                SnackBar(content: Text("Done Entering"));
               },
               child: const Text("Submit"))
         ],

@@ -74,7 +74,7 @@ public class TournamentController {
                 temp.addAll(i.getCurrentMatch().partString());
 
                 matches.add(temp); 
-            }
+            }}
             return matches;
         } catch (Exception e) {
             System.out.println(e.getMessage());

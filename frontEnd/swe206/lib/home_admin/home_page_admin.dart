@@ -18,15 +18,13 @@ class HomePageAdmin extends StatefulWidget {
 class _HomePageAdminState extends State<HomePageAdmin> {
   bool isLoading = false;
   List<dynamic> tournamentsCard = [];
-  List<MatchCardAdmin> matchsCard = [];
+  List<dynamic> matchsCard = [];
   Future getTournaments() async {
     setState(() {
       isLoading = true;
     });
     tournamentsCard = await Requests.getTournamentsAdmin();
-    for (int i = 0; i < tournamentsCard.length; i++) {
-      // matchsCard.add(new MatchCardAdmin());
-    }
+    matchsCard = await Requests.getMatchesAdmin();
     setState(() {
       isLoading = false;
     });
@@ -56,17 +54,7 @@ class _HomePageAdminState extends State<HomePageAdmin> {
               child: ListView(
                 children: [
                   Text("Matches:", style: h2),
-                  new MatchCardAdmin(
-                      id: 2,
-                      participantA: "participantA",
-                      participantB: "participantB",
-                      game: "game",
-                      date: "13/13/2013",
-                      scoreA: 0,
-                      scoreB: 0,
-                      title: "Top G vs Bottom G",
-                      endDate: "13/13/20/13",
-                      finished: false),
+                  ...matchsCard,
                   Text("Tournaments:", style: h2),
                   ...tournamentsCard,
                 ],
