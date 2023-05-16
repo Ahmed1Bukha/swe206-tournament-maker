@@ -31,8 +31,9 @@ public class Student extends Participant {
     }
 
     @Override
-    public void win(int goalsMade, int goalsRecieved) {
-        points += 3;
+    public void win(int goalsMade, int goalsRecieved,Tournament tournament) {
+        int index= tournamentNameIndex.indexOf(tournament.id);
+        points.set(index, points.get(index)+3);
         this.goalsMade += goalsMade;
         this.goalsRecieved += goalsRecieved;
         wins++;
@@ -45,15 +46,18 @@ public class Student extends Participant {
     }
 
     @Override
-    public void draw(int GoalsMade, int goalsRecieved) {
+    public void draw(int GoalsMade, int goalsRecieved,Tournament tournament) {
         this.goalsMade += goalsMade;
         this.goalsRecieved += goalsRecieved;
-        points += 1;
+        int index= tournamentNameIndex.indexOf(tournament.id);
+        points.set(index, points.get(index)+1);
     }
 
     @Override
     public void addTournament(Tournament tournament) {
         this.tournaments.add(tournament);
+        this.tournamentNameIndex.add(tournament.id);
+        points.add(0);
     }
 
     public Set<Team> getTeams() {
