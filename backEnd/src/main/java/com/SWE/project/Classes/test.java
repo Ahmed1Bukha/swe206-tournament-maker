@@ -38,7 +38,7 @@ public class test {
         }
         System.out.println(g.getWinner());
         System.out.println(g.findLeaderBoard(g));
-        EliminationTournament t= new EliminationTournament("r", 3, 1, null, null, 10000, TOURNAMENT_TYPES.INDIVIDUAL,"Football");
+        RoundRobinTournament t= new RoundRobinTournament("r", 3, 1, null, null, 10000, TOURNAMENT_TYPES.INDIVIDUAL,"Football");
         t.id=1L;
         // EliminationTournament elim = new EliminationTournament("Test",
         // 9, 1, null, null, 100,
@@ -51,12 +51,12 @@ public class test {
         // round.addParticipant(d);
         t.start();
         
-    
+        System.out.println(t.generateRounds());
         while(!t.finished){
             t.enterResults(1, 0);
         }
         System.out.println(t.getWinner());
-        System.out.println(t.allRounds);
+        System.out.println(t.findLeaderBoard(t));
         // elim.addParticipant(b);
         // elim.addParticipant(c);
         // elim.addParticipant(d);
