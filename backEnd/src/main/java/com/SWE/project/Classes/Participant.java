@@ -29,7 +29,7 @@ import java.util.Objects;
 public abstract class Participant {
     @Id
     @GeneratedValue
-    protected Long id;
+    protected Long id=0L;
 
     @Column
     protected Integer goalsMade = 0;
