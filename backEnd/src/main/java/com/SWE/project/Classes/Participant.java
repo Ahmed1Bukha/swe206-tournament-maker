@@ -1,6 +1,9 @@
 package com.SWE.project.Classes;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -38,8 +41,9 @@ public abstract class Participant {
     protected Integer wins = 0;
 
     @Column
-    protected Integer points = 0;
-
+    protected List<Integer> points = new ArrayList<>();
+    @Column
+    protected List<Long> tournamentNameIndex= new ArrayList<>();
     @Column
     protected String name;
 
@@ -67,9 +71,9 @@ public abstract class Participant {
     abstract void addWonTournament(Tournament tournament);
     abstract void addTournament(Tournament tournament);
 
-    abstract void win(int GoalsMade, int goalsRecieved);
+    abstract void win(int goalsMade, int goalsRecieved,Tournament tournament);
 
-    abstract void draw(int GoalsMade, int goalsRecieved);
+    abstract void draw(int goalsMade, int goalsRecieved,Tournament tournament);
 
     abstract void lost(int GoalsMade, int goalsRecieved);
 
@@ -100,7 +104,12 @@ public abstract class Participant {
     public void setGoalsMade(int goalsMade) {
         this.goalsMade = goalsMade;
     }
-
+    public List<Long> getTournamentNameIndex(){
+        return tournamentNameIndex;
+    }
+    public void getTournamentNameIndex(List<Long> tournamentNameIndex){
+        this.tournamentNameIndex=tournamentNameIndex;
+    }
     public int getGoalsRecieved() {
         return this.goalsRecieved;
     }
@@ -117,11 +126,11 @@ public abstract class Participant {
         this.wins = wins;
     }
 
-    public int getPoints() {
+    public List<Integer> getPoints() {
         return points;
     }
 
-    public void setPoints(int points) {
+    public void setPoints(ArrayList<Integer> points) {
         this.points = points;
     }
 
@@ -158,7 +167,7 @@ public abstract class Participant {
     @Override
     public String toString() {
         return "{" +
-                "id='" + getId() + "'" +
+                // "id='" + getId() + "'" +
                 ", goalsMade='" + getGoalsMade() + "'" +
                 ", goalsRecieved='" + getGoalsRecieved() + "'" +
                 ", wins='" + getWins() + "'" +

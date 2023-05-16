@@ -17,13 +17,33 @@ import java.io.IOException;
 import java.util.HashMap;
 public class test {
     public static void main(String[] args) {
-        RoundRobinTournament t= new RoundRobinTournament("r", 3, 1, null, null, 10000, TOURNAMENT_TYPES.INDIVIDUAL,"Football");
+        RoundRobinTournament g= new RoundRobinTournament("r", 3, 1, null, null, 10000, TOURNAMENT_TYPES.INDIVIDUAL,"Football");
+        g.id=2L;
         // EliminationTournament elim = new EliminationTournament("Test",
         // 9, 1, null, null, 100,
         // TOURNAMENT_TYPES.INDIVIDUAL, "Football");
         Student a = new Student(0L, "1");
         Student b = new Student(0L, "2");
         Student c = new Student(0L, "3");
+        // Student d = new Student(0L, "4");
+        g.addParticipant(a);
+        g.addParticipant(b);
+        g.addParticipant(c);
+        // round.addParticipant(d);
+        g.start();
+        
+        System.out.println(g.generateRounds());
+        while(!g.finished){
+            g.enterResults(1, 0);
+        }
+        System.out.println(g.getWinner());
+        System.out.println(g.findLeaderBoard(g));
+        RoundRobinTournament t= new RoundRobinTournament("r", 3, 1, null, null, 10000, TOURNAMENT_TYPES.INDIVIDUAL,"Football");
+        t.id=1L;
+        // EliminationTournament elim = new EliminationTournament("Test",
+        // 9, 1, null, null, 100,
+        // TOURNAMENT_TYPES.INDIVIDUAL, "Football");
+       
         // Student d = new Student(0L, "4");
         t.addParticipant(a);
         t.addParticipant(b);
@@ -32,22 +52,11 @@ public class test {
         t.start();
         
         System.out.println(t.generateRounds());
-        ArrayList<ArrayList<Match>> rounds = t.generateRounds();
-        
-            List<Map<String,String>> result = new ArrayList<Map<String,String>>();
-        
-        for(int i=0;i<rounds.get(0).size();i++){
-            HashMap<String,String> temp= new HashMap<>();
-            int counter=1;
-            for(ArrayList<Match> j: rounds){
-               temp.put("Round "+counter, j.get(i).toString());
-                counter++;
-            }
-            result.add(temp);
-            temp=null;
+        while(!t.finished){
+            t.enterResults(1, 0);
         }
-        System.out.println(result);
-        // elim.addParticipant(a);
+        System.out.println(t.getWinner());
+        System.out.println(t.findLeaderBoard(t));
         // elim.addParticipant(b);
         // elim.addParticipant(c);
         // elim.addParticipant(d);
